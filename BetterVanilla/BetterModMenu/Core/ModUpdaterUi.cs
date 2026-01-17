@@ -62,14 +62,14 @@ public sealed class ModUpdaterUi : MonoBehaviour
     {
         AvailableRelease = release;
 
-        if (AvailableRelease.Version.ToString() == GeneratedProps.Version)
+        if (AvailableRelease.Version.ToString() == ModData.Version)
         {
             SetUpdateText("No update available. You are using the latest version of BetterVanilla");
             installButtonText.SetText("No update to install");
         }
         else
         {
-            var currentVersion = ColorUtils.ColoredString(ColorUtils.FromHex("#A01919"), $"v{GeneratedProps.Version}");
+            var currentVersion = ColorUtils.ColoredString(ColorUtils.FromHex("#A01919"), $"v{ModData.Version}");
             var releaseVersion = ColorUtils.ColoredString(ColorUtils.FromHex("#00B03A"), $"v{AvailableRelease.Version.ToString()}");
             SetUpdateText($"BetterVanilla {releaseVersion} is available. You are currently using BetterVanilla {currentVersion}");
             installButtonText.SetText($"Download v{AvailableRelease.Version.ToString()}");

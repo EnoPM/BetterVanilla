@@ -246,25 +246,21 @@ public abstract class BaseView : MonoBehaviour, IDisposable
         }
         _namedElements.Clear();
     }
-}
 
-/// <summary>
-/// Base class for views with a strongly-typed ViewModel.
-/// </summary>
-public abstract class BaseView<TViewModel> : BaseView where TViewModel : class
-{
     /// <summary>
-    /// The strongly-typed ViewModel.
+    /// Gets the DataContext as a typed ViewModel.
     /// </summary>
-    public new TViewModel? DataContext
+    protected T? GetViewModel<T>() where T : class
     {
-        get => base.DataContext as TViewModel;
-        set => base.DataContext = value;
+        return DataContext as T;
     }
 
     /// <summary>
-    /// Gets the ViewModel or throws if null.
+    /// Gets the DataContext as a typed ViewModel, throwing if null or wrong type.
     /// </summary>
-    protected TViewModel ViewModel =>
-        DataContext ?? throw new InvalidOperationException("DataContext is not set.");
+    protected T GetRequiredViewModel<T>() where T : class
+    {
+        return DataContext as T ?? throw new InvalidOperationException(
+            $"DataContext is not set or is not of type {typeof(T).Name}.");
+    }
 }

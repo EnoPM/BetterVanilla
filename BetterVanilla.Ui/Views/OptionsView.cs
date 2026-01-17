@@ -8,10 +8,15 @@ namespace BetterVanilla.Ui.Views;
 /// User code for OptionsView.
 /// The partial class is completed by the generated OptionsView.g.cs file.
 /// </summary>
-public partial class OptionsView : BaseView<OptionsViewModel>
+public partial class OptionsView : BaseView
 {
     public event Action? SettingsSaved;
     public event Action? Cancelled;
+
+    /// <summary>
+    /// Gets the typed ViewModel.
+    /// </summary>
+    private OptionsViewModel ViewModel => GetRequiredViewModel<OptionsViewModel>();
 
     protected override void OnInitialized()
     {

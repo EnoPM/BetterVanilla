@@ -5,21 +5,15 @@
   qui ont leur propre configuration de build (ex: MonoMod).
 
   Usage:
-  <Import Project="$(MSBuildThisFileDirectory)..\..\build\EnoModLoader.CopyToGameFiles.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)..\..\build\CopyToGameFiles.targets" />
 -->
-<Project>
-
-  <PropertyGroup>
-    <!-- Lire ModsDirectoryPath depuis Directory.Build.props à la racine -->
-    <CopyToMods Condition="'$(CopyToMods)' == ''">false</CopyToMods>
-  </PropertyGroup>
-  
+<Project>  
   <!--
     Copy DLL to mods folder after build.
   -->
-  <Target Name="CopyToMods" AfterTargets="AfterBuild" Condition="'$(CopyToMods)' == 'true'">
+  <Target Name="CopyToMods" AfterTargets="AfterBuild" Condition="'$(CopyToMods)' != ''">
     <MakeDir Directories="$(ModsDirectoryPath)" Condition="!Exists('$(ModsDirectoryPath)')" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsDirectoryPath)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsDirectoryPath)\$(CopyToMods)" SkipUnchangedFiles="true" />
     <Message Importance="High" Text="Copied $(TargetFileName) to $(ModsOutputPath)" />
   </Target>
 

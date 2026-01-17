@@ -2,7 +2,6 @@ using System;
 using BetterVanilla.Ui.Binding;
 using BetterVanilla.Ui.Core;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace BetterVanilla.Ui.Controls;
@@ -52,7 +51,7 @@ public sealed class ButtonControl : BaseControl, ITextControl, IClickableControl
 
         if (_button != null)
         {
-            _button.onClick.AddListener((Action)OnClick);
+            _button.onClick.AddListener(OnClick);
         }
     }
 
@@ -76,11 +75,11 @@ public sealed class ButtonControl : BaseControl, ITextControl, IClickableControl
         }
     }
 
-    protected override void OnEnabledChanged(bool enabled)
+    protected override void OnEnabledChanged(bool state)
     {
         if (_button != null)
         {
-            _button.interactable = enabled;
+            _button.interactable = state;
         }
     }
 
@@ -88,7 +87,7 @@ public sealed class ButtonControl : BaseControl, ITextControl, IClickableControl
     {
         if (_button != null)
         {
-            _button.onClick.RemoveListener((Action)OnClick);
+            _button.onClick.RemoveListener(OnClick);
         }
         Clicked = null;
         base.Dispose();

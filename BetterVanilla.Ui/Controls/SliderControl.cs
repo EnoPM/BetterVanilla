@@ -110,7 +110,7 @@ public sealed class SliderControl : BaseControl, IValueControl<float>, ITextCont
 
         if (_slider != null)
         {
-            _slider.onValueChanged.AddListener((Action<float>)OnSliderChanged);
+            _slider.onValueChanged.AddListener(OnSliderChanged);
         }
     }
 
@@ -151,11 +151,11 @@ public sealed class SliderControl : BaseControl, IValueControl<float>, ITextCont
         }
     }
 
-    protected override void OnEnabledChanged(bool enabled)
+    protected override void OnEnabledChanged(bool state)
     {
         if (_slider != null)
         {
-            _slider.interactable = enabled;
+            _slider.interactable = state;
         }
     }
 
@@ -163,7 +163,7 @@ public sealed class SliderControl : BaseControl, IValueControl<float>, ITextCont
     {
         if (_slider != null)
         {
-            _slider.onValueChanged.RemoveListener((Action<float>)OnSliderChanged);
+            _slider.onValueChanged.RemoveListener(OnSliderChanged);
         }
         ValueChanged = null;
         base.Dispose();

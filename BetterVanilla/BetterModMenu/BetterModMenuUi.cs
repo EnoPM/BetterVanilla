@@ -17,7 +17,7 @@ public sealed class BetterModMenuUi : BaseWindowUi
 
     private void Awake()
     {
-        versionText.SetText($"v{GeneratedProps.Version}");
+        versionText.SetText($"v{ModData.Version}");
         sponsorTab.enabled = false;
         localOptionsTab.enabled = false;
         outfitSaverTab.enabled = false;

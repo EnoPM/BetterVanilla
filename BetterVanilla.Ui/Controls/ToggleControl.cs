@@ -2,7 +2,6 @@ using System;
 using BetterVanilla.Ui.Binding;
 using BetterVanilla.Ui.Core;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace BetterVanilla.Ui.Controls;
@@ -71,7 +70,7 @@ public sealed class ToggleControl : BaseControl, IValueControl<bool>, ITextContr
 
         if (_toggle != null)
         {
-            _toggle.onValueChanged.AddListener((Action<bool>)OnToggleChanged);
+            _toggle.onValueChanged.AddListener(OnToggleChanged);
         }
     }
 
@@ -104,11 +103,11 @@ public sealed class ToggleControl : BaseControl, IValueControl<bool>, ITextContr
         ValueChanged?.Invoke(isOn);
     }
 
-    protected override void OnEnabledChanged(bool enabled)
+    protected override void OnEnabledChanged(bool state)
     {
         if (_toggle != null)
         {
-            _toggle.interactable = enabled;
+            _toggle.interactable = state;
         }
     }
 
@@ -116,7 +115,7 @@ public sealed class ToggleControl : BaseControl, IValueControl<bool>, ITextContr
     {
         if (_toggle != null)
         {
-            _toggle.onValueChanged.RemoveListener((Action<bool>)OnToggleChanged);
+            _toggle.onValueChanged.RemoveListener(OnToggleChanged);
         }
         ValueChanged = null;
         base.Dispose();

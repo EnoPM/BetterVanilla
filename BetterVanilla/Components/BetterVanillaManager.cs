@@ -16,7 +16,7 @@ public sealed class BetterVanillaManager : MonoBehaviour
 {
     public static BetterVanillaManager Instance { get; private set; } = null!;
 
-    private readonly Harmony _harmony = new (GeneratedProps.Guid);
+    private readonly Harmony _harmony = new (ModData.Guid);
     public readonly List<BetterPlayerControl> AllPlayers = [];
     public readonly Dictionary<int, TeamPreferences> AllTeamPreferences = [];
     public readonly Dictionary<int, TeamPreferences> AllForcedTeamAssignments = [];
@@ -52,7 +52,7 @@ public sealed class BetterVanillaManager : MonoBehaviour
 
         GameEventManager.PlayerJoined += OnPlayerJoined;
         
-        Ls.LogInfo($"Plugin {GeneratedProps.Name} v{GeneratedProps.Version} is loaded!");
+        Ls.LogInfo($"Plugin {ModData.Name} v{ModData.Version} is loaded!");
     }
     
     private void Start()
@@ -82,7 +82,7 @@ public sealed class BetterVanillaManager : MonoBehaviour
         
         yield return CoLoadCosmetics();
         
-        Ls.LogInfo($"Plugin {GeneratedProps.Name} v{GeneratedProps.Version} was successfully started!");
+        Ls.LogInfo($"Plugin {ModData.Name} v{ModData.Version} was successfully started!");
     }
 
     private IEnumerator CoLoadCosmetics()

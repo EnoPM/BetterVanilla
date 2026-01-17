@@ -12,8 +12,8 @@ public sealed class BetterVanillaHandshake
     
     private BetterVanillaHandshake()
     {
-        Version = $"v{GeneratedProps.Version}";
-        Guid = typeof(BetterVanillaPlugin).Module.ModuleVersionId.ToString();
+        Version = $"v{ModData.Version}";
+        Guid = typeof(Plugin).Module.ModuleVersionId.ToString();
     }
 
     private BetterVanillaHandshake(string version)

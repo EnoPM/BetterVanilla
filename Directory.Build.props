@@ -18,8 +18,15 @@
         Windows Epic  : C:\Program Files\Epic Games\AmongUs\EnoUnityLoader
         Linux Steam   : ~/.steam/steam/steamapps/common/Among Us/EnoUnityLoader
     -->
-    <ModLoaderOutputPath>C:\Program Files (x86)\Steam\steamapps\common\Among Us\EnoUnityLoader</ModLoaderOutputPath>
-    <InteropOutputPath>$(ModLoaderOutputPath)\interop</InteropOutputPath>
+    <GameDirectoryPath>C:\Program Files (x86)\Steam\steamapps\common\Among Us</GameDirectoryPath>
+    <InteropDirectoryPath>$(GameDirectoryPath)\EnoUnityLoader\interop</InteropDirectoryPath>
+    <ModsDirectoryPath>$(GameDirectoryPath)\EnoUnityLoader\mods\$(AssemblyName)</ModsDirectoryPath>
+    <!-- Par défaut true, mettre à false dans le .csproj pour désactiver -->
+    <EnoUnityLoaderMod>true</EnoUnityLoaderMod>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(EnoUnityLoaderMod)' == 'true'">
+    <PackageReference Include="EnoPM.EnoUnityLoader" Version="1.0.0"/>
+  </ItemGroup>
 
 </Project>

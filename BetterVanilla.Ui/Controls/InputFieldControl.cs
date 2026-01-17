@@ -2,7 +2,6 @@ using System;
 using BetterVanilla.Ui.Binding;
 using BetterVanilla.Ui.Core;
 using TMPro;
-using UnityEngine;
 
 namespace BetterVanilla.Ui.Controls;
 
@@ -97,8 +96,8 @@ public sealed class InputFieldControl : BaseControl, IValueControl<string>, ITex
 
         if (_inputField != null)
         {
-            _inputField.onValueChanged.AddListener((Action<string>)OnInputChanged);
-            _inputField.onEndEdit.AddListener((Action<string>)OnEndEdit);
+            _inputField.onValueChanged.AddListener(OnInputChanged);
+            _inputField.onEndEdit.AddListener(OnEndEdit);
         }
     }
 
@@ -127,11 +126,11 @@ public sealed class InputFieldControl : BaseControl, IValueControl<string>, ITex
         // Can be used for validation or final value handling
     }
 
-    protected override void OnEnabledChanged(bool enabled)
+    protected override void OnEnabledChanged(bool state)
     {
         if (_inputField != null)
         {
-            _inputField.interactable = enabled;
+            _inputField.interactable = state;
         }
     }
 
@@ -139,8 +138,8 @@ public sealed class InputFieldControl : BaseControl, IValueControl<string>, ITex
     {
         if (_inputField != null)
         {
-            _inputField.onValueChanged.RemoveListener((Action<string>)OnInputChanged);
-            _inputField.onEndEdit.RemoveListener((Action<string>)OnEndEdit);
+            _inputField.onValueChanged.RemoveListener(OnInputChanged);
+            _inputField.onEndEdit.RemoveListener(OnEndEdit);
         }
         ValueChanged = null;
         base.Dispose();
