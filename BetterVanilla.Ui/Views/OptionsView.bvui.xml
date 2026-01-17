@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Example BVUI file demonstrating the XAML-like syntax.
+  This file will be processed by the code generator to produce OptionsView.g.cs
+-->
+<View xmlns="http://schemas.bettervanilla.ui/2025"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      x:Class="BetterVanilla.Ui.Views.OptionsView">
+
+  <!-- Root panel container -->
+  <Panel x:Name="root" Alias="Windows/OptionsPanel">
+
+    <!-- Title text -->
+    <TextBlock x:Name="titleText"
+               Alias="Controls/TextBlock"
+               Text="Options" />
+
+    <!-- Enable feature toggle -->
+    <Toggle x:Name="enableFeatureToggle"
+            Alias="Controls/Toggle"
+            Text="Enable Feature"
+            IsOn="{Binding IsFeatureEnabled, Mode=TwoWay}"
+            ValueChanged="OnFeatureToggleChanged" />
+
+    <!-- Volume slider -->
+    <Slider x:Name="volumeSlider"
+            Alias="Controls/Slider"
+            Text="Volume"
+            Value="{Binding Volume, Mode=TwoWay}"
+            ValueChanged="OnVolumeChanged" />
+
+    <!-- Username input -->
+    <InputField x:Name="usernameInput"
+                Alias="Controls/InputField"
+                Text="{Binding Username, Mode=TwoWay}"
+                ValueChanged="OnUsernameChanged" />
+
+    <!-- Save button -->
+    <Button x:Name="saveButton"
+            Alias="Controls/Button"
+            Text="Save Settings"
+            Click="OnSaveClicked" />
+
+    <!-- Cancel button -->
+    <Button x:Name="cancelButton"
+            Alias="Controls/Button"
+            Text="Cancel"
+            Click="OnCancelClicked" />
+
+  </Panel>
+</View>

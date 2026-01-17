@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>BetterVanilla.Ui.XamlGenerator</RootNamespace>
+    <AssemblyName>BetterVanilla.Ui.XamlGenerator</AssemblyName>
+
+    <!-- Tool packaging -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>bvui-gen</ToolCommandName>
+    <PackageId>BetterVanilla.Ui.XamlGenerator</PackageId>
+    <Version>1.0.0</Version>
+    <Description>BVUI XML to C# code generator for BetterVanilla.Ui</Description>
+
+    <!-- Exclude from Unity mod builds -->
+    <EnoUnityLoaderMod>false</EnoUnityLoaderMod>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+  </ItemGroup>
+
+</Project>

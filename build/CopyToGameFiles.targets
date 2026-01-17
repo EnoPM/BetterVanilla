@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Target pour copier les assemblies vers les dossiers core et mods du ModLoader.
+  Ce fichier peut être importé séparément des props pour les projets
+  qui ont leur propre configuration de build (ex: MonoMod).
+
+  Usage:
+  <Import Project="$(MSBuildThisFileDirectory)..\..\build\EnoModLoader.CopyToGameFiles.targets" />
+-->
+<Project>
+
+  <PropertyGroup>
+    <!-- Lire ModsDirectoryPath depuis Directory.Build.props à la racine -->
+    <CopyToMods Condition="'$(CopyToMods)' == ''">false</CopyToMods>
+  </PropertyGroup>
+  
+  <!--
+    Copy DLL to mods folder after build.
+  -->
+  <Target Name="CopyToMods" AfterTargets="AfterBuild" Condition="'$(CopyToMods)' == 'true'">
+    <MakeDir Directories="$(ModsDirectoryPath)" Condition="!Exists('$(ModsDirectoryPath)')" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsDirectoryPath)" SkipUnchangedFiles="true" />
+    <Message Importance="High" Text="Copied $(TargetFileName) to $(ModsOutputPath)" />
+  </Target>
+
+</Project>

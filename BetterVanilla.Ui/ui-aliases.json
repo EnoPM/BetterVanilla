@@ -1,0 +1,64 @@
+{
+  "$schema": "./ui-aliases.schema.json",
+  "version": "1.0",
+  "defaultBundle": "BetterVanilla.Ui.Assets.ui.bundle",
+  "defaultNamespace": "BetterVanilla.Ui.Controls",
+  "aliases": {
+    "Panel": {
+      "prefab": "Assets/Prefabs/Controls/Panel.prefab",
+      "component": "BetterVanilla.Ui.Controls.PanelControl"
+    },
+    "Button": {
+      "prefab": "Assets/Prefabs/Controls/Button.prefab",
+      "component": "BetterVanilla.Ui.Controls.ButtonControl"
+    },
+    "Toggle": {
+      "prefab": "Assets/Prefabs/Controls/Toggle.prefab",
+      "component": "BetterVanilla.Ui.Controls.ToggleControl"
+    },
+    "Slider": {
+      "prefab": "Assets/Prefabs/Controls/Slider.prefab",
+      "component": "BetterVanilla.Ui.Controls.SliderControl"
+    },
+    "TextBlock": {
+      "prefab": "Assets/Prefabs/Controls/TextBlock.prefab",
+      "component": "BetterVanilla.Ui.Controls.TextBlockControl"
+    },
+    "InputField": {
+      "prefab": "Assets/Prefabs/Controls/InputField.prefab",
+      "component": "BetterVanilla.Ui.Controls.InputFieldControl"
+    },
+    "Controls/Panel": {
+      "prefab": "Assets/Prefabs/Controls/Panel.prefab",
+      "component": "BetterVanilla.Ui.Controls.PanelControl"
+    },
+    "Controls/Button": {
+      "prefab": "Assets/Prefabs/Controls/Button.prefab",
+      "component": "BetterVanilla.Ui.Controls.ButtonControl"
+    },
+    "Controls/Toggle": {
+      "prefab": "Assets/Prefabs/Controls/Toggle.prefab",
+      "component": "BetterVanilla.Ui.Controls.ToggleControl"
+    },
+    "Controls/Slider": {
+      "prefab": "Assets/Prefabs/Controls/Slider.prefab",
+      "component": "BetterVanilla.Ui.Controls.SliderControl"
+    },
+    "Controls/TextBlock": {
+      "prefab": "Assets/Prefabs/Controls/TextBlock.prefab",
+      "component": "BetterVanilla.Ui.Controls.TextBlockControl"
+    },
+    "Controls/InputField": {
+      "prefab": "Assets/Prefabs/Controls/InputField.prefab",
+      "component": "BetterVanilla.Ui.Controls.InputFieldControl"
+    },
+    "Windows/OptionsPanel": {
+      "prefab": "Assets/Prefabs/Windows/OptionsPanel.prefab",
+      "component": "BetterVanilla.Ui.Controls.PanelControl"
+    },
+    "Windows/ModalDialog": {
+      "prefab": "Assets/Prefabs/Windows/ModalDialog.prefab",
+      "component": "BetterVanilla.Ui.Controls.PanelControl"
+    }
+  }
+}

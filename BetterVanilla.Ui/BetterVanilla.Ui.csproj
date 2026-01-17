@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <!-- Exclude the nested XamlGenerator project from default globbing -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);Tools\**\*</DefaultItemExcludes>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Version>0.0.1</Version>
+        <FileVersion>$(AssemblyVersion)</FileVersion>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <AssemblyGuid>pm.eno.ui.bettervanilla</AssemblyGuid>
+        <AssemblyName>BetterVanilla.Ui</AssemblyName>
+        <AssemblyVersion>$(Version).0</AssemblyVersion>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <CopyToMods>BetterVanilla</CopyToMods>
+    </PropertyGroup>
+
+    <!-- BVUI Code Generation -->
+    <PropertyGroup>
+        <EnableBvuiGeneration>true</EnableBvuiGeneration>
+        <BvuiAliasesFile>$(MSBuildProjectDirectory)\ui-aliases.json</BvuiAliasesFile>
+    </PropertyGroup>
+
+    <!-- Import BVUI build system -->
+    <Import Project="Build\BetterVanilla.Ui.Xaml.props" />
+    <Import Project="Build\BetterVanilla.Ui.Xaml.targets" />
+
+    <!-- Additional content files -->
+    <ItemGroup>
+        <None Include="ui-aliases.json" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="ui-aliases.schema.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+</Project>
