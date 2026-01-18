@@ -18,17 +18,16 @@ public abstract class BaseView : MonoBehaviour, IDisposable
     protected readonly CompositeDisposable Disposables = new();
 
     private bool _isInitialized;
-    private object? _dataContext;
 
     /// <summary>
     /// The data context (ViewModel) for this view.
     /// </summary>
     public object? DataContext
     {
-        get => _dataContext;
+        get;
         set
         {
-            _dataContext = value;
+            field = value;
             BindingEngine.DataContext = value;
             OnDataContextChanged(value);
         }

@@ -9,7 +9,8 @@ namespace BetterVanilla.Ui.XamlGenerator;
 /// </summary>
 public sealed partial class XamlParser
 {
-    private const string XNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+    private const string MsXamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+    private const string BvuiXamlNamespace = "http://schemas.bettervanilla.ui/2025/xaml";
     private const string BvuiNamespace = "http://schemas.bettervanilla.ui/2025";
 
     // Known event names that should be treated as event handlers
@@ -34,8 +35,9 @@ public sealed partial class XamlParser
             throw new InvalidOperationException($"Empty XML document: {filePath}");
         }
 
-        // Parse x:Class
-        var classAttr = doc.DocumentElement.GetAttributeNode("Class", XNamespace)
+        // Parse x:Class (support both Microsoft and BVUI namespaces)
+        var classAttr = doc.DocumentElement.GetAttributeNode("Class", BvuiXamlNamespace)
+                        ?? doc.DocumentElement.GetAttributeNode("Class", MsXamlNamespace)
                         ?? doc.DocumentElement.GetAttributeNode("x:Class");
 
         if (classAttr != null)
@@ -85,15 +87,15 @@ public sealed partial class XamlParser
             var name = attr.LocalName;
             var value = attr.Value;
 
-            // Handle x:Name
-            if ((attr.NamespaceURI == XNamespace && name == "Name") || attr.Name == "x:Name")
+            // Handle x:Name (support both Microsoft and BVUI namespaces)
+            if ((attr.NamespaceURI is BvuiXamlNamespace or MsXamlNamespace && name == "Name") || attr.Name == "x:Name")
             {
                 element.Name = value;
                 continue;
             }
 
-            // Skip x:Class and xmlns declarations
-            if (name == "Class" || name.StartsWith("xmlns"))
+            // Skip x:Class, xmlns declarations, and xsi attributes
+            if (name == "Class" || name.StartsWith("xmlns") || attr.Prefix == "xsi")
             {
                 continue;
             }

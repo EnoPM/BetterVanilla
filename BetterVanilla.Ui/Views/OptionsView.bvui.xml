@@ -4,7 +4,9 @@
   This file will be processed by the code generator to produce OptionsView.g.cs
 -->
 <View xmlns="http://schemas.bettervanilla.ui/2025"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:x="http://schemas.bettervanilla.ui/2025/xaml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://schemas.bettervanilla.ui/2025 ../Schemas/bvui.xsd"
       x:Class="BetterVanilla.Ui.Views.OptionsView">
 
   <!-- Root panel container -->

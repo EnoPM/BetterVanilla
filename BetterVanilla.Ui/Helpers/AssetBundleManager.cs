@@ -28,10 +28,6 @@ public sealed class AssetBundleManager : IDisposable
 
         assembly ??= Assembly.GetCallingAssembly();
 
-#if ANDROID
-        bundleName = $"{bundleName}.android";
-#endif
-
         var resourceStream = assembly.GetManifestResourceStream(bundleName);
         if (resourceStream == null)
         {

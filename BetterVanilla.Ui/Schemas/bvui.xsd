@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:x="http://schemas.bettervanilla.ui/2025/xaml"
+           xmlns:bvui="http://schemas.bettervanilla.ui/2025"
+           targetNamespace="http://schemas.bettervanilla.ui/2025"
+           elementFormDefault="qualified">
+
+  <!-- Import x: namespace for x:Name, x:Class -->
+  <xs:import namespace="http://schemas.bettervanilla.ui/2025/xaml" schemaLocation="bvui-xaml.xsd"/>
+
+  <!-- ========== Common Types ========== -->
+
+  <xs:simpleType name="BindingExpression">
+    <xs:annotation>
+      <xs:documentation>
+        Expression de binding. Exemples:
+        - {Binding PropertyName}
+        - {Binding PropertyName, Mode=TwoWay}
+        - {Binding Path.To.Property, Mode=OneWay, Converter=MyConverter}
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="BindingMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OneWay"/>
+      <xs:enumeration value="TwoWay"/>
+      <xs:enumeration value="OneWayToSource"/>
+      <xs:enumeration value="OneTime"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="BooleanOrBinding">
+    <xs:union memberTypes="xs:boolean bvui:BindingExpression"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="FloatOrBinding">
+    <xs:union memberTypes="xs:float bvui:BindingExpression"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="StringOrBinding">
+    <xs:union memberTypes="xs:string bvui:BindingExpression"/>
+  </xs:simpleType>
+
+  <!-- ========== Base Control Attributes ========== -->
+
+  <xs:attributeGroup name="BaseControlAttributes">
+    <xs:attribute ref="x:Name" use="optional"/>
+    <xs:attribute name="Alias" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Référence à un prefab défini dans ui-aliases.json</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="IsEnabled" type="bvui:BooleanOrBinding" use="optional" default="true">
+      <xs:annotation>
+        <xs:documentation>État activé/désactivé du contrôle</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="IsVisible" type="bvui:BooleanOrBinding" use="optional" default="true">
+      <xs:annotation>
+        <xs:documentation>Visibilité du contrôle</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="TextControlAttributes">
+    <xs:attribute name="Text" type="bvui:StringOrBinding" use="optional">
+      <xs:annotation>
+        <xs:documentation>Texte affiché par le contrôle</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <!-- ========== Control Elements ========== -->
+
+  <!-- View (root element) -->
+  <xs:element name="View">
+    <xs:annotation>
+      <xs:documentation>Élément racine d'une vue BVUI</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute ref="x:Class" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Group of all control elements -->
+  <xs:group name="ControlElements">
+    <xs:choice>
+      <xs:element ref="bvui:Panel"/>
+      <xs:element ref="bvui:Button"/>
+      <xs:element ref="bvui:Toggle"/>
+      <xs:element ref="bvui:Slider"/>
+      <xs:element ref="bvui:TextBlock"/>
+      <xs:element ref="bvui:InputField"/>
+    </xs:choice>
+  </xs:group>
+
+  <!-- Panel -->
+  <xs:element name="Panel">
+    <xs:annotation>
+      <xs:documentation>Conteneur pour d'autres contrôles</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Button -->
+  <xs:element name="Button">
+    <xs:annotation>
+      <xs:documentation>Bouton cliquable</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attributeGroup ref="bvui:TextControlAttributes"/>
+      <xs:attribute name="Click" type="xs:NCName" use="optional">
+        <xs:annotation>
+          <xs:documentation>Nom de la méthode appelée au clic</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Toggle -->
+  <xs:element name="Toggle">
+    <xs:annotation>
+      <xs:documentation>Case à cocher / Toggle</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attributeGroup ref="bvui:TextControlAttributes"/>
+      <xs:attribute name="IsOn" type="bvui:BooleanOrBinding" use="optional" default="false">
+        <xs:annotation>
+          <xs:documentation>État coché/décoché du toggle</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Value" type="bvui:BooleanOrBinding" use="optional">
+        <xs:annotation>
+          <xs:documentation>Alias pour IsOn</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ValueChanged" type="xs:NCName" use="optional">
+        <xs:annotation>
+          <xs:documentation>Nom de la méthode appelée au changement de valeur (reçoit bool)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Slider -->
+  <xs:element name="Slider">
+    <xs:annotation>
+      <xs:documentation>Curseur pour valeurs numériques</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attributeGroup ref="bvui:TextControlAttributes"/>
+      <xs:attribute name="Value" type="bvui:FloatOrBinding" use="optional" default="0">
+        <xs:annotation>
+          <xs:documentation>Valeur actuelle du slider</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="MinValue" type="xs:float" use="optional" default="0">
+        <xs:annotation>
+          <xs:documentation>Valeur minimale</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="MaxValue" type="xs:float" use="optional" default="1">
+        <xs:annotation>
+          <xs:documentation>Valeur maximale</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="WholeNumbers" type="xs:boolean" use="optional" default="false">
+        <xs:annotation>
+          <xs:documentation>Restreindre aux nombres entiers</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ValueFormat" type="xs:string" use="optional" default="{0:F1}">
+        <xs:annotation>
+          <xs:documentation>Format d'affichage de la valeur (ex: {0:F2})</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ValueChanged" type="xs:NCName" use="optional">
+        <xs:annotation>
+          <xs:documentation>Nom de la méthode appelée au changement de valeur (reçoit float)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- TextBlock -->
+  <xs:element name="TextBlock">
+    <xs:annotation>
+      <xs:documentation>Affichage de texte statique ou lié</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attributeGroup ref="bvui:TextControlAttributes"/>
+      <xs:attribute name="FontSize" type="xs:float" use="optional">
+        <xs:annotation>
+          <xs:documentation>Taille de la police</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="TextColor" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Couleur du texte (format: #RRGGBB ou #RRGGBBAA)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="TextAlignment" use="optional">
+        <xs:annotation>
+          <xs:documentation>Alignement du texte</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Left"/>
+            <xs:enumeration value="Center"/>
+            <xs:enumeration value="Right"/>
+            <xs:enumeration value="Justified"/>
+            <xs:enumeration value="TopLeft"/>
+            <xs:enumeration value="Top"/>
+            <xs:enumeration value="TopRight"/>
+            <xs:enumeration value="MidlineLeft"/>
+            <xs:enumeration value="Midline"/>
+            <xs:enumeration value="MidlineRight"/>
+            <xs:enumeration value="BottomLeft"/>
+            <xs:enumeration value="Bottom"/>
+            <xs:enumeration value="BottomRight"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- InputField -->
+  <xs:element name="InputField">
+    <xs:annotation>
+      <xs:documentation>Champ de saisie texte</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attribute name="Text" type="bvui:StringOrBinding" use="optional">
+        <xs:annotation>
+          <xs:documentation>Texte saisi</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Value" type="bvui:StringOrBinding" use="optional">
+        <xs:annotation>
+          <xs:documentation>Alias pour Text</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Placeholder" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Texte affiché quand le champ est vide</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="CharacterLimit" type="xs:int" use="optional" default="0">
+        <xs:annotation>
+          <xs:documentation>Limite de caractères (0 = illimité)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ContentType" use="optional" default="Standard">
+        <xs:annotation>
+          <xs:documentation>Type de contenu attendu</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Standard"/>
+            <xs:enumeration value="Autocorrected"/>
+            <xs:enumeration value="IntegerNumber"/>
+            <xs:enumeration value="DecimalNumber"/>
+            <xs:enumeration value="Alphanumeric"/>
+            <xs:enumeration value="Name"/>
+            <xs:enumeration value="EmailAddress"/>
+            <xs:enumeration value="Password"/>
+            <xs:enumeration value="Pin"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="ValueChanged" type="xs:NCName" use="optional">
+        <xs:annotation>
+          <xs:documentation>Nom de la méthode appelée au changement de valeur (reçoit string)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
