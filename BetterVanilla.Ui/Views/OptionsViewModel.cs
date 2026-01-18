@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BetterVanilla.Ui.Helpers;
 
 namespace BetterVanilla.Ui.Views;
@@ -25,6 +26,8 @@ public sealed class OptionsViewModel : ViewModelBase
         get;
         set => SetProperty(ref field, value);
     } = string.Empty;
+    
+    public IEnumerable<string> DifficultyOptions { get; } = ["Facile", "Normal", "Difficile"];
 
     public void SaveSettings()
     {

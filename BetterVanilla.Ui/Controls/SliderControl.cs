@@ -10,11 +10,12 @@ namespace BetterVanilla.Ui.Controls;
 /// <summary>
 /// A slider control for numeric values.
 /// </summary>
-public sealed class SliderControl : BaseControl, IValueControl<float>, ITextControl
+public sealed class SliderControl : BaseControl, IValueControl<float>, ILabelStyleControl
 {
     private Slider? _slider;
     private TMP_Text? _labelText;
     private TMP_Text? _valueText;
+    private LabelStyleHelper? _labelStyle;
     private readonly BindableProperty<float> _valueProperty = new();
     private readonly BindableProperty<string> _textProperty = new();
 
@@ -83,6 +84,94 @@ public sealed class SliderControl : BaseControl, IValueControl<float>, ITextCont
 
     public string? ValueFormat { get; set; } = "{0:F1}";
 
+    #region ILabelStyleControl
+
+    public float LabelFontSize
+    {
+        get => _labelStyle?.FontSize ?? 14f;
+        set { if (_labelStyle != null) _labelStyle.FontSize = value; }
+    }
+
+    public Color LabelTextColor
+    {
+        get => _labelStyle?.TextColor ?? Color.white;
+        set { if (_labelStyle != null) _labelStyle.TextColor = value; }
+    }
+
+    public TextAlignmentOptions LabelTextAlignment
+    {
+        get => _labelStyle?.TextAlignment ?? TextAlignmentOptions.Left;
+        set { if (_labelStyle != null) _labelStyle.TextAlignment = value; }
+    }
+
+    public FontStyles LabelFontStyle
+    {
+        get => _labelStyle?.FontStyle ?? FontStyles.Normal;
+        set { if (_labelStyle != null) _labelStyle.FontStyle = value; }
+    }
+
+    public float LabelCharacterSpacing
+    {
+        get => _labelStyle?.CharacterSpacing ?? 0f;
+        set { if (_labelStyle != null) _labelStyle.CharacterSpacing = value; }
+    }
+
+    public float LabelLineSpacing
+    {
+        get => _labelStyle?.LineSpacing ?? 0f;
+        set { if (_labelStyle != null) _labelStyle.LineSpacing = value; }
+    }
+
+    public float LabelWordSpacing
+    {
+        get => _labelStyle?.WordSpacing ?? 0f;
+        set { if (_labelStyle != null) _labelStyle.WordSpacing = value; }
+    }
+
+    public bool LabelWordWrapping
+    {
+        get => _labelStyle?.WordWrapping ?? false;
+        set { if (_labelStyle != null) _labelStyle.WordWrapping = value; }
+    }
+
+    public TextOverflowModes LabelTextOverflow
+    {
+        get => _labelStyle?.TextOverflow ?? TextOverflowModes.Overflow;
+        set { if (_labelStyle != null) _labelStyle.TextOverflow = value; }
+    }
+
+    public bool LabelRichText
+    {
+        get => _labelStyle?.RichText ?? true;
+        set { if (_labelStyle != null) _labelStyle.RichText = value; }
+    }
+
+    public bool LabelAutoSize
+    {
+        get => _labelStyle?.AutoSize ?? false;
+        set { if (_labelStyle != null) _labelStyle.AutoSize = value; }
+    }
+
+    public float LabelMinFontSize
+    {
+        get => _labelStyle?.MinFontSize ?? 10f;
+        set { if (_labelStyle != null) _labelStyle.MinFontSize = value; }
+    }
+
+    public float LabelMaxFontSize
+    {
+        get => _labelStyle?.MaxFontSize ?? 72f;
+        set { if (_labelStyle != null) _labelStyle.MaxFontSize = value; }
+    }
+
+    public Vector4 LabelTextMargin
+    {
+        get => _labelStyle?.TextMargin ?? Vector4.zero;
+        set { if (_labelStyle != null) _labelStyle.TextMargin = value; }
+    }
+
+    #endregion
+
     public override bool IsEnabled
     {
         get => base.IsEnabled;
@@ -108,6 +197,8 @@ public sealed class SliderControl : BaseControl, IValueControl<float>, ITextCont
         if (texts.Length >= 2)
             _valueText = texts[1];
 
+        _labelStyle = new LabelStyleHelper(_labelText);
+
         if (_slider != null)
         {
             _slider.onValueChanged.AddListener(OnSliderChanged);
@@ -116,6 +207,8 @@ public sealed class SliderControl : BaseControl, IValueControl<float>, ITextCont
 
     protected override void RegisterBindableProperties()
     {
+        base.RegisterBindableProperties();
+
         RegisterBindableProperty("Value", _valueProperty);
         RegisterBindableProperty("Text", _textProperty);
 

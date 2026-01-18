@@ -5,6 +5,8 @@ using BetterVanilla.Ui.Binding;
 using BetterVanilla.Ui.Controls;
 using BetterVanilla.Ui.Helpers;
 using UnityEngine;
+using UnityEngine.UI;
+using BetterVanilla.Ui;
 
 namespace BetterVanilla.Ui.Core;
 
@@ -68,8 +70,23 @@ public abstract class BaseView : MonoBehaviour, IDisposable
         // Set up event handlers
         SetupEventHandlers();
 
+        // Force layout rebuild after all elements are set up
+        ForceLayoutRebuild();
+
         // Custom initialization
         OnInitialized();
+    }
+
+    /// <summary>
+    /// Forces a layout rebuild on all layout groups in this view.
+    /// </summary>
+    protected void ForceLayoutRebuild()
+    {
+        var rectTransform = transform.Cast<RectTransform>();
+        if (rectTransform != null)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+        }
     }
 
     /// <summary>
@@ -143,7 +160,7 @@ public abstract class BaseView : MonoBehaviour, IDisposable
         var bindableProperty = control.GetBindableProperty(targetProperty);
         if (bindableProperty == null)
         {
-            Debug.LogWarning($"Property '{targetProperty}' not found on control '{control.Name}'");
+            Plugin.Instance.Log.LogWarning($"Property '{targetProperty}' not found on control '{control.Name}'");
             return EmptyDisposable.Instance;
         }
 
@@ -159,14 +176,14 @@ public abstract class BaseView : MonoBehaviour, IDisposable
         var parsed = BindingExpression.Parse(expression);
         if (parsed == null)
         {
-            Debug.LogWarning($"Failed to parse binding expression: {expression}");
+            Plugin.Instance.Log.LogWarning($"Failed to parse binding expression: {expression}");
             return EmptyDisposable.Instance;
         }
 
         var bindableProperty = control.GetBindableProperty(targetProperty);
         if (bindableProperty == null)
         {
-            Debug.LogWarning($"Property '{targetProperty}' not found on control '{control.Name}'");
+            Plugin.Instance.Log.LogWarning($"Property '{targetProperty}' not found on control '{control.Name}'");
             return EmptyDisposable.Instance;
         }
 
@@ -201,7 +218,7 @@ public abstract class BaseView : MonoBehaviour, IDisposable
             }
             else if (attr.Required)
             {
-                Debug.LogWarning($"Required view element '{attr.Name}' is null in {type.Name}");
+                Plugin.Instance.Log.LogWarning($"Required view element '{attr.Name}' is null in {type.Name}");
             }
         }
     }

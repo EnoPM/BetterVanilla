@@ -8,6 +8,10 @@
       "prefab": "Assets/Prefabs/Controls/Panel.prefab",
       "component": "BetterVanilla.Ui.Controls.PanelControl"
     },
+    "ScrollView": {
+      "prefab": "Assets/Prefabs/Controls/ScrollView.prefab",
+      "component": "BetterVanilla.Ui.Controls.ScrollViewControl"
+    },
     "Button": {
       "prefab": "Assets/Prefabs/Controls/Button.prefab",
       "component": "BetterVanilla.Ui.Controls.ButtonControl"
@@ -28,9 +32,25 @@
       "prefab": "Assets/Prefabs/Controls/InputField.prefab",
       "component": "BetterVanilla.Ui.Controls.InputFieldControl"
     },
+    "Dropdown": {
+      "prefab": "Assets/Prefabs/Controls/Dropdown.prefab",
+      "component": "BetterVanilla.Ui.Controls.DropdownControl"
+    },
+    "Image": {
+      "prefab": "Assets/Prefabs/Controls/Image.prefab",
+      "component": "BetterVanilla.Ui.Controls.ImageControl"
+    },
+    "IconButton": {
+      "prefab": "Assets/Prefabs/Controls/IconButton.prefab",
+      "component": "BetterVanilla.Ui.Controls.IconButtonControl"
+    },
     "Controls/Panel": {
       "prefab": "Assets/Prefabs/Controls/Panel.prefab",
       "component": "BetterVanilla.Ui.Controls.PanelControl"
+    },
+    "Controls/ScrollView": {
+      "prefab": "Assets/Prefabs/Controls/ScrollView.prefab",
+      "component": "BetterVanilla.Ui.Controls.ScrollViewControl"
     },
     "Controls/Button": {
       "prefab": "Assets/Prefabs/Controls/Button.prefab",
@@ -51,6 +71,18 @@
     "Controls/InputField": {
       "prefab": "Assets/Prefabs/Controls/InputField.prefab",
       "component": "BetterVanilla.Ui.Controls.InputFieldControl"
+    },
+    "Controls/Dropdown": {
+      "prefab": "Assets/Prefabs/Controls/Dropdown.prefab",
+      "component": "BetterVanilla.Ui.Controls.DropdownControl"
+    },
+    "Controls/Image": {
+      "prefab": "Assets/Prefabs/Controls/Image.prefab",
+      "component": "BetterVanilla.Ui.Controls.ImageControl"
+    },
+    "Controls/IconButton": {
+      "prefab": "Assets/Prefabs/Controls/IconButton.prefab",
+      "component": "BetterVanilla.Ui.Controls.IconButtonControl"
     },
     "Windows/OptionsPanel": {
       "prefab": "Assets/Prefabs/Windows/OptionsPanel.prefab",

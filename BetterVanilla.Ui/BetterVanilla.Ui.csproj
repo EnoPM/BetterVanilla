@@ -39,5 +39,8 @@
         <None Include="ui-aliases.json" CopyToOutputDirectory="PreserveNewest" />
         <None Include="ui-aliases.schema.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Assets\**"/>
+    </ItemGroup>
 
 </Project>

@@ -78,6 +78,126 @@ public interface ITextControl : IViewControl
 }
 
 /// <summary>
+/// Interface for controls that support text styling (TMP properties).
+/// </summary>
+public interface ITextStyleControl : ITextControl
+{
+    /// <summary>
+    /// Font size in points.
+    /// </summary>
+    float FontSize { get; set; }
+
+    /// <summary>
+    /// Text color.
+    /// </summary>
+    Color TextColor { get; set; }
+
+    /// <summary>
+    /// Text alignment options.
+    /// </summary>
+    TMPro.TextAlignmentOptions TextAlignment { get; set; }
+
+    /// <summary>
+    /// Font style (Bold, Italic, etc.).
+    /// </summary>
+    TMPro.FontStyles FontStyle { get; set; }
+
+    /// <summary>
+    /// Character spacing (in em units).
+    /// </summary>
+    float CharacterSpacing { get; set; }
+
+    /// <summary>
+    /// Line spacing adjustment.
+    /// </summary>
+    float LineSpacing { get; set; }
+
+    /// <summary>
+    /// Word spacing adjustment.
+    /// </summary>
+    float WordSpacing { get; set; }
+
+    /// <summary>
+    /// Whether word wrapping is enabled.
+    /// </summary>
+    bool WordWrapping { get; set; }
+
+    /// <summary>
+    /// Text overflow mode.
+    /// </summary>
+    TMPro.TextOverflowModes TextOverflow { get; set; }
+
+    /// <summary>
+    /// Whether rich text tags are enabled.
+    /// </summary>
+    bool RichText { get; set; }
+
+    /// <summary>
+    /// Whether auto-sizing is enabled.
+    /// </summary>
+    bool AutoSize { get; set; }
+
+    /// <summary>
+    /// Minimum font size for auto-sizing.
+    /// </summary>
+    float MinFontSize { get; set; }
+
+    /// <summary>
+    /// Maximum font size for auto-sizing.
+    /// </summary>
+    float MaxFontSize { get; set; }
+
+    /// <summary>
+    /// Text margins (left, top, right, bottom).
+    /// </summary>
+    Vector4 TextMargin { get; set; }
+}
+
+/// <summary>
+/// Interface for controls that have a styleable text label (Button, Toggle, Slider).
+/// Properties are prefixed with "Label" to distinguish from the control's main properties.
+/// </summary>
+public interface ILabelStyleControl : ITextControl
+{
+    float LabelFontSize { get; set; }
+    Color LabelTextColor { get; set; }
+    TMPro.TextAlignmentOptions LabelTextAlignment { get; set; }
+    TMPro.FontStyles LabelFontStyle { get; set; }
+    float LabelCharacterSpacing { get; set; }
+    float LabelLineSpacing { get; set; }
+    float LabelWordSpacing { get; set; }
+    bool LabelWordWrapping { get; set; }
+    TMPro.TextOverflowModes LabelTextOverflow { get; set; }
+    bool LabelRichText { get; set; }
+    bool LabelAutoSize { get; set; }
+    float LabelMinFontSize { get; set; }
+    float LabelMaxFontSize { get; set; }
+    Vector4 LabelTextMargin { get; set; }
+}
+
+/// <summary>
+/// Interface for controls that have a styleable placeholder text (InputField).
+/// Properties are prefixed with "Placeholder" to distinguish from input text properties.
+/// </summary>
+public interface IPlaceholderStyleControl : IViewControl
+{
+    float PlaceholderFontSize { get; set; }
+    Color PlaceholderTextColor { get; set; }
+    TMPro.TextAlignmentOptions PlaceholderTextAlignment { get; set; }
+    TMPro.FontStyles PlaceholderFontStyle { get; set; }
+    float PlaceholderCharacterSpacing { get; set; }
+    float PlaceholderLineSpacing { get; set; }
+    float PlaceholderWordSpacing { get; set; }
+    bool PlaceholderWordWrapping { get; set; }
+    TMPro.TextOverflowModes PlaceholderTextOverflow { get; set; }
+    bool PlaceholderRichText { get; set; }
+    bool PlaceholderAutoSize { get; set; }
+    float PlaceholderMinFontSize { get; set; }
+    float PlaceholderMaxFontSize { get; set; }
+    Vector4 PlaceholderTextMargin { get; set; }
+}
+
+/// <summary>
 /// Interface for controls that can be clicked.
 /// </summary>
 public interface IClickableControl : IViewControl

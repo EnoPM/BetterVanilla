@@ -47,13 +47,16 @@ public sealed class AssetBundleManager : IDisposable
     {
         var cacheKey = $"{bundleName}::{prefabPath}";
 
-        if (_prefabCache.TryGetValue(cacheKey, out var cached))
+        // Check cache, but verify the object is still valid (Unity objects can be destroyed)
+        if (_prefabCache.TryGetValue(cacheKey, out var cached) && cached != null)
             return cached;
 
-        if (!_loadedBundles.TryGetValue(bundleName, out var bundle))
+        // Check if bundle is loaded and still valid
+        if (!_loadedBundles.TryGetValue(bundleName, out var bundle) || bundle == null)
         {
-            throw new InvalidOperationException(
-                $"AssetBundle '{bundleName}' is not loaded. Call LoadFromEmbeddedResource first.");
+            // Bundle was destroyed or not loaded, try to reload it
+            _loadedBundles.Remove(bundleName);
+            bundle = LoadFromEmbeddedResource(bundleName, typeof(AssetBundleManager).Assembly);
         }
 
         var prefab = bundle.LoadAsset<GameObject>(prefabPath);
@@ -62,6 +65,9 @@ public sealed class AssetBundleManager : IDisposable
             throw new InvalidOperationException(
                 $"Prefab '{prefabPath}' not found in bundle '{bundleName}'");
         }
+
+        // Prevent prefab from being unloaded during scene changes
+        prefab.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
         _prefabCache[cacheKey] = prefab;
         return prefab;

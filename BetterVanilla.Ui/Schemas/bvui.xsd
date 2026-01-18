@@ -8,12 +8,46 @@
   <!-- Import x: namespace for x:Name, x:Class -->
   <xs:import namespace="http://schemas.bettervanilla.ui/2025/xaml" schemaLocation="bvui-xaml.xsd"/>
 
-  <!-- ========== Common Types ========== -->
+  <!-- ============================================================ -->
+  <!-- SIMPLE TYPES                                                 -->
+  <!-- ============================================================ -->
+
+  <xs:simpleType name="HorizontalAlignment">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None"/>
+      <xs:enumeration value="Left"/>
+      <xs:enumeration value="Center"/>
+      <xs:enumeration value="Right"/>
+      <xs:enumeration value="Stretch"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="VerticalAlignment">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None"/>
+      <xs:enumeration value="Top"/>
+      <xs:enumeration value="Center"/>
+      <xs:enumeration value="Bottom"/>
+      <xs:enumeration value="Stretch"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ThicknessValue">
+    <xs:annotation>
+      <xs:documentation>
+        Thickness value for margin/padding.
+        Formats: "10" (uniform), "10,5" (horizontal,vertical), "10,5,10,5" (left,top,right,bottom)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\d+(\.\d+)?(,\d+(\.\d+)?){0,3}"/>
+    </xs:restriction>
+  </xs:simpleType>
 
   <xs:simpleType name="BindingExpression">
     <xs:annotation>
       <xs:documentation>
-        Expression de binding. Exemples:
+        Binding expression. Examples:
         - {Binding PropertyName}
         - {Binding PropertyName, Mode=TwoWay}
         - {Binding Path.To.Property, Mode=OneWay, Converter=MyConverter}
@@ -43,41 +77,341 @@
     <xs:union memberTypes="xs:string bvui:BindingExpression"/>
   </xs:simpleType>
 
-  <!-- ========== Base Control Attributes ========== -->
+  <xs:simpleType name="ChildAlignment">
+    <xs:annotation>
+      <xs:documentation>Child alignment within a LayoutGroup container</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="UpperLeft"/>
+      <xs:enumeration value="UpperCenter"/>
+      <xs:enumeration value="UpperRight"/>
+      <xs:enumeration value="MiddleLeft"/>
+      <xs:enumeration value="MiddleCenter"/>
+      <xs:enumeration value="MiddleRight"/>
+      <xs:enumeration value="LowerLeft"/>
+      <xs:enumeration value="LowerCenter"/>
+      <xs:enumeration value="LowerRight"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Orientation">
+    <xs:annotation>
+      <xs:documentation>Layout orientation for Panel containers</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None"/>
+      <xs:enumeration value="Vertical"/>
+      <xs:enumeration value="Horizontal"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TextAlignmentOptions">
+    <xs:annotation>
+      <xs:documentation>Text alignment options (maps to TMPro.TextAlignmentOptions)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Left"/>
+      <xs:enumeration value="Center"/>
+      <xs:enumeration value="Right"/>
+      <xs:enumeration value="Justified"/>
+      <xs:enumeration value="TopLeft"/>
+      <xs:enumeration value="Top"/>
+      <xs:enumeration value="TopRight"/>
+      <xs:enumeration value="MidlineLeft"/>
+      <xs:enumeration value="Midline"/>
+      <xs:enumeration value="MidlineRight"/>
+      <xs:enumeration value="BottomLeft"/>
+      <xs:enumeration value="Bottom"/>
+      <xs:enumeration value="BottomRight"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="InputFieldContentType">
+    <xs:annotation>
+      <xs:documentation>Input field content type for validation</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Standard"/>
+      <xs:enumeration value="Autocorrected"/>
+      <xs:enumeration value="IntegerNumber"/>
+      <xs:enumeration value="DecimalNumber"/>
+      <xs:enumeration value="Alphanumeric"/>
+      <xs:enumeration value="Name"/>
+      <xs:enumeration value="EmailAddress"/>
+      <xs:enumeration value="Password"/>
+      <xs:enumeration value="Pin"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FontStyles">
+    <xs:annotation>
+      <xs:documentation>Font style flags (maps to TMPro.FontStyles). Can be combined with | in code.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Normal"/>
+      <xs:enumeration value="Bold"/>
+      <xs:enumeration value="Italic"/>
+      <xs:enumeration value="Underline"/>
+      <xs:enumeration value="Strikethrough"/>
+      <xs:enumeration value="LowerCase"/>
+      <xs:enumeration value="UpperCase"/>
+      <xs:enumeration value="SmallCaps"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TextOverflowModes">
+    <xs:annotation>
+      <xs:documentation>Text overflow handling mode (maps to TMPro.TextOverflowModes)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Overflow"/>
+      <xs:enumeration value="Ellipsis"/>
+      <xs:enumeration value="Masking"/>
+      <xs:enumeration value="Truncate"/>
+      <xs:enumeration value="ScrollRect"/>
+      <xs:enumeration value="Page"/>
+      <xs:enumeration value="Linked"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- ============================================================ -->
+  <!-- ATTRIBUTE GROUPS                                             -->
+  <!-- ============================================================ -->
+
+  <xs:attributeGroup name="LayoutAttributes">
+    <xs:annotation>
+      <xs:documentation>Common layout attributes for all controls</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Width" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Width in pixels (-1 = auto)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Height" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Height in pixels (-1 = auto)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="MinWidth" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Minimum width in pixels</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="MinHeight" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Minimum height in pixels</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="MaxWidth" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Maximum width in pixels</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="MaxHeight" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Maximum height in pixels</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FlexibleWidth" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Flexible width for LayoutGroup expansion (0 = no expansion, higher = more expansion)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FlexibleHeight" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Flexible height for LayoutGroup expansion (0 = no expansion, higher = more expansion)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Margin" type="bvui:ThicknessValue" use="optional">
+      <xs:annotation>
+        <xs:documentation>Outer margin (left,top,right,bottom or uniform)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="HorizontalAlignment" type="bvui:HorizontalAlignment" use="optional">
+      <xs:annotation>
+        <xs:documentation>Horizontal alignment within parent</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="VerticalAlignment" type="bvui:VerticalAlignment" use="optional">
+      <xs:annotation>
+        <xs:documentation>Vertical alignment within parent</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
 
   <xs:attributeGroup name="BaseControlAttributes">
+    <xs:annotation>
+      <xs:documentation>Base attributes for all controls</xs:documentation>
+    </xs:annotation>
     <xs:attribute ref="x:Name" use="optional"/>
     <xs:attribute name="Alias" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>Référence à un prefab défini dans ui-aliases.json</xs:documentation>
+        <xs:documentation>Reference to a prefab defined in ui-aliases.json</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="IsEnabled" type="bvui:BooleanOrBinding" use="optional" default="true">
+    <xs:attribute name="IsEnabled" type="bvui:BooleanOrBinding" use="optional">
       <xs:annotation>
-        <xs:documentation>État activé/désactivé du contrôle</xs:documentation>
+        <xs:documentation>Whether the control is enabled</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="IsVisible" type="bvui:BooleanOrBinding" use="optional" default="true">
+    <xs:attribute name="IsVisible" type="bvui:BooleanOrBinding" use="optional">
       <xs:annotation>
-        <xs:documentation>Visibilité du contrôle</xs:documentation>
+        <xs:documentation>Whether the control is visible</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attributeGroup ref="bvui:LayoutAttributes"/>
   </xs:attributeGroup>
 
   <xs:attributeGroup name="TextControlAttributes">
+    <xs:annotation>
+      <xs:documentation>Text-related attributes for controls that display text</xs:documentation>
+    </xs:annotation>
     <xs:attribute name="Text" type="bvui:StringOrBinding" use="optional">
       <xs:annotation>
-        <xs:documentation>Texte affiché par le contrôle</xs:documentation>
+        <xs:documentation>Text displayed by the control</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:attributeGroup>
 
-  <!-- ========== Control Elements ========== -->
+  <xs:attributeGroup name="TextStyleAttributes">
+    <xs:annotation>
+      <xs:documentation>Text styling attributes (TMP properties)</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="FontSize" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Font size in points</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TextColor" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Text color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TextAlignment" type="bvui:TextAlignmentOptions" use="optional">
+      <xs:annotation>
+        <xs:documentation>Text alignment within the control</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FontStyle" type="bvui:FontStyles" use="optional">
+      <xs:annotation>
+        <xs:documentation>Font style (Bold, Italic, Underline, etc.)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CharacterSpacing" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Character spacing in EM units</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="LineSpacing" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Line spacing adjustment</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="WordSpacing" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Word spacing adjustment</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="WordWrapping" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Enable automatic word wrapping</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TextOverflow" type="bvui:TextOverflowModes" use="optional">
+      <xs:annotation>
+        <xs:documentation>Text overflow handling mode</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="RichText" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Enable rich text tag parsing</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="AutoSize" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Enable automatic font size adjustment</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="MinFontSize" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Minimum font size for auto-sizing</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="MaxFontSize" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Maximum font size for auto-sizing</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TextMargin" type="bvui:ThicknessValue" use="optional">
+      <xs:annotation>
+        <xs:documentation>Text margins (left,top,right,bottom or uniform)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
 
-  <!-- View (root element) -->
+  <xs:attributeGroup name="LayoutGroupAttributes">
+    <xs:annotation>
+      <xs:documentation>LayoutGroup attributes (Panel-specific)</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Background" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Background color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Orientation" type="bvui:Orientation" use="optional">
+      <xs:annotation>
+        <xs:documentation>LayoutGroup orientation (Vertical, Horizontal, or None)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Spacing" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Spacing between child elements</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Padding" type="bvui:ThicknessValue" use="optional">
+      <xs:annotation>
+        <xs:documentation>Inner padding of the container</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ChildAlignment" type="bvui:ChildAlignment" use="optional">
+      <xs:annotation>
+        <xs:documentation>Alignment of child elements within the container</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ChildControlWidth" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Whether the LayoutGroup controls children's width</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ChildControlHeight" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Whether the LayoutGroup controls children's height</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ChildForceExpandWidth" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Force children to expand to fill available width</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ChildForceExpandHeight" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Force children to expand to fill available height</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ReverseArrangement" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Reverse the order of child elements</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <!-- ============================================================ -->
+  <!-- VIEW ELEMENT                                                 -->
+  <!-- ============================================================ -->
+
   <xs:element name="View">
     <xs:annotation>
-      <xs:documentation>Élément racine d'une vue BVUI</xs:documentation>
+      <xs:documentation>Root element of a BVUI view</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -87,205 +421,469 @@
     </xs:complexType>
   </xs:element>
 
-  <!-- Group of all control elements -->
   <xs:group name="ControlElements">
+    <xs:annotation>
+      <xs:documentation>Group of all available control elements</xs:documentation>
+    </xs:annotation>
     <xs:choice>
       <xs:element ref="bvui:Panel"/>
+      <xs:element ref="bvui:ScrollView"/>
       <xs:element ref="bvui:Button"/>
       <xs:element ref="bvui:Toggle"/>
       <xs:element ref="bvui:Slider"/>
       <xs:element ref="bvui:TextBlock"/>
       <xs:element ref="bvui:InputField"/>
+      <xs:element ref="bvui:Dropdown"/>
+      <xs:element ref="bvui:Image"/>
+      <xs:element ref="bvui:IconButton"/>
     </xs:choice>
   </xs:group>
 
-  <!-- Panel -->
+  <!-- ============================================================ -->
+  <!-- PANEL CONTROL                                                -->
+  <!-- ============================================================ -->
+
   <xs:element name="Panel">
     <xs:annotation>
-      <xs:documentation>Conteneur pour d'autres contrôles</xs:documentation>
+      <xs:documentation>Container control with optional LayoutGroup for child arrangement</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attributeGroup ref="bvui:LayoutGroupAttributes"/>
     </xs:complexType>
   </xs:element>
 
-  <!-- Button -->
-  <xs:element name="Button">
+  <!-- ============================================================ -->
+  <!-- SCROLLVIEW CONTROL                                           -->
+  <!-- ============================================================ -->
+
+  <xs:element name="ScrollView">
     <xs:annotation>
-      <xs:documentation>Bouton cliquable</xs:documentation>
+      <xs:documentation>Scrollable container control with optional LayoutGroup for child arrangement</xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
-      <xs:attributeGroup ref="bvui:TextControlAttributes"/>
-      <xs:attribute name="Click" type="xs:NCName" use="optional">
+      <xs:attribute name="Background" type="xs:string" use="optional">
         <xs:annotation>
-          <xs:documentation>Nom de la méthode appelée au clic</xs:documentation>
+          <xs:documentation>Background color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Horizontal" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>Whether horizontal scrolling is enabled (default: false)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Vertical" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>Whether vertical scrolling is enabled (default: true)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Inertia" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>Whether inertia is enabled (content continues to move after drag)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="DecelerationRate" type="xs:float" use="optional">
+        <xs:annotation>
+          <xs:documentation>The scroll deceleration rate (0 = instant stop, 1 = never stops)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Elasticity" type="xs:float" use="optional">
+        <xs:annotation>
+          <xs:documentation>The elasticity when scrolling past bounds</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ScrollSensitivity" type="xs:float" use="optional">
+        <xs:annotation>
+          <xs:documentation>The scroll sensitivity for scroll wheel input</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Orientation" type="bvui:Orientation" use="optional">
+        <xs:annotation>
+          <xs:documentation>Content LayoutGroup orientation (Vertical, Horizontal, or None)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Spacing" type="xs:float" use="optional">
+        <xs:annotation>
+          <xs:documentation>Spacing between child elements in the content</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Padding" type="bvui:ThicknessValue" use="optional">
+        <xs:annotation>
+          <xs:documentation>Inner padding of the content area</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ChildAlignment" type="bvui:ChildAlignment" use="optional">
+        <xs:annotation>
+          <xs:documentation>Alignment of child elements within the content</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ChildControlWidth" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>Whether the LayoutGroup controls children's width</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ChildControlHeight" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>Whether the LayoutGroup controls children's height</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ChildForceExpandWidth" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>Force children to expand to fill available width</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ChildForceExpandHeight" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>Force children to expand to fill available height</xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>
   </xs:element>
 
-  <!-- Toggle -->
-  <xs:element name="Toggle">
+  <!-- ============================================================ -->
+  <!-- TEXT STYLE TYPE (for nested text styling)                    -->
+  <!-- ============================================================ -->
+
+  <xs:complexType name="TextStyleType">
     <xs:annotation>
-      <xs:documentation>Case à cocher / Toggle</xs:documentation>
+      <xs:documentation>Text style properties for control text and labels</xs:documentation>
+    </xs:annotation>
+    <xs:attributeGroup ref="bvui:TextStyleAttributes"/>
+  </xs:complexType>
+
+  <!-- ============================================================ -->
+  <!-- BUTTON CONTROL                                               -->
+  <!-- ============================================================ -->
+
+  <xs:element name="Button">
+    <xs:annotation>
+      <xs:documentation>Clickable button control. Can contain child elements for overlay.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Button.TextStyle" type="bvui:TextStyleType" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Style properties for the button's text label</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
       <xs:attributeGroup ref="bvui:TextControlAttributes"/>
-      <xs:attribute name="IsOn" type="bvui:BooleanOrBinding" use="optional" default="false">
+      <xs:attribute name="Background" type="xs:string" use="optional">
         <xs:annotation>
-          <xs:documentation>État coché/décoché du toggle</xs:documentation>
+          <xs:documentation>Background color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Click" type="xs:NCName" use="optional">
+        <xs:annotation>
+          <xs:documentation>Name of the method called on click</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ============================================================ -->
+  <!-- TOGGLE CONTROL                                               -->
+  <!-- ============================================================ -->
+
+  <xs:element name="Toggle">
+    <xs:annotation>
+      <xs:documentation>Checkbox / Toggle control. Can contain child elements for overlay.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Toggle.TextStyle" type="bvui:TextStyleType" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Style properties for the toggle's text label</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attributeGroup ref="bvui:TextControlAttributes"/>
+      <xs:attribute name="IsOn" type="bvui:BooleanOrBinding" use="optional">
+        <xs:annotation>
+          <xs:documentation>Whether the toggle is checked</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="Value" type="bvui:BooleanOrBinding" use="optional">
         <xs:annotation>
-          <xs:documentation>Alias pour IsOn</xs:documentation>
+          <xs:documentation>Alias for IsOn</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="ValueChanged" type="xs:NCName" use="optional">
         <xs:annotation>
-          <xs:documentation>Nom de la méthode appelée au changement de valeur (reçoit bool)</xs:documentation>
+          <xs:documentation>Name of the method called on value change (receives bool)</xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>
   </xs:element>
 
-  <!-- Slider -->
+  <!-- ============================================================ -->
+  <!-- SLIDER CONTROL                                               -->
+  <!-- ============================================================ -->
+
   <xs:element name="Slider">
     <xs:annotation>
-      <xs:documentation>Curseur pour valeurs numériques</xs:documentation>
+      <xs:documentation>Slider control for numeric values. Can contain child elements for overlay.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Slider.TextStyle" type="bvui:TextStyleType" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Style properties for the slider's text label</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
       <xs:attributeGroup ref="bvui:TextControlAttributes"/>
-      <xs:attribute name="Value" type="bvui:FloatOrBinding" use="optional" default="0">
+      <xs:attribute name="Value" type="bvui:FloatOrBinding" use="optional">
         <xs:annotation>
-          <xs:documentation>Valeur actuelle du slider</xs:documentation>
+          <xs:documentation>Current slider value</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="MinValue" type="xs:float" use="optional" default="0">
+      <xs:attribute name="MinValue" type="xs:float" use="optional">
         <xs:annotation>
-          <xs:documentation>Valeur minimale</xs:documentation>
+          <xs:documentation>Minimum value</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="MaxValue" type="xs:float" use="optional" default="1">
+      <xs:attribute name="MaxValue" type="xs:float" use="optional">
         <xs:annotation>
-          <xs:documentation>Valeur maximale</xs:documentation>
+          <xs:documentation>Maximum value</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="WholeNumbers" type="xs:boolean" use="optional" default="false">
+      <xs:attribute name="WholeNumbers" type="xs:boolean" use="optional">
         <xs:annotation>
-          <xs:documentation>Restreindre aux nombres entiers</xs:documentation>
+          <xs:documentation>Restrict to whole numbers only</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="ValueFormat" type="xs:string" use="optional" default="{0:F1}">
+      <xs:attribute name="ValueFormat" type="xs:string" use="optional">
         <xs:annotation>
-          <xs:documentation>Format d'affichage de la valeur (ex: {0:F2})</xs:documentation>
+          <xs:documentation>Value display format (e.g., {0:F2})</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="ValueChanged" type="xs:NCName" use="optional">
         <xs:annotation>
-          <xs:documentation>Nom de la méthode appelée au changement de valeur (reçoit float)</xs:documentation>
+          <xs:documentation>Name of the method called on value change (receives float)</xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>
   </xs:element>
 
-  <!-- TextBlock -->
+  <!-- ============================================================ -->
+  <!-- TEXTBLOCK CONTROL                                            -->
+  <!-- ============================================================ -->
+
   <xs:element name="TextBlock">
     <xs:annotation>
-      <xs:documentation>Affichage de texte statique ou lié</xs:documentation>
+      <xs:documentation>Static or bound text display with full TMP styling support. Can contain child elements for overlay.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
       <xs:attributeGroup ref="bvui:TextControlAttributes"/>
-      <xs:attribute name="FontSize" type="xs:float" use="optional">
-        <xs:annotation>
-          <xs:documentation>Taille de la police</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="TextColor" type="xs:string" use="optional">
-        <xs:annotation>
-          <xs:documentation>Couleur du texte (format: #RRGGBB ou #RRGGBBAA)</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="TextAlignment" use="optional">
-        <xs:annotation>
-          <xs:documentation>Alignement du texte</xs:documentation>
-        </xs:annotation>
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="Left"/>
-            <xs:enumeration value="Center"/>
-            <xs:enumeration value="Right"/>
-            <xs:enumeration value="Justified"/>
-            <xs:enumeration value="TopLeft"/>
-            <xs:enumeration value="Top"/>
-            <xs:enumeration value="TopRight"/>
-            <xs:enumeration value="MidlineLeft"/>
-            <xs:enumeration value="Midline"/>
-            <xs:enumeration value="MidlineRight"/>
-            <xs:enumeration value="BottomLeft"/>
-            <xs:enumeration value="Bottom"/>
-            <xs:enumeration value="BottomRight"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
+      <xs:attributeGroup ref="bvui:TextStyleAttributes"/>
     </xs:complexType>
   </xs:element>
 
-  <!-- InputField -->
+  <!-- ============================================================ -->
+  <!-- INPUTFIELD CONTROL                                           -->
+  <!-- ============================================================ -->
+
   <xs:element name="InputField">
     <xs:annotation>
-      <xs:documentation>Champ de saisie texte</xs:documentation>
+      <xs:documentation>Text input field control. Can contain child elements for overlay.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:sequence>
+        <xs:element name="InputField.TextStyle" type="bvui:TextStyleType" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Style properties for the input text</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="InputField.PlaceholderStyle" type="bvui:TextStyleType" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Style properties for the placeholder text</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
       <xs:attribute name="Text" type="bvui:StringOrBinding" use="optional">
         <xs:annotation>
-          <xs:documentation>Texte saisi</xs:documentation>
+          <xs:documentation>Input text value</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="Value" type="bvui:StringOrBinding" use="optional">
         <xs:annotation>
-          <xs:documentation>Alias pour Text</xs:documentation>
+          <xs:documentation>Alias for Text</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="Placeholder" type="xs:string" use="optional">
         <xs:annotation>
-          <xs:documentation>Texte affiché quand le champ est vide</xs:documentation>
+          <xs:documentation>Placeholder text shown when empty</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="CharacterLimit" type="xs:int" use="optional" default="0">
+      <xs:attribute name="CharacterLimit" type="xs:int" use="optional">
         <xs:annotation>
-          <xs:documentation>Limite de caractères (0 = illimité)</xs:documentation>
+          <xs:documentation>Character limit (0 = unlimited)</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="ContentType" use="optional" default="Standard">
+      <xs:attribute name="ContentType" type="bvui:InputFieldContentType" use="optional">
         <xs:annotation>
-          <xs:documentation>Type de contenu attendu</xs:documentation>
+          <xs:documentation>Expected content type for validation</xs:documentation>
         </xs:annotation>
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="Standard"/>
-            <xs:enumeration value="Autocorrected"/>
-            <xs:enumeration value="IntegerNumber"/>
-            <xs:enumeration value="DecimalNumber"/>
-            <xs:enumeration value="Alphanumeric"/>
-            <xs:enumeration value="Name"/>
-            <xs:enumeration value="EmailAddress"/>
-            <xs:enumeration value="Password"/>
-            <xs:enumeration value="Pin"/>
-          </xs:restriction>
-        </xs:simpleType>
       </xs:attribute>
       <xs:attribute name="ValueChanged" type="xs:NCName" use="optional">
         <xs:annotation>
-          <xs:documentation>Nom de la méthode appelée au changement de valeur (reçoit string)</xs:documentation>
+          <xs:documentation>Name of the method called on value change (receives string)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ============================================================ -->
+  <!-- DROPDOWN CONTROL                                             -->
+  <!-- ============================================================ -->
+
+  <xs:element name="Dropdown">
+    <xs:annotation>
+      <xs:documentation>Dropdown/combobox control for selecting from a list of options. Can contain child elements for overlay.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Dropdown.TextStyle" type="bvui:TextStyleType" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Style properties for the dropdown's text label</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attributeGroup ref="bvui:TextControlAttributes"/>
+      <xs:attribute name="Options" type="bvui:BindingExpression" use="optional">
+        <xs:annotation>
+          <xs:documentation>Binding to IEnumerable&lt;string&gt; for dropdown options</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="SelectedIndex" type="xs:int" use="optional">
+        <xs:annotation>
+          <xs:documentation>The selected option index (0-based)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Value" type="xs:int" use="optional">
+        <xs:annotation>
+          <xs:documentation>Alias for SelectedIndex</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ValueChanged" type="xs:NCName" use="optional">
+        <xs:annotation>
+          <xs:documentation>Name of the method called on selection change (receives int)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="SelectedIndexChanged" type="xs:NCName" use="optional">
+        <xs:annotation>
+          <xs:documentation>Alias for ValueChanged</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ============================================================ -->
+  <!-- IMAGE CONTROL                                                -->
+  <!-- ============================================================ -->
+
+  <xs:simpleType name="ImageType">
+    <xs:annotation>
+      <xs:documentation>Image display type (maps to UnityEngine.UI.Image.Type)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Simple"/>
+      <xs:enumeration value="Sliced"/>
+      <xs:enumeration value="Tiled"/>
+      <xs:enumeration value="Filled"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="Image">
+    <xs:annotation>
+      <xs:documentation>Image control that can display images from embedded resources or sprites.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attribute name="Source" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Embedded resource name or path (e.g., "MyNamespace.Images.logo.png" or "logo.png")</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Color" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Tint color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="PreserveAspect" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>Whether to preserve the aspect ratio of the image</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ImageType" type="bvui:ImageType" use="optional">
+        <xs:annotation>
+          <xs:documentation>Image display type (Simple, Sliced, Tiled, Filled)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="RaycastTarget" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>Whether the image should receive raycasts for UI interaction</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ============================================================ -->
+  <!-- ICONBUTTON CONTROL                                           -->
+  <!-- ============================================================ -->
+
+  <xs:element name="IconButton">
+    <xs:annotation>
+      <xs:documentation>A button that displays an icon instead of text.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attribute name="Source" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Embedded resource name or path for the icon</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Color" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Image tint color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="PreserveAspect" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>Whether to preserve the aspect ratio of the icon</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Click" type="xs:NCName" use="optional">
+        <xs:annotation>
+          <xs:documentation>Name of the method called on click</xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>

@@ -1,6 +1,5 @@
 using System;
 using BetterVanilla.Ui.Core;
-using UnityEngine;
 
 namespace BetterVanilla.Ui.Views;
 
@@ -12,6 +11,7 @@ public partial class OptionsView : BaseView
 {
     public event Action? SettingsSaved;
     public event Action? Cancelled;
+    public event Action? Closed;
 
     /// <summary>
     /// Gets the typed ViewModel.
@@ -33,7 +33,7 @@ public partial class OptionsView : BaseView
         // Update UI when ViewModel changes
         if (newDataContext is OptionsViewModel vm)
         {
-            Debug.Log($"OptionsView bound to ViewModel: Feature={vm.IsFeatureEnabled}, Volume={vm.Volume}");
+            Plugin.Instance.Log.LogMessage($"OptionsView bound to ViewModel: Feature={vm.IsFeatureEnabled}, Volume={vm.Volume}");
         }
     }
 
@@ -41,30 +41,42 @@ public partial class OptionsView : BaseView
 
     partial void OnFeatureToggleChanged(bool value)
     {
-        Debug.Log($"Feature toggle changed to: {value}");
+        Plugin.Instance.Log.LogMessage($"Feature toggle changed to: {value}");
     }
 
     partial void OnVolumeChanged(float value)
     {
-        Debug.Log($"Volume changed to: {value:F2}");
+        Plugin.Instance.Log.LogMessage($"Volume changed to: {value:F2}");
     }
 
     partial void OnUsernameChanged(string value)
     {
-        Debug.Log($"Username changed to: {value}");
+        Plugin.Instance.Log.LogMessage($"Username changed to: {value}");
+    }
+
+    partial void OnDifficultyChanged(int value)
+    {
+        Plugin.Instance.Log.LogMessage($"Difficulty changed to: {value}");
     }
 
     partial void OnSaveClicked()
     {
         ViewModel.SaveSettings();
         SettingsSaved?.Invoke();
-        Debug.Log("Settings saved!");
+        Plugin.Instance.Log.LogMessage("Settings saved!");
     }
 
     partial void OnCancelClicked()
     {
         ViewModel.ResetToDefaults();
         Cancelled?.Invoke();
-        Debug.Log("Settings cancelled.");
+        Plugin.Instance.Log.LogMessage("Settings cancelled.");
+    }
+
+    partial void OnCloseClicked()
+    {
+        Plugin.Instance.Log.LogMessage("Close button clicked, destroying view.");
+        Closed?.Invoke();
+        Destroy(gameObject);
     }
 }
