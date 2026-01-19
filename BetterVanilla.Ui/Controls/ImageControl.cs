@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using BetterVanilla.Ui.Components;
+using BetterVanilla.Ui.Core;
 using Il2CppInterop.Runtime.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,9 +12,10 @@ namespace BetterVanilla.Ui.Controls;
 /// <summary>
 /// Image control that can display images from embedded resources or sprites.
 /// </summary>
-public sealed class ImageControl : BaseControl
+public sealed class ImageControl : BaseControl, IShadowControl
 {
     private ImageComponent? _component;
+    private ShadowHelper? _shadow;
     private string? _source;
     private Assembly? _sourceAssembly;
 
@@ -127,10 +129,39 @@ public sealed class ImageControl : BaseControl
         }
     }
 
+    #region IShadowControl
+
+    public bool ShadowEnabled
+    {
+        get => _shadow?.Enabled ?? false;
+        set { if (_shadow != null) _shadow.Enabled = value; }
+    }
+
+    public Color ShadowColor
+    {
+        get => _shadow?.Color ?? new Color(0, 0, 0, 0.5f);
+        set { if (_shadow != null) _shadow.Color = value; }
+    }
+
+    public Vector2 ShadowDistance
+    {
+        get => _shadow?.Distance ?? new Vector2(1, -1);
+        set { if (_shadow != null) _shadow.Distance = value; }
+    }
+
+    public bool ShadowUseGraphicAlpha
+    {
+        get => _shadow?.UseGraphicAlpha ?? true;
+        set { if (_shadow != null) _shadow.UseGraphicAlpha = value; }
+    }
+
+    #endregion
+
     protected override void Awake()
     {
         base.Awake();
         _component = GetComponent<ImageComponent>();
+        _shadow = new ShadowHelper(_component?.shadow);
     }
 
     private void LoadImageFromSource()

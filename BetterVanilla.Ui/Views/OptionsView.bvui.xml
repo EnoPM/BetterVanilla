@@ -50,11 +50,12 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     Margin="0,0,0,50"
-                    PressedColor="#FF0000"
-                    HighlightedColor="#FF0000"
-                    SelectedColor="#FF0000"
-                    DisabledColor="#00FF00"
-                    Text="Devenir un sponsor"/>
+                    ShadowEnabled="true"
+                    ShadowDistance="2,-2"
+                    ShadowColor="#000000F0"
+                    Text="Devenir un sponsor">
+                <Button.TextStyle AutoSize="true" TextMargin="20,0" />
+            </Button>
         </Image>
 
 

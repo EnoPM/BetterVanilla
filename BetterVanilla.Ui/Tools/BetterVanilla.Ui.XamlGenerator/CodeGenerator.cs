@@ -577,11 +577,15 @@ public sealed class CodeGenerator
     // Known color properties that need parsing
     private static readonly HashSet<string> ColorProperties = [
         "TextColor", "Background", "Color",
-        "NormalColor", "HighlightedColor", "PressedColor", "SelectedColor", "DisabledColor"
+        "NormalColor", "HighlightedColor", "PressedColor", "SelectedColor", "DisabledColor",
+        "ShadowColor"
     ];
 
     // Known margin/vector properties that need parsing
     private static readonly HashSet<string> MarginProperties = ["TextMargin"];
+
+    // Known shadow distance properties that need special parsing
+    private static readonly HashSet<string> ShadowDistanceProperties = ["ShadowDistance"];
 
     private static string FormatPropertyValue(string propName, string value)
     {
@@ -601,6 +605,12 @@ public sealed class CodeGenerator
         if (MarginProperties.Contains(propName))
         {
             return $"LabelStyleHelper.ParseMargin(\"{value}\")";
+        }
+
+        // Check if it's a shadow distance property
+        if (ShadowDistanceProperties.Contains(propName))
+        {
+            return $"ShadowHelper.ParseDistance(\"{value}\")";
         }
 
         // Try to parse as bool

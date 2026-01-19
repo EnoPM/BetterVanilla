@@ -390,6 +390,32 @@
     </xs:attribute>
   </xs:attributeGroup>
 
+  <xs:attributeGroup name="ShadowAttributes">
+    <xs:annotation>
+      <xs:documentation>Shadow effect attributes for controls with Unity Shadow component</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="ShadowEnabled" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Whether the shadow effect is enabled (default: false)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ShadowColor" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Shadow color (format: #RGB, #RRGGBB, or #RRGGBBAA. Default: #00000080)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ShadowDistance" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Shadow offset (format: "5" for uniform or "5,-5" for x,y. Default: "1,-1")</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ShadowUseGraphicAlpha" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Whether to use the graphic's alpha for the shadow (default: true)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
   <xs:attributeGroup name="LayoutGroupAttributes">
     <xs:annotation>
       <xs:documentation>LayoutGroup attributes (Panel-specific)</xs:documentation>
@@ -494,6 +520,7 @@
       </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
       <xs:attributeGroup ref="bvui:LayoutGroupAttributes"/>
+      <xs:attributeGroup ref="bvui:ShadowAttributes"/>
     </xs:complexType>
   </xs:element>
 
@@ -619,6 +646,7 @@
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
       <xs:attributeGroup ref="bvui:TextControlAttributes"/>
       <xs:attributeGroup ref="bvui:ButtonColorsAttributes"/>
+      <xs:attributeGroup ref="bvui:ShadowAttributes"/>
       <xs:attribute name="Background" type="xs:string" use="optional">
         <xs:annotation>
           <xs:documentation>Background color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
@@ -751,6 +779,7 @@
         <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attributeGroup ref="bvui:ShadowAttributes"/>
       <xs:attribute name="Text" type="bvui:StringOrBinding" use="optional">
         <xs:annotation>
           <xs:documentation>Input text value</xs:documentation>
@@ -856,6 +885,7 @@
         <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attributeGroup ref="bvui:ShadowAttributes"/>
       <xs:attribute name="Source" type="xs:string" use="optional">
         <xs:annotation>
           <xs:documentation>Embedded resource name or path (e.g., "MyNamespace.Images.logo.png" or "logo.png")</xs:documentation>
@@ -898,6 +928,7 @@
       </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
       <xs:attributeGroup ref="bvui:ButtonColorsAttributes"/>
+      <xs:attributeGroup ref="bvui:ShadowAttributes"/>
       <xs:attribute name="Source" type="xs:string" use="optional">
         <xs:annotation>
           <xs:documentation>Embedded resource name or path for the icon</xs:documentation>

@@ -11,11 +11,12 @@ namespace BetterVanilla.Ui.Controls;
 /// <summary>
 /// A button control that can be clicked.
 /// </summary>
-public sealed class ButtonControl : BaseControl, ILabelStyleControl, IButtonColorsControl
+public sealed class ButtonControl : BaseControl, ILabelStyleControl, IButtonColorsControl, IShadowControl
 {
     private ButtonComponent? _component;
     private LabelStyleHelper? _labelStyle;
     private ButtonColorsHelper? _buttonColors;
+    private ShadowHelper? _shadow;
     private readonly BindableProperty<string> _textProperty = new();
 
     public event Action? Clicked;
@@ -190,6 +191,34 @@ public sealed class ButtonControl : BaseControl, ILabelStyleControl, IButtonColo
 
     #endregion
 
+    #region IShadowControl
+
+    public bool ShadowEnabled
+    {
+        get => _shadow?.Enabled ?? false;
+        set { if (_shadow != null) _shadow.Enabled = value; }
+    }
+
+    public Color ShadowColor
+    {
+        get => _shadow?.Color ?? new Color(0, 0, 0, 0.5f);
+        set { if (_shadow != null) _shadow.Color = value; }
+    }
+
+    public Vector2 ShadowDistance
+    {
+        get => _shadow?.Distance ?? new Vector2(1, -1);
+        set { if (_shadow != null) _shadow.Distance = value; }
+    }
+
+    public bool ShadowUseGraphicAlpha
+    {
+        get => _shadow?.UseGraphicAlpha ?? true;
+        set { if (_shadow != null) _shadow.UseGraphicAlpha = value; }
+    }
+
+    #endregion
+
     public override bool IsEnabled
     {
         get => base.IsEnabled;
@@ -209,6 +238,7 @@ public sealed class ButtonControl : BaseControl, ILabelStyleControl, IButtonColo
         _component = GetComponent<ButtonComponent>();
         _labelStyle = new LabelStyleHelper(_component?.buttonText);
         _buttonColors = new ButtonColorsHelper(_component?.button);
+        _shadow = new ShadowHelper(_component?.shadow);
 
         if (_component != null)
         {

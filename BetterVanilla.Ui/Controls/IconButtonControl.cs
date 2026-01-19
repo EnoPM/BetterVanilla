@@ -12,10 +12,11 @@ namespace BetterVanilla.Ui.Controls;
 /// A button control that displays an icon instead of text.
 /// The icon is displayed as the button's background image.
 /// </summary>
-public sealed class IconButtonControl : BaseControl, IButtonColorsControl
+public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShadowControl
 {
     private IconButtonComponent? _component;
     private ButtonColorsHelper? _buttonColors;
+    private ShadowHelper? _shadow;
     private string? _source;
     private Assembly? _sourceAssembly;
     private Color? _pendingColor;
@@ -160,6 +161,34 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl
 
     #endregion
 
+    #region IShadowControl
+
+    public bool ShadowEnabled
+    {
+        get => _shadow?.Enabled ?? false;
+        set { if (_shadow != null) _shadow.Enabled = value; }
+    }
+
+    public Color ShadowColor
+    {
+        get => _shadow?.Color ?? new Color(0, 0, 0, 0.5f);
+        set { if (_shadow != null) _shadow.Color = value; }
+    }
+
+    public Vector2 ShadowDistance
+    {
+        get => _shadow?.Distance ?? new Vector2(1, -1);
+        set { if (_shadow != null) _shadow.Distance = value; }
+    }
+
+    public bool ShadowUseGraphicAlpha
+    {
+        get => _shadow?.UseGraphicAlpha ?? true;
+        set { if (_shadow != null) _shadow.UseGraphicAlpha = value; }
+    }
+
+    #endregion
+
     public override bool IsEnabled
     {
         get => base.IsEnabled;
@@ -178,6 +207,7 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl
         base.Awake();
         _component = GetComponent<IconButtonComponent>();
         _buttonColors = new ButtonColorsHelper(_component?.button);
+        _shadow = new ShadowHelper(_component?.shadow);
 
         if (_component != null)
         {

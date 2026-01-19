@@ -36,9 +36,10 @@ public enum Orientation
 /// <summary>
 /// A container control that can hold child controls.
 /// </summary>
-public sealed class PanelControl : BaseControl, IContainerControl
+public sealed class PanelControl : BaseControl, IContainerControl, IShadowControl
 {
     private PanelComponent? _component;
+    private ShadowHelper? _shadow;
     private readonly List<IViewControl> _children = [];
     private HorizontalOrVerticalLayoutGroup? _layoutGroup;
     private Orientation _orientation = Orientation.None;
@@ -317,10 +318,39 @@ public sealed class PanelControl : BaseControl, IContainerControl
 
     #endregion
 
+    #region IShadowControl
+
+    public bool ShadowEnabled
+    {
+        get => _shadow?.Enabled ?? false;
+        set { if (_shadow != null) _shadow.Enabled = value; }
+    }
+
+    public Color ShadowColor
+    {
+        get => _shadow?.Color ?? new Color(0, 0, 0, 0.5f);
+        set { if (_shadow != null) _shadow.Color = value; }
+    }
+
+    public Vector2 ShadowDistance
+    {
+        get => _shadow?.Distance ?? new Vector2(1, -1);
+        set { if (_shadow != null) _shadow.Distance = value; }
+    }
+
+    public bool ShadowUseGraphicAlpha
+    {
+        get => _shadow?.UseGraphicAlpha ?? true;
+        set { if (_shadow != null) _shadow.UseGraphicAlpha = value; }
+    }
+
+    #endregion
+
     protected override void Awake()
     {
         base.Awake();
         _component = GetComponent<PanelComponent>();
+        _shadow = new ShadowHelper(_component?.shadow);
     }
 
     public void AddChild(IViewControl child)

@@ -264,3 +264,29 @@ public interface IButtonColorsControl : IClickableControl
     /// </summary>
     float FadeDuration { get; set; }
 }
+
+/// <summary>
+/// Interface for controls that have a Shadow effect.
+/// </summary>
+public interface IShadowControl : IViewControl
+{
+    /// <summary>
+    /// Whether the shadow is enabled/visible.
+    /// </summary>
+    bool ShadowEnabled { get; set; }
+
+    /// <summary>
+    /// The color of the shadow effect.
+    /// </summary>
+    Color ShadowColor { get; set; }
+
+    /// <summary>
+    /// The offset distance of the shadow (X, Y).
+    /// </summary>
+    Vector2 ShadowDistance { get; set; }
+
+    /// <summary>
+    /// Whether to use the graphic's alpha for the shadow.
+    /// </summary>
+    bool ShadowUseGraphicAlpha { get; set; }
+}

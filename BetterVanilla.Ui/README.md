@@ -326,6 +326,27 @@ Les boutons supportent les couleurs de transition Unity pour les différents ét
 |-----------|-----------|-------------------|
 | `Clicked` | `Action`  | Déclenché au clic |
 
+#### Effet d'ombre (Shadow)
+
+Les boutons supportent les effets d'ombre Unity :
+
+```xml
+<Button x:Name="shadowButton"
+        Text="Button with Shadow"
+        ShadowEnabled="true"
+        ShadowColor="#00000080"
+        ShadowDistance="2,-2"
+        ShadowUseGraphicAlpha="true"
+        Click="OnClick" />
+```
+
+| Propriété              | Type      | Description                                           |
+|------------------------|-----------|-------------------------------------------------------|
+| `ShadowEnabled`        | `bool`    | Active/désactive l'ombre (défaut: false)              |
+| `ShadowColor`          | `Color`   | Couleur de l'ombre (#RGB, #RRGGBB, ou #RRGGBBAA)      |
+| `ShadowDistance`       | `string`  | Décalage: "5" (uniforme) ou "5,-5" (x,y)              |
+| `ShadowUseGraphicAlpha`| `bool`    | Utiliser l'alpha du graphique pour l'ombre            |
+
 ### ToggleControl
 
 Case à cocher / Toggle.
@@ -407,6 +428,8 @@ Champ de saisi texte.
 |----------------|------------------|---------------------------------|
 | `ValueChanged` | `Action<string>` | Déclenché à chaque modification |
 
+InputFieldControl supporte également les [effets d'ombre](#effet-dombre-shadow).
+
 ### PanelControl
 
 Conteneur pour d'autres contrôles avec support de layout (LayoutGroup).
@@ -440,6 +463,8 @@ Conteneur pour d'autres contrôles avec support de layout (LayoutGroup).
 | `ReverseArrangement`   | `bool`           | Inverse l'ordre des enfants                          |
 
 **Valeurs de ChildAlignment :** `UpperLeft`, `UpperCenter`, `UpperRight`, `MiddleLeft`, `MiddleCenter`, `MiddleRight`, `LowerLeft`, `LowerCenter`, `LowerRight`
+
+PanelControl supporte également les [effets d'ombre](#effet-dombre-shadow).
 
 ### DropdownControl
 
@@ -556,6 +581,8 @@ Affichage d'images.
 | `ImageType`     | `ImageType` | Type: `Simple`, `Sliced`, `Tiled`, `Filled`    |
 | `FillCenter`    | `bool`      | Remplir le centre (pour Sliced)                |
 
+ImageControl supporte également les [effets d'ombre](#effet-dombre-shadow).
+
 ### IconButtonControl
 
 Bouton avec icône.
@@ -574,7 +601,7 @@ Bouton avec icône.
 | `Color`         | `Color`     | Teinte/couleur de l'icône         |
 | `PreserveAspect`| `bool`      | Conserver le ratio d'aspect       |
 
-IconButtonControl supporte également les [couleurs de transition](#couleurs-de-transition-colorblock) comme ButtonControl.
+IconButtonControl supporte également les [couleurs de transition](#couleurs-de-transition-colorblock) et les [effets d'ombre](#effet-dombre-shadow) comme ButtonControl.
 
 | Événement | Signature | Description       |
 |-----------|-----------|-------------------|
