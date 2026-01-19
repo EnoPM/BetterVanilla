@@ -48,19 +48,20 @@
           BeforeTargets="CoreCompile"
           Condition="'$(EnableBvuiGeneration)' == 'true'">
 
-    <!-- Find all generated .g.cs files (exclude obj folder) -->
+    <!-- Find all generated .g.cs files from our output path -->
     <ItemGroup>
-      <BvuiGeneratedFile Include="$(BvuiGeneratedOutputPath)\**\*.g.cs" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**;obj\**;bin\**" />
+      <BvuiGeneratedFile Include="$(BvuiGeneratedOutputPath)\**\*.g.cs" />
     </ItemGroup>
 
     <!-- Add to compilation -->
     <ItemGroup>
       <Compile Include="@(BvuiGeneratedFile)" Condition="'@(BvuiGeneratedFile)' != ''">
         <AutoGen>true</AutoGen>
+        <DependentUpon>%(Filename).bvui.xml</DependentUpon>
       </Compile>
     </ItemGroup>
 
-    <Message Text="BetterVanilla.Ui: Added @(BvuiGeneratedFile->Count()) generated file(s) to compilation."
+    <Message Text="BetterVanilla.Ui: Added @(BvuiGeneratedFile->Count()) generated file(s) to compilation from $(BvuiGeneratedOutputPath)"
              Importance="high"
              Condition="'@(BvuiGeneratedFile)' != ''" />
   </Target>

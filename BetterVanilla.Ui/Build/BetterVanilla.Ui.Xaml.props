@@ -15,8 +15,9 @@
     <!-- Default aliases file -->
     <BvuiAliasesFile Condition="'$(BvuiAliasesFile)' == ''">$(MSBuildProjectDirectory)\ui-aliases.json</BvuiAliasesFile>
 
-    <!-- Output directory for generated files (in project folder, not obj) -->
-    <BvuiGeneratedOutputPath Condition="'$(BvuiGeneratedOutputPath)' == ''">$(MSBuildProjectDirectory)\BvuiGenerated</BvuiGeneratedOutputPath>
+    <!-- Output directory for generated files (in obj folder, like MSBuild source generators) -->
+    <!-- Use obj\BvuiGenerated directly to avoid config-specific duplication -->
+    <BvuiGeneratedOutputPath Condition="'$(BvuiGeneratedOutputPath)' == ''">$(MSBuildProjectDirectory)\obj\BvuiGenerated</BvuiGeneratedOutputPath>
 
     <!-- Verbose output -->
     <BvuiVerbose Condition="'$(BvuiVerbose)' == ''">false</BvuiVerbose>
@@ -33,10 +34,9 @@
     <None Include="@(BvuiFile)" />
   </ItemGroup>
 
-  <!-- Exclude generated files from default SDK globbing (we add them explicitly) -->
+  <!-- Exclude generated files from default SDK globbing (we add them explicitly in targets) -->
   <ItemGroup>
     <Compile Remove="$(BvuiGeneratedOutputPath)\**\*.cs" />
-    <Compile Remove="BvuiGenerated\**\*.cs" />
   </ItemGroup>
 
 </Project>
