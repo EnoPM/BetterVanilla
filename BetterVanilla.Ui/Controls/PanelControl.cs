@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,6 +38,7 @@ public enum Orientation
 /// </summary>
 public sealed class PanelControl : BaseControl, IContainerControl
 {
+    private PanelComponent? _component;
     private readonly List<IViewControl> _children = [];
     private HorizontalOrVerticalLayoutGroup? _layoutGroup;
     private Orientation _orientation = Orientation.None;
@@ -256,10 +258,8 @@ public sealed class PanelControl : BaseControl, IContainerControl
 
     #region Background
 
-    private Image? _backgroundImage;
-
     /// <summary>
-    /// Background color of the panel. Setting this will add an Image component if not present.
+    /// Background color of the panel.
     /// </summary>
     public Color? Background
     {
@@ -273,18 +273,8 @@ public sealed class PanelControl : BaseControl, IContainerControl
 
     private void ApplyBackground()
     {
-        if (!Background.HasValue) return;
-
-        if (_backgroundImage == null)
-        {
-            _backgroundImage = GetComponent<Image>();
-            if (_backgroundImage == null)
-            {
-                _backgroundImage = gameObject.AddComponent<Image>();
-            }
-        }
-
-        _backgroundImage.color = Background.Value;
+        if (!Background.HasValue || _component == null) return;
+        _component.background.color = Background.Value;
     }
 
     /// <summary>
@@ -326,6 +316,12 @@ public sealed class PanelControl : BaseControl, IContainerControl
     }
 
     #endregion
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _component = GetComponent<PanelComponent>();
+    }
 
     public void AddChild(IViewControl child)
     {

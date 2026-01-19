@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BetterVanilla.Ui.Binding;
+using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using TMPro;
 using UnityEngine;
@@ -12,8 +13,7 @@ namespace BetterVanilla.Ui.Controls;
 /// </summary>
 public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelStyleControl
 {
-    private TMP_Dropdown? _dropdown;
-    private TMP_Text? _labelText;
+    private DropdownComponent? _component;
     private LabelStyleHelper? _labelStyle;
     private readonly BindableProperty<int> _selectedIndexProperty = new();
     private readonly BindableProperty<string> _textProperty = new();
@@ -27,12 +27,12 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
     /// </summary>
     public int Value
     {
-        get => _dropdown?.value ?? -1;
+        get => _component?.dropdown.value ?? -1;
         set
         {
-            if (_dropdown != null && _dropdown.value != value)
+            if (_component != null && _component.dropdown.value != value)
             {
-                _dropdown.value = value;
+                _component.dropdown.value = value;
             }
         }
     }
@@ -53,9 +53,9 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
     {
         get
         {
-            if (_dropdown == null || _dropdown.options.Count == 0 || _dropdown.value < 0)
+            if (_component == null || _component.dropdown.options.Count == 0 || _component.dropdown.value < 0)
                 return string.Empty;
-            return _dropdown.options[_dropdown.value].text;
+            return _component.dropdown.options[_component.dropdown.value].text;
         }
     }
 
@@ -64,12 +64,12 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
     /// </summary>
     public string Text
     {
-        get => _labelText != null ? _labelText.text : string.Empty;
+        get => _component != null ? _component.label.text : string.Empty;
         set
         {
-            if (_labelText != null)
+            if (_component != null)
             {
-                _labelText.text = value;
+                _component.label.text = value;
             }
             _textProperty.Value = value;
         }
@@ -83,9 +83,9 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
         get
         {
             var result = new List<string>();
-            if (_dropdown != null)
+            if (_component != null)
             {
-                foreach (var option in _dropdown.options)
+                foreach (var option in _component.dropdown.options)
                 {
                     result.Add(option.text);
                 }
@@ -100,17 +100,17 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
     /// </summary>
     public void SetOptions(IEnumerable<string> options)
     {
-        if (_dropdown == null)
+        if (_component == null)
             return;
 
-        _dropdown.ClearOptions();
+        _component.dropdown.ClearOptions();
         var optionData = new Il2CppSystem.Collections.Generic.List<string>();
         foreach (var option in options)
         {
             optionData.Add(option);
         }
-        
-        _dropdown.AddOptions(optionData);
+
+        _component.dropdown.AddOptions(optionData);
     }
 
     /// <summary>
@@ -126,8 +126,8 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
     /// </summary>
     public void AddOption(string option)
     {
-        _dropdown?.options.Add(new TMP_Dropdown.OptionData(option));
-        _dropdown?.RefreshShownValue();
+        _component?.dropdown.options.Add(new TMP_Dropdown.OptionData(option));
+        _component?.dropdown.RefreshShownValue();
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
     /// </summary>
     public void ClearOptions()
     {
-        _dropdown?.ClearOptions();
+        _component?.dropdown.ClearOptions();
     }
 
     #region ILabelStyleControl
@@ -232,9 +232,9 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
         set
         {
             base.IsEnabled = value;
-            if (_dropdown != null)
+            if (_component != null)
             {
-                _dropdown.interactable = value;
+                _component.dropdown.interactable = value;
             }
         }
     }
@@ -242,24 +242,12 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
     protected override void Awake()
     {
         base.Awake();
-        _dropdown = GetComponentInChildren<TMP_Dropdown>();
+        _component = GetComponent<DropdownComponent>();
+        _labelStyle = new LabelStyleHelper(_component?.label);
 
-        // Find label text (usually the first TMP_Text that's not part of the dropdown)
-        var texts = GetComponentsInChildren<TMP_Text>();
-        foreach (var text in texts)
+        if (_component != null)
         {
-            // Skip the dropdown's caption text and item text
-            if (_dropdown != null && (text == _dropdown.captionText || text == _dropdown.itemText))
-                continue;
-            _labelText = text;
-            break;
-        }
-
-        _labelStyle = new LabelStyleHelper(_labelText);
-
-        if (_dropdown != null)
-        {
-            _dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
+            _component.dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
         }
     }
 
@@ -276,17 +264,17 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
 
         _selectedIndexProperty.ValueChanged += value =>
         {
-            if (_dropdown != null && value is int intValue)
+            if (_component != null && value is int intValue)
             {
-                _dropdown.value = intValue;
+                _component.dropdown.value = intValue;
             }
         };
 
         _textProperty.ValueChanged += value =>
         {
-            if (_labelText != null && value is string strValue)
+            if (_component != null && value is string strValue)
             {
-                _labelText.text = strValue;
+                _component.label.text = strValue;
             }
         };
     }
@@ -300,17 +288,17 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
 
     protected override void OnEnabledChanged(bool state)
     {
-        if (_dropdown != null)
+        if (_component != null)
         {
-            _dropdown.interactable = state;
+            _component.dropdown.interactable = state;
         }
     }
 
     public override void Dispose()
     {
-        if (_dropdown != null)
+        if (_component != null)
         {
-            _dropdown.onValueChanged.RemoveListener(OnDropdownValueChanged);
+            _component.dropdown.onValueChanged.RemoveListener(OnDropdownValueChanged);
         }
         ValueChanged = null;
         SelectedIndexChanged = null;

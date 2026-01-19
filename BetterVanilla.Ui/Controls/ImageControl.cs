@@ -1,10 +1,10 @@
 using System;
 using System.IO;
 using System.Reflection;
+using BetterVanilla.Ui.Components;
 using Il2CppInterop.Runtime.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
-using BetterVanilla.Ui;
 
 namespace BetterVanilla.Ui.Controls;
 
@@ -13,14 +13,14 @@ namespace BetterVanilla.Ui.Controls;
 /// </summary>
 public sealed class ImageControl : BaseControl
 {
-    private Image? _image;
+    private ImageComponent? _component;
     private string? _source;
     private Assembly? _sourceAssembly;
 
     /// <summary>
     /// The Unity Image component.
     /// </summary>
-    public Image? ImageComponent => _image;
+    public Image? Image => _component?.image;
 
     /// <summary>
     /// The embedded resource name or path to load the image from.
@@ -57,12 +57,12 @@ public sealed class ImageControl : BaseControl
     /// </summary>
     public Sprite? Sprite
     {
-        get => _image?.sprite;
+        get => _component?.image.sprite;
         set
         {
-            if (_image != null)
+            if (_component != null)
             {
-                _image.sprite = value;
+                _component.image.sprite = value;
             }
         }
     }
@@ -72,12 +72,12 @@ public sealed class ImageControl : BaseControl
     /// </summary>
     public Color Color
     {
-        get => _image?.color ?? Color.white;
+        get => _component?.image.color ?? Color.white;
         set
         {
-            if (_image != null)
+            if (_component != null)
             {
-                _image.color = value;
+                _component.image.color = value;
             }
         }
     }
@@ -87,12 +87,12 @@ public sealed class ImageControl : BaseControl
     /// </summary>
     public bool PreserveAspect
     {
-        get => _image?.preserveAspect ?? false;
+        get => _component?.image.preserveAspect ?? false;
         set
         {
-            if (_image != null)
+            if (_component != null)
             {
-                _image.preserveAspect = value;
+                _component.image.preserveAspect = value;
             }
         }
     }
@@ -100,14 +100,14 @@ public sealed class ImageControl : BaseControl
     /// <summary>
     /// The image type (Simple, Sliced, Tiled, Filled).
     /// </summary>
-    public Image.Type ImageType
+    public UnityEngine.UI.Image.Type ImageType
     {
-        get => _image?.type ?? Image.Type.Simple;
+        get => _component?.image.type ?? Image.Type.Simple;
         set
         {
-            if (_image != null)
+            if (_component != null)
             {
-                _image.type = value;
+                _component.image.type = value;
             }
         }
     }
@@ -117,12 +117,12 @@ public sealed class ImageControl : BaseControl
     /// </summary>
     public bool RaycastTarget
     {
-        get => _image?.raycastTarget ?? true;
+        get => _component?.image.raycastTarget ?? true;
         set
         {
-            if (_image != null)
+            if (_component != null)
             {
-                _image.raycastTarget = value;
+                _component.image.raycastTarget = value;
             }
         }
     }
@@ -130,16 +130,12 @@ public sealed class ImageControl : BaseControl
     protected override void Awake()
     {
         base.Awake();
-        _image = GetComponent<Image>();
-        if (_image == null)
-        {
-            _image = gameObject.AddComponent<Image>();
-        }
+        _component = GetComponent<ImageComponent>();
     }
 
     private void LoadImageFromSource()
     {
-        if (string.IsNullOrEmpty(_source) || _image == null)
+        if (string.IsNullOrEmpty(_source) || _component == null)
             return;
 
         var assembly = _sourceAssembly ?? Assembly.GetCallingAssembly();
@@ -153,7 +149,7 @@ public sealed class ImageControl : BaseControl
                 new Vector2(0.5f, 0.5f),
                 100f
             );
-            _image.sprite = sprite;
+            _component.image.sprite = sprite;
         }
     }
 
@@ -301,7 +297,7 @@ public sealed class ImageControl : BaseControl
     [HideFromIl2Cpp]
     public void LoadFromBytes(byte[] imageData)
     {
-        if (_image == null) return;
+        if (_component == null) return;
 
         var texture = new Texture2D(2, 2);
         if (texture.LoadImage(imageData))
@@ -312,20 +308,20 @@ public sealed class ImageControl : BaseControl
                 new Vector2(0.5f, 0.5f),
                 100f
             );
-            _image.sprite = sprite;
+            _component.image.sprite = sprite;
         }
     }
 
     public override void Dispose()
     {
         // Clean up created textures/sprites if needed
-        if (_image?.sprite != null && _image.sprite.texture != null)
+        if (_component?.image.sprite != null && _component.image.sprite.texture != null)
         {
             // Only destroy if we created it (not from an asset bundle)
             if (!string.IsNullOrEmpty(_source))
             {
-                Destroy(_image.sprite.texture);
-                Destroy(_image.sprite);
+                Destroy(_component.image.sprite.texture);
+                Destroy(_component.image.sprite);
             }
         }
         base.Dispose();

@@ -1,5 +1,6 @@
 using System;
 using BetterVanilla.Ui.Binding;
+using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using TMPro;
 using UnityEngine;
@@ -12,8 +13,7 @@ namespace BetterVanilla.Ui.Controls;
 /// </summary>
 public sealed class ButtonControl : BaseControl, ILabelStyleControl, IClickableControl
 {
-    private Button? _button;
-    private TMP_Text? _textComponent;
+    private ButtonComponent? _component;
     private LabelStyleHelper? _labelStyle;
     private readonly BindableProperty<string> _textProperty = new();
 
@@ -21,20 +21,18 @@ public sealed class ButtonControl : BaseControl, ILabelStyleControl, IClickableC
 
     public string Text
     {
-        get => _textComponent != null ? _textComponent.text : string.Empty;
+        get => _component != null ? _component.buttonText.text : string.Empty;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.text = value;
+                _component.buttonText.text = value;
             }
             _textProperty.Value = value;
         }
     }
 
     #region Background
-
-    private Image? _backgroundImage;
 
     /// <summary>
     /// Background color of the button. Setting this will modify the Image component's color.
@@ -51,18 +49,8 @@ public sealed class ButtonControl : BaseControl, ILabelStyleControl, IClickableC
 
     private void ApplyBackground()
     {
-        if (!Background.HasValue) return;
-
-        if (_backgroundImage == null)
-        {
-            _backgroundImage = GetComponent<Image>();
-            if (_backgroundImage == null)
-            {
-                _backgroundImage = gameObject.AddComponent<Image>();
-            }
-        }
-
-        _backgroundImage.color = Background.Value;
+        if (!Background.HasValue || _component == null) return;
+        _component.background.color = Background.Value;
     }
 
     #endregion
@@ -161,9 +149,9 @@ public sealed class ButtonControl : BaseControl, ILabelStyleControl, IClickableC
         set
         {
             base.IsEnabled = value;
-            if (_button != null)
+            if (_component != null)
             {
-                _button.interactable = value;
+                _component.button.interactable = value;
             }
         }
     }
@@ -171,13 +159,12 @@ public sealed class ButtonControl : BaseControl, ILabelStyleControl, IClickableC
     protected override void Awake()
     {
         base.Awake();
-        _button = GetComponentInChildren<Button>();
-        _textComponent = GetComponentInChildren<TMP_Text>();
-        _labelStyle = new LabelStyleHelper(_textComponent);
+        _component = GetComponent<ButtonComponent>();
+        _labelStyle = new LabelStyleHelper(_component?.buttonText);
 
-        if (_button != null)
+        if (_component != null)
         {
-            _button.onClick.AddListener(OnClick);
+            _component.button.onClick.AddListener(OnClick);
         }
     }
 
@@ -188,9 +175,9 @@ public sealed class ButtonControl : BaseControl, ILabelStyleControl, IClickableC
         RegisterBindableProperty("Text", _textProperty);
         _textProperty.ValueChanged += value =>
         {
-            if (_textComponent != null && value is string strValue)
+            if (_component != null && value is string strValue)
             {
-                _textComponent.text = strValue;
+                _component.buttonText.text = strValue;
             }
         };
     }
@@ -205,17 +192,17 @@ public sealed class ButtonControl : BaseControl, ILabelStyleControl, IClickableC
 
     protected override void OnEnabledChanged(bool state)
     {
-        if (_button != null)
+        if (_component != null)
         {
-            _button.interactable = state;
+            _component.button.interactable = state;
         }
     }
 
     public override void Dispose()
     {
-        if (_button != null)
+        if (_component != null)
         {
-            _button.onClick.RemoveListener(OnClick);
+            _component.button.onClick.RemoveListener(OnClick);
         }
         Clicked = null;
         base.Dispose();

@@ -326,19 +326,18 @@ Curseur pour valeurs numériques.
 
 ```xml
 <Slider x:Name="volumeSlider" Alias="Controls/Slider"
-        Text="Volume"
         Value="{Binding Volume, Mode=TwoWay}"
+        MinValue="0"
+        MaxValue="100"
         ValueChanged="OnVolumeChanged" />
 ```
 
-| Propriété      | Type     | Description                         |
-|----------------|----------|-------------------------------------|
-| `Text`         | `string` | Label du slider                     |
-| `Value`        | `float`  | Valeur actuelle                     |
-| `MinValue`     | `float`  | Valeur minimale                     |
-| `MaxValue`     | `float`  | Valeur maximale                     |
-| `WholeNumbers` | `bool`   | Restreindre aux entiers             |
-| `ValueFormat`  | `string` | Format d'affichage (ex: `"{0:F1}"`) |
+| Propriété      | Type     | Description             |
+|----------------|----------|-------------------------|
+| `Value`        | `float`  | Valeur actuelle         |
+| `MinValue`     | `float`  | Valeur minimale         |
+| `MaxValue`     | `float`  | Valeur maximale         |
+| `WholeNumbers` | `bool`   | Restreindre aux entiers |
 
 | Événement      | Signature       | Description             |
 |----------------|-----------------|-------------------------|
@@ -892,7 +891,6 @@ unityEvent.RemoveListener(Action<int> handler);
       </Toggle>
 
       <Slider x:Name="volumeSlider"
-              Text="Volume"
               HorizontalAlignment="Stretch"
               Value="{Binding Volume, Mode=TwoWay}"
               ValueChanged="OnVolumeChanged" />

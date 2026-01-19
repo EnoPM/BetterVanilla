@@ -1,9 +1,9 @@
 using System;
 using BetterVanilla.Ui.Binding;
+using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BetterVanilla.Ui.Controls;
 
@@ -12,8 +12,7 @@ namespace BetterVanilla.Ui.Controls;
 /// </summary>
 public sealed class ToggleControl : BaseControl, IValueControl<bool>, ILabelStyleControl
 {
-    private Toggle? _toggle;
-    private TMP_Text? _labelText;
+    private ToggleComponent? _component;
     private LabelStyleHelper? _labelStyle;
     private readonly BindableProperty<bool> _isOnProperty = new();
     private readonly BindableProperty<string> _textProperty = new();
@@ -22,12 +21,12 @@ public sealed class ToggleControl : BaseControl, IValueControl<bool>, ILabelStyl
 
     public bool Value
     {
-        get => _toggle != null && _toggle.isOn;
+        get => _component != null && _component.toggle.isOn;
         set
         {
-            if (_toggle != null && _toggle.isOn != value)
+            if (_component != null && _component.toggle.isOn != value)
             {
-                _toggle.isOn = value;
+                _component.toggle.isOn = value;
             }
         }
     }
@@ -40,12 +39,12 @@ public sealed class ToggleControl : BaseControl, IValueControl<bool>, ILabelStyl
 
     public string Text
     {
-        get => _labelText != null ? _labelText.text : string.Empty;
+        get => _component?.label.text ?? string.Empty;
         set
         {
-            if (_labelText != null)
+            if (_component != null)
             {
-                _labelText.text = value;
+                _component.label.text = value;
             }
             _textProperty.Value = value;
         }
@@ -145,9 +144,9 @@ public sealed class ToggleControl : BaseControl, IValueControl<bool>, ILabelStyl
         set
         {
             base.IsEnabled = value;
-            if (_toggle != null)
+            if (_component != null)
             {
-                _toggle.interactable = value;
+                _component.toggle.interactable = value;
             }
         }
     }
@@ -155,13 +154,12 @@ public sealed class ToggleControl : BaseControl, IValueControl<bool>, ILabelStyl
     protected override void Awake()
     {
         base.Awake();
-        _toggle = GetComponentInChildren<Toggle>();
-        _labelText = GetComponentInChildren<TMP_Text>();
-        _labelStyle = new LabelStyleHelper(_labelText);
+        _component = GetComponent<ToggleComponent>();
+        _labelStyle = new LabelStyleHelper(_component?.label);
 
-        if (_toggle != null)
+        if (_component != null)
         {
-            _toggle.onValueChanged.AddListener(OnToggleChanged);
+            _component.toggle.onValueChanged.AddListener(OnToggleChanged);
         }
     }
 
@@ -175,17 +173,17 @@ public sealed class ToggleControl : BaseControl, IValueControl<bool>, ILabelStyl
 
         _isOnProperty.ValueChanged += value =>
         {
-            if (_toggle != null && value is bool boolValue)
+            if (_component != null && value is bool boolValue)
             {
-                _toggle.isOn = boolValue;
+                _component.toggle.isOn = boolValue;
             }
         };
 
         _textProperty.ValueChanged += value =>
         {
-            if (_labelText != null && value is string strValue)
+            if (_component != null && value is string strValue)
             {
-                _labelText.text = strValue;
+                _component.label.text = strValue;
             }
         };
     }
@@ -198,17 +196,17 @@ public sealed class ToggleControl : BaseControl, IValueControl<bool>, ILabelStyl
 
     protected override void OnEnabledChanged(bool state)
     {
-        if (_toggle != null)
+        if (_component != null)
         {
-            _toggle.interactable = state;
+            _component.toggle.interactable = state;
         }
     }
 
     public override void Dispose()
     {
-        if (_toggle != null)
+        if (_component != null)
         {
-            _toggle.onValueChanged.RemoveListener(OnToggleChanged);
+            _component.toggle.onValueChanged.RemoveListener(OnToggleChanged);
         }
         ValueChanged = null;
         base.Dispose();

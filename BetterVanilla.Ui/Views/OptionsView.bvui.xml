@@ -73,7 +73,6 @@
             <!-- Volume slider - s'étire en largeur -->
             <Slider x:Name="volumeSlider"
                     Alias="Controls/Slider"
-                    Text="Volume"
                     HorizontalAlignment="Stretch"
                     Value="{Binding Volume, Mode=TwoWay}"
                     ValueChanged="OnVolumeChanged"/>

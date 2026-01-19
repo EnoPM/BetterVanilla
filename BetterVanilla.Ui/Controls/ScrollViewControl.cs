@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,33 +24,31 @@ public enum ScrollbarVisibility
 /// </summary>
 public sealed class ScrollViewControl : BaseControl, IContainerControl
 {
+    private ScrollViewComponent? _component;
     private readonly List<IViewControl> _children = [];
-    private ScrollRect? _scrollRect;
-    private RectTransform? _content;
     private HorizontalOrVerticalLayoutGroup? _layoutGroup;
     private Orientation _orientation = Orientation.Vertical;
-    private Image? _backgroundImage;
 
     /// <summary>
     /// Gets the ScrollRect component.
     /// </summary>
-    public ScrollRect? ScrollRect => _scrollRect;
+    public ScrollRect? ScrollRect => _component?.scrollRect;
 
     /// <summary>
     /// Gets the content RectTransform where children are added.
     /// </summary>
-    public RectTransform? Content => _content;
+    public RectTransform? Content => _component?.content;
 
     /// <summary>
     /// Whether horizontal scrolling is enabled.
     /// </summary>
     public bool Horizontal
     {
-        get => _scrollRect?.horizontal ?? false;
+        get => _component?.scrollRect.horizontal ?? false;
         set
         {
-            if (_scrollRect != null)
-                _scrollRect.horizontal = value;
+            if (_component != null)
+                _component.scrollRect.horizontal = value;
         }
     }
 
@@ -58,11 +57,11 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     /// </summary>
     public bool Vertical
     {
-        get => _scrollRect?.vertical ?? true;
+        get => _component?.scrollRect.vertical ?? true;
         set
         {
-            if (_scrollRect != null)
-                _scrollRect.vertical = value;
+            if (_component != null)
+                _component.scrollRect.vertical = value;
         }
     }
 
@@ -71,11 +70,11 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     /// </summary>
     public float DecelerationRate
     {
-        get => _scrollRect?.decelerationRate ?? 0.135f;
+        get => _component?.scrollRect.decelerationRate ?? 0.135f;
         set
         {
-            if (_scrollRect != null)
-                _scrollRect.decelerationRate = value;
+            if (_component != null)
+                _component.scrollRect.decelerationRate = value;
         }
     }
 
@@ -84,11 +83,11 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     /// </summary>
     public float Elasticity
     {
-        get => _scrollRect?.elasticity ?? 0.1f;
+        get => _component?.scrollRect.elasticity ?? 0.1f;
         set
         {
-            if (_scrollRect != null)
-                _scrollRect.elasticity = value;
+            if (_component != null)
+                _component.scrollRect.elasticity = value;
         }
     }
 
@@ -97,11 +96,11 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     /// </summary>
     public bool Inertia
     {
-        get => _scrollRect?.inertia ?? true;
+        get => _component?.scrollRect.inertia ?? true;
         set
         {
-            if (_scrollRect != null)
-                _scrollRect.inertia = value;
+            if (_component != null)
+                _component.scrollRect.inertia = value;
         }
     }
 
@@ -110,11 +109,11 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     /// </summary>
     public float ScrollSensitivity
     {
-        get => _scrollRect?.scrollSensitivity ?? 1f;
+        get => _component?.scrollRect.scrollSensitivity ?? 1f;
         set
         {
-            if (_scrollRect != null)
-                _scrollRect.scrollSensitivity = value;
+            if (_component != null)
+                _component.scrollRect.scrollSensitivity = value;
         }
     }
 
@@ -123,11 +122,11 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     /// </summary>
     public Vector2 NormalizedPosition
     {
-        get => _scrollRect?.normalizedPosition ?? Vector2.zero;
+        get => _component?.scrollRect.normalizedPosition ?? Vector2.zero;
         set
         {
-            if (_scrollRect != null)
-                _scrollRect.normalizedPosition = value;
+            if (_component != null)
+                _component.scrollRect.normalizedPosition = value;
         }
     }
 
@@ -244,7 +243,7 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
 
     private void ApplyOrientation()
     {
-        if (_content == null) return;
+        if (_component == null) return;
 
         // Remove existing layout group
         if (_layoutGroup != null)
@@ -253,11 +252,11 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
             _layoutGroup = null;
         }
 
-        var existingVertical = _content.GetComponent<VerticalLayoutGroup>();
+        var existingVertical = _component.content.GetComponent<VerticalLayoutGroup>();
         if (existingVertical != null)
             Destroy(existingVertical);
 
-        var existingHorizontal = _content.GetComponent<HorizontalLayoutGroup>();
+        var existingHorizontal = _component.content.GetComponent<HorizontalLayoutGroup>();
         if (existingHorizontal != null)
             Destroy(existingHorizontal);
 
@@ -265,10 +264,10 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
         switch (_orientation)
         {
             case Orientation.Vertical:
-                _layoutGroup = _content.gameObject.AddComponent<VerticalLayoutGroup>();
+                _layoutGroup = _component.content.gameObject.AddComponent<VerticalLayoutGroup>();
                 break;
             case Orientation.Horizontal:
-                _layoutGroup = _content.gameObject.AddComponent<HorizontalLayoutGroup>();
+                _layoutGroup = _component.content.gameObject.AddComponent<HorizontalLayoutGroup>();
                 break;
             case Orientation.None:
             default:
@@ -281,10 +280,10 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
         }
 
         // Add ContentSizeFitter if we have a layout group
-        var sizeFitter = _content.GetComponent<ContentSizeFitter>();
+        var sizeFitter = _component.content.GetComponent<ContentSizeFitter>();
         if (_layoutGroup != null && sizeFitter == null)
         {
-            sizeFitter = _content.gameObject.AddComponent<ContentSizeFitter>();
+            sizeFitter = _component.content.gameObject.AddComponent<ContentSizeFitter>();
         }
 
         if (sizeFitter != null)
@@ -301,7 +300,7 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     private void ApplyLayoutGroupProperties()
     {
         // If no layout group exists yet but we have content and orientation, create it
-        if (_layoutGroup == null && _content != null && _orientation != Orientation.None)
+        if (_layoutGroup == null && _component != null && _orientation != Orientation.None)
         {
             ApplyOrientation();
         }
@@ -356,18 +355,8 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
 
     private void ApplyBackground()
     {
-        if (!Background.HasValue) return;
-
-        if (_backgroundImage == null)
-        {
-            _backgroundImage = GetComponent<Image>();
-            if (_backgroundImage == null)
-            {
-                _backgroundImage = gameObject.AddComponent<Image>();
-            }
-        }
-
-        _backgroundImage.color = Background.Value;
+        if (!Background.HasValue || _component == null) return;
+        _component.background.color = Background.Value;
     }
 
     #endregion
@@ -375,99 +364,16 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     protected override void Awake()
     {
         base.Awake();
-
-        _scrollRect = GetComponent<ScrollRect>();
-        if (_scrollRect == null)
-        {
-            _scrollRect = gameObject.AddComponent<ScrollRect>();
-        }
-
-        // Find or create viewport - try ScrollRect.viewport first, then search children
-        RectTransform? viewportRect = _scrollRect.viewport;
-        if (viewportRect == null)
-        {
-            viewportRect = FindChildByName<RectTransform>(transform, "Viewport");
-        }
-
-        if (viewportRect == null)
-        {
-            var viewportGo = new GameObject("Viewport");
-            viewportGo.transform.SetParent(transform, false);
-
-            viewportRect = viewportGo.AddComponent<RectTransform>();
-            viewportRect.anchorMin = Vector2.zero;
-            viewportRect.anchorMax = Vector2.one;
-            viewportRect.sizeDelta = Vector2.zero;
-            viewportRect.anchoredPosition = Vector2.zero;
-
-            // Add mask
-            var mask = viewportGo.AddComponent<Mask>();
-            mask.showMaskGraphic = false;
-
-            // Add image for mask (required)
-            var maskImage = viewportGo.AddComponent<Image>();
-            maskImage.color = Color.white;
-        }
-
-        _scrollRect.viewport = viewportRect;
-
-        // Find or create content - try ScrollRect.content first, then search children
-        _content = _scrollRect.content;
-        if (_content == null)
-        {
-            _content = FindChildByName<RectTransform>(viewportRect.transform, "Content");
-        }
-
-        if (_content == null)
-        {
-            var contentGo = new GameObject("Content");
-            contentGo.transform.SetParent(viewportRect.transform, false);
-
-            _content = contentGo.AddComponent<RectTransform>();
-            _content.anchorMin = new Vector2(0, 1);
-            _content.anchorMax = new Vector2(1, 1);
-            _content.pivot = new Vector2(0.5f, 1);
-            _content.sizeDelta = Vector2.zero;
-            _content.anchoredPosition = Vector2.zero;
-        }
-
-        _scrollRect.content = _content;
-
-        // Ensure content has correct anchors for vertical scrolling
-        _content.anchorMin = new Vector2(0, 1);
-        _content.anchorMax = new Vector2(1, 1);
-        _content.pivot = new Vector2(0.5f, 1);
-
-        // Default settings
-        _scrollRect.horizontal = false;
-        _scrollRect.vertical = true;
-        _scrollRect.movementType = ScrollRect.MovementType.Elastic;
-        _scrollRect.elasticity = 0.1f;
-        _scrollRect.inertia = true;
-        _scrollRect.decelerationRate = 0.135f;
-        _scrollRect.scrollSensitivity = 1f;
+        _component = GetComponent<ScrollViewComponent>();
 
         // Apply default vertical orientation
         ApplyOrientation();
     }
 
-    private static T? FindChildByName<T>(Transform parent, string name) where T : Component
-    {
-        for (var i = 0; i < parent.childCount; i++)
-        {
-            var child = parent.GetChild(i);
-            if (child.name == name)
-            {
-                return child.GetComponent<T>();
-            }
-        }
-        return null;
-    }
-
     /// <summary>
     /// Gets the transform where children should be added.
     /// </summary>
-    public Transform ContentTransform => _content != null ? _content.transform : transform;
+    public Transform ContentTransform => _component != null ? _component.content.transform : transform;
 
     public void AddChild(IViewControl child)
     {
@@ -506,8 +412,8 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     /// </summary>
     public void ScrollToTop()
     {
-        if (_scrollRect != null)
-            _scrollRect.normalizedPosition = new Vector2(0, 1);
+        if (_component != null)
+            _component.scrollRect.normalizedPosition = new Vector2(0, 1);
     }
 
     /// <summary>
@@ -515,8 +421,8 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     /// </summary>
     public void ScrollToBottom()
     {
-        if (_scrollRect != null)
-            _scrollRect.normalizedPosition = new Vector2(0, 0);
+        if (_component != null)
+            _component.scrollRect.normalizedPosition = new Vector2(0, 0);
     }
 
     protected override void OnEnabledChanged(bool state)

@@ -1,5 +1,5 @@
-using System;
 using BetterVanilla.Ui.Binding;
+using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using TMPro;
 using UnityEngine;
@@ -11,19 +11,19 @@ namespace BetterVanilla.Ui.Controls;
 /// </summary>
 public sealed class TextBlockControl : BaseControl, ITextStyleControl
 {
-    private TMP_Text? _textComponent;
+    private TextBlockComponent? _component;
     private readonly BindableProperty<string> _textProperty = new();
 
     #region Text Content
 
     public string Text
     {
-        get => _textComponent != null ? _textComponent.text : string.Empty;
+        get => _component?.text.text ?? string.Empty;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.text = value;
+                _component.text.text = value;
             }
             _textProperty.Value = value;
         }
@@ -35,48 +35,48 @@ public sealed class TextBlockControl : BaseControl, ITextStyleControl
 
     public Color TextColor
     {
-        get => _textComponent != null ? _textComponent.color : Color.white;
+        get => _component?.text.color ?? Color.white;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.color = value;
+                _component.text.color = value;
             }
         }
     }
 
     public float FontSize
     {
-        get => _textComponent != null ? _textComponent.fontSize : 14f;
+        get => _component?.text.fontSize ?? 14f;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.fontSize = value;
+                _component.text.fontSize = value;
             }
         }
     }
 
     public TextAlignmentOptions TextAlignment
     {
-        get => _textComponent != null ? _textComponent.alignment : TextAlignmentOptions.Left;
+        get => _component?.text.alignment ?? TextAlignmentOptions.Left;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.alignment = value;
+                _component.text.alignment = value;
             }
         }
     }
 
     public FontStyles FontStyle
     {
-        get => _textComponent != null ? _textComponent.fontStyle : FontStyles.Normal;
+        get => _component?.text.fontStyle ?? FontStyles.Normal;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.fontStyle = value;
+                _component.text.fontStyle = value;
             }
         }
     }
@@ -87,36 +87,36 @@ public sealed class TextBlockControl : BaseControl, ITextStyleControl
 
     public float CharacterSpacing
     {
-        get => _textComponent != null ? _textComponent.characterSpacing : 0f;
+        get => _component?.text.characterSpacing ?? 0f;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.characterSpacing = value;
+                _component.text.characterSpacing = value;
             }
         }
     }
 
     public float LineSpacing
     {
-        get => _textComponent != null ? _textComponent.lineSpacing : 0f;
+        get => _component?.text.lineSpacing ?? 0f;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.lineSpacing = value;
+                _component.text.lineSpacing = value;
             }
         }
     }
 
     public float WordSpacing
     {
-        get => _textComponent != null ? _textComponent.wordSpacing : 0f;
+        get => _component?.text.wordSpacing ?? 0f;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.wordSpacing = value;
+                _component.text.wordSpacing = value;
             }
         }
     }
@@ -127,36 +127,36 @@ public sealed class TextBlockControl : BaseControl, ITextStyleControl
 
     public bool WordWrapping
     {
-        get => _textComponent != null && _textComponent.enableWordWrapping;
+        get => _component != null && _component.text.enableWordWrapping;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.enableWordWrapping = value;
+                _component.text.enableWordWrapping = value;
             }
         }
     }
 
     public TextOverflowModes TextOverflow
     {
-        get => _textComponent != null ? _textComponent.overflowMode : TextOverflowModes.Overflow;
+        get => _component?.text.overflowMode ?? TextOverflowModes.Overflow;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.overflowMode = value;
+                _component.text.overflowMode = value;
             }
         }
     }
 
     public bool RichText
     {
-        get => _textComponent != null && _textComponent.richText;
+        get => _component != null && _component.text.richText;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.richText = value;
+                _component.text.richText = value;
             }
         }
     }
@@ -167,48 +167,48 @@ public sealed class TextBlockControl : BaseControl, ITextStyleControl
 
     public bool AutoSize
     {
-        get => _textComponent != null && _textComponent.enableAutoSizing;
+        get => _component != null && _component.text.enableAutoSizing;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.enableAutoSizing = value;
+                _component.text.enableAutoSizing = value;
             }
         }
     }
 
     public float MinFontSize
     {
-        get => _textComponent != null ? _textComponent.fontSizeMin : 10f;
+        get => _component?.text.fontSizeMin ?? 10f;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.fontSizeMin = value;
+                _component.text.fontSizeMin = value;
             }
         }
     }
 
     public float MaxFontSize
     {
-        get => _textComponent != null ? _textComponent.fontSizeMax : 72f;
+        get => _component?.text.fontSizeMax ?? 72f;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.fontSizeMax = value;
+                _component.text.fontSizeMax = value;
             }
         }
     }
 
     public Vector4 TextMargin
     {
-        get => _textComponent != null ? _textComponent.margin : Vector4.zero;
+        get => _component?.text.margin ?? Vector4.zero;
         set
         {
-            if (_textComponent != null)
+            if (_component != null)
             {
-                _textComponent.margin = value;
+                _component.text.margin = value;
             }
         }
     }
@@ -218,7 +218,7 @@ public sealed class TextBlockControl : BaseControl, ITextStyleControl
     protected override void Awake()
     {
         base.Awake();
-        _textComponent = GetComponentInChildren<TMP_Text>();
+        _component = GetComponent<TextBlockComponent>();
     }
 
     protected override void RegisterBindableProperties()
@@ -228,18 +228,18 @@ public sealed class TextBlockControl : BaseControl, ITextStyleControl
         RegisterBindableProperty("Text", _textProperty);
         _textProperty.ValueChanged += value =>
         {
-            if (_textComponent != null && value is string strValue)
+            if (_component != null && value is string strValue)
             {
-                _textComponent.text = strValue;
+                _component.text.text = strValue;
             }
         };
     }
 
     protected override void OnEnabledChanged(bool enabled)
     {
-        if (_textComponent != null)
+        if (_component != null)
         {
-            _textComponent.alpha = enabled ? 1f : 0.5f;
+            _component.text.alpha = enabled ? 1f : 0.5f;
         }
     }
 }

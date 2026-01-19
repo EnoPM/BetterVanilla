@@ -155,7 +155,7 @@ public abstract class BaseView : MonoBehaviour, IDisposable
     /// <summary>
     /// Creates a binding between a source property and a control property.
     /// </summary>
-    protected IDisposable Bind(string sourcePath, IViewControl control, string targetProperty, BindingMode mode = BindingMode.OneWay)
+    protected IDisposable Bind(string sourcePath, IViewControl control, string targetProperty, BindingMode mode)
     {
         var bindableProperty = control.GetBindableProperty(targetProperty);
         if (bindableProperty == null)

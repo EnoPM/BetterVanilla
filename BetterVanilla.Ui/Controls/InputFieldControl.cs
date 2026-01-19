@@ -1,5 +1,6 @@
 using System;
 using BetterVanilla.Ui.Binding;
+using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using TMPro;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace BetterVanilla.Ui.Controls;
 /// </summary>
 public sealed class InputFieldControl : BaseControl, IValueControl<string>, ITextControl, ILabelStyleControl, IPlaceholderStyleControl
 {
-    private TMP_InputField? _inputField;
+    private InputFieldComponent? _component;
     private LabelStyleHelper? _labelStyle;
     private LabelStyleHelper? _placeholderStyle;
     private readonly BindableProperty<string> _textProperty = new();
@@ -20,12 +21,12 @@ public sealed class InputFieldControl : BaseControl, IValueControl<string>, ITex
 
     public string Value
     {
-        get => _inputField != null ? _inputField.text : string.Empty;
+        get => _component != null ? _component.inputField.text : string.Empty;
         set
         {
-            if (_inputField != null && _inputField.text != value)
+            if (_component != null && _component.inputField.text != value)
             {
-                _inputField.text = value;
+                _component.inputField.text = value;
             }
         }
     }
@@ -38,43 +39,36 @@ public sealed class InputFieldControl : BaseControl, IValueControl<string>, ITex
 
     public string Placeholder
     {
-        get
-        {
-            if (_inputField?.placeholder is TMP_Text placeholder)
-            {
-                return placeholder.text;
-            }
-            return string.Empty;
-        }
+        get => _component?.placeholder.text ?? string.Empty;
         set
         {
-            if (_inputField?.placeholder is TMP_Text placeholder)
+            if (_component != null)
             {
-                placeholder.text = value;
+                _component.placeholder.text = value;
             }
         }
     }
 
     public TMP_InputField.ContentType ContentType
     {
-        get => _inputField?.contentType ?? TMP_InputField.ContentType.Standard;
+        get => _component?.inputField.contentType ?? TMP_InputField.ContentType.Standard;
         set
         {
-            if (_inputField != null)
+            if (_component != null)
             {
-                _inputField.contentType = value;
+                _component.inputField.contentType = value;
             }
         }
     }
 
     public int CharacterLimit
     {
-        get => _inputField?.characterLimit ?? 0;
+        get => _component?.inputField.characterLimit ?? 0;
         set
         {
-            if (_inputField != null)
+            if (_component != null)
             {
-                _inputField.characterLimit = value;
+                _component.inputField.characterLimit = value;
             }
         }
     }
@@ -85,9 +79,9 @@ public sealed class InputFieldControl : BaseControl, IValueControl<string>, ITex
         set
         {
             base.IsEnabled = value;
-            if (_inputField != null)
+            if (_component != null)
             {
-                _inputField.interactable = value;
+                _component.inputField.interactable = value;
             }
         }
     }
@@ -271,18 +265,15 @@ public sealed class InputFieldControl : BaseControl, IValueControl<string>, ITex
     protected override void Awake()
     {
         base.Awake();
-        _inputField = GetComponentInChildren<TMP_InputField>();
+        _component = GetComponent<InputFieldComponent>();
 
-        if (_inputField != null)
+        if (_component != null)
         {
-            _labelStyle = new LabelStyleHelper(_inputField.textComponent);
-            if (_inputField.placeholder is TMP_Text placeholderText)
-            {
-                _placeholderStyle = new LabelStyleHelper(placeholderText);
-            }
+            _labelStyle = new LabelStyleHelper(_component.text);
+            _placeholderStyle = new LabelStyleHelper(_component.placeholder);
 
-            _inputField.onValueChanged.AddListener(OnInputChanged);
-            _inputField.onEndEdit.AddListener(OnEndEdit);
+            _component.inputField.onValueChanged.AddListener(OnInputChanged);
+            _component.inputField.onEndEdit.AddListener(OnEndEdit);
         }
     }
 
@@ -295,9 +286,9 @@ public sealed class InputFieldControl : BaseControl, IValueControl<string>, ITex
 
         _textProperty.ValueChanged += value =>
         {
-            if (_inputField != null && value is string strValue)
+            if (_component != null && value is string strValue)
             {
-                _inputField.text = strValue;
+                _component.inputField.text = strValue;
             }
         };
     }
@@ -315,18 +306,18 @@ public sealed class InputFieldControl : BaseControl, IValueControl<string>, ITex
 
     protected override void OnEnabledChanged(bool state)
     {
-        if (_inputField != null)
+        if (_component != null)
         {
-            _inputField.interactable = state;
+            _component.inputField.interactable = state;
         }
     }
 
     public override void Dispose()
     {
-        if (_inputField != null)
+        if (_component != null)
         {
-            _inputField.onValueChanged.RemoveListener(OnInputChanged);
-            _inputField.onEndEdit.RemoveListener(OnEndEdit);
+            _component.inputField.onValueChanged.RemoveListener(OnInputChanged);
+            _component.inputField.onEndEdit.RemoveListener(OnEndEdit);
         }
         ValueChanged = null;
         base.Dispose();

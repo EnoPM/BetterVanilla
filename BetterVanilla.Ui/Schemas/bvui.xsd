@@ -637,15 +637,9 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="Slider.TextStyle" type="bvui:TextStyleType" minOccurs="0" maxOccurs="1">
-          <xs:annotation>
-            <xs:documentation>Style properties for the slider's text label</xs:documentation>
-          </xs:annotation>
-        </xs:element>
         <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
-      <xs:attributeGroup ref="bvui:TextControlAttributes"/>
       <xs:attribute name="Value" type="bvui:FloatOrBinding" use="optional">
         <xs:annotation>
           <xs:documentation>Current slider value</xs:documentation>
@@ -664,11 +658,6 @@
       <xs:attribute name="WholeNumbers" type="xs:boolean" use="optional">
         <xs:annotation>
           <xs:documentation>Restrict to whole numbers only</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="ValueFormat" type="xs:string" use="optional">
-        <xs:annotation>
-          <xs:documentation>Value display format (e.g., {0:F2})</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="ValueChanged" type="xs:NCName" use="optional">

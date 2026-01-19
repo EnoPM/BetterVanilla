@@ -175,7 +175,6 @@ public partial class OptionsView
         volumeSlider = InstantiateControl<SliderControl>("BetterVanilla.Ui.Assets.ui.bundle", "Assets/Prefabs/Controls/Slider.prefab", optionsScrollView.ContentTransform);
         volumeSlider.Name = "volumeSlider";
         volumeSlider.Initialize();
-        volumeSlider.Text = "Volume";
         volumeSlider.HorizontalAlignment = HorizontalAlignment.Stretch;
         volumeSlider.ApplyLayout();
 

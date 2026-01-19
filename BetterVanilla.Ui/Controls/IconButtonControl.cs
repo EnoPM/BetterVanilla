@@ -1,6 +1,6 @@
 using System;
-using System.IO;
 using System.Reflection;
+using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using Il2CppInterop.Runtime.Attributes;
 using UnityEngine;
@@ -14,8 +14,7 @@ namespace BetterVanilla.Ui.Controls;
 /// </summary>
 public sealed class IconButtonControl : BaseControl, IClickableControl
 {
-    private Button? _button;
-    private Image? _image;
+    private IconButtonComponent? _component;
     private string? _source;
     private Assembly? _sourceAssembly;
     private Color? _pendingColor;
@@ -64,12 +63,12 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
     /// </summary>
     public Sprite? Icon
     {
-        get => _image?.sprite;
+        get => _component?.background.sprite;
         set
         {
-            if (_image != null)
+            if (_component != null)
             {
-                _image.sprite = value;
+                _component.background.sprite = value;
             }
         }
     }
@@ -79,12 +78,12 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
     /// </summary>
     public Color Color
     {
-        get => _image?.color ?? _pendingColor ?? Color.white;
+        get => _component?.background.color ?? _pendingColor ?? Color.white;
         set
         {
-            if (_image != null)
+            if (_component != null)
             {
-                _image.color = value;
+                _component.background.color = value;
             }
             else
             {
@@ -98,12 +97,12 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
     /// </summary>
     public bool PreserveAspect
     {
-        get => _image?.preserveAspect ?? _pendingPreserveAspect ?? false;
+        get => _component?.background.preserveAspect ?? _pendingPreserveAspect ?? false;
         set
         {
-            if (_image != null)
+            if (_component != null)
             {
-                _image.preserveAspect = value;
+                _component.background.preserveAspect = value;
             }
             else
             {
@@ -120,9 +119,9 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
         set
         {
             base.IsEnabled = value;
-            if (_button != null)
+            if (_component != null)
             {
-                _button.interactable = value;
+                _component.button.interactable = value;
             }
         }
     }
@@ -130,29 +129,22 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
     protected override void Awake()
     {
         base.Awake();
-        _button = GetComponentInChildren<Button>();
+        _component = GetComponent<IconButtonComponent>();
 
-        // Get the Image component on the button (the background image)
-        _image = GetComponent<Image>();
-        if (_image == null)
+        if (_component != null)
         {
-            _image = gameObject.AddComponent<Image>();
-        }
+            _component.button.onClick.AddListener(OnClick);
 
-        if (_button != null)
-        {
-            _button.onClick.AddListener(OnClick);
-        }
+            // Apply pending properties
+            if (_pendingColor.HasValue)
+            {
+                _component.background.color = _pendingColor.Value;
+            }
 
-        // Apply pending properties
-        if (_pendingColor.HasValue)
-        {
-            _image.color = _pendingColor.Value;
-        }
-
-        if (_pendingPreserveAspect.HasValue)
-        {
-            _image.preserveAspect = _pendingPreserveAspect.Value;
+            if (_pendingPreserveAspect.HasValue)
+            {
+                _component.background.preserveAspect = _pendingPreserveAspect.Value;
+            }
         }
 
         _isInitialized = true;
@@ -166,7 +158,7 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
 
     private void LoadIconFromSource()
     {
-        if (string.IsNullOrEmpty(_source) || _image == null)
+        if (string.IsNullOrEmpty(_source) || _component == null)
             return;
 
         Texture2D? texture = null;
@@ -190,9 +182,9 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
                 new Vector2(0.5f, 0.5f),
                 100f
             );
-            _image.sprite = sprite;
+            _component.background.sprite = sprite;
             // Force Simple type so PreserveAspect works correctly
-            _image.type = Image.Type.Simple;
+            _component.background.type = Image.Type.Simple;
         }
     }
 
@@ -212,7 +204,7 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
     [HideFromIl2Cpp]
     public void LoadFromBytes(byte[] imageData)
     {
-        if (_image == null) return;
+        if (_component == null) return;
 
         var texture = new Texture2D(2, 2);
         if (texture.LoadImage(imageData))
@@ -223,9 +215,9 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
                 new Vector2(0.5f, 0.5f),
                 100f
             );
-            _image.sprite = sprite;
+            _component.background.sprite = sprite;
             // Force Simple type so PreserveAspect works correctly
-            _image.type = Image.Type.Simple;
+            _component.background.type = Image.Type.Simple;
         }
     }
 
@@ -239,26 +231,26 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
 
     protected override void OnEnabledChanged(bool state)
     {
-        if (_button != null)
+        if (_component != null)
         {
-            _button.interactable = state;
+            _component.button.interactable = state;
         }
     }
 
     public override void Dispose()
     {
-        if (_button != null)
+        if (_component != null)
         {
-            _button.onClick.RemoveListener(OnClick);
-        }
+            _component.button.onClick.RemoveListener(OnClick);
 
-        // Clean up created textures/sprites
-        if (_image?.sprite != null && _image.sprite.texture != null)
-        {
-            if (!string.IsNullOrEmpty(_source))
+            // Clean up created textures/sprites
+            if (_component.background.sprite != null && _component.background.sprite.texture != null)
             {
-                Destroy(_image.sprite.texture);
-                Destroy(_image.sprite);
+                if (!string.IsNullOrEmpty(_source))
+                {
+                    Destroy(_component.background.sprite.texture);
+                    Destroy(_component.background.sprite);
+                }
             }
         }
 
