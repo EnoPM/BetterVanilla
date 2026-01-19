@@ -144,6 +144,27 @@ public partial class OptionsView
         closeButton.HorizontalAlignment = HorizontalAlignment.Right;
         closeButton.ApplyLayout();
 
+        // Instantiate anonymous Image
+        var _anonymousImage0 = InstantiateControl<ImageControl>("BetterVanilla.Ui.Assets.ui.bundle", "Assets/Prefabs/Controls/Image.prefab", root.transform);
+        _anonymousImage0.Name = "_anonymousImage0";
+        _anonymousImage0.Initialize();
+        _anonymousImage0.Source = "BetterVanilla.Ui.Assets.Images.SponsorBanner.png";
+        _anonymousImage0.Height = 300f;
+        _anonymousImage0.HorizontalAlignment = HorizontalAlignment.Stretch;
+        _anonymousImage0.ApplyLayout();
+
+        // Instantiate anonymous Button
+        var _anonymousButton1 = InstantiateControl<ButtonControl>("BetterVanilla.Ui.Assets.ui.bundle", "Assets/Prefabs/Controls/Button.prefab", _anonymousImage0.transform);
+        _anonymousButton1.Name = "_anonymousButton1";
+        _anonymousButton1.Initialize();
+        _anonymousButton1.Text = "Devenir un sponsor";
+        _anonymousButton1.Width = 300f;
+        _anonymousButton1.Height = 50f;
+        _anonymousButton1.Margin = Thickness.Parse("0,0,0,50");
+        _anonymousButton1.HorizontalAlignment = HorizontalAlignment.Center;
+        _anonymousButton1.VerticalAlignment = VerticalAlignment.Bottom;
+        _anonymousButton1.ApplyLayout();
+
         // Instantiate optionsScrollView
         optionsScrollView = InstantiateControl<ScrollViewControl>("BetterVanilla.Ui.Assets.ui.bundle", "Assets/Prefabs/Controls/ScrollView.prefab", root.transform);
         optionsScrollView.Name = "optionsScrollView";
@@ -199,15 +220,15 @@ public partial class OptionsView
         usernameInputLocker.ApplyLayout();
 
         // Instantiate anonymous TextBlock
-        var _anonymousTextBlock0 = InstantiateControl<TextBlockControl>("BetterVanilla.Ui.Assets.ui.bundle", "Assets/Prefabs/Controls/TextBlock.prefab", usernameInputLocker.transform);
-        _anonymousTextBlock0.Name = "_anonymousTextBlock0";
-        _anonymousTextBlock0.Initialize();
-        _anonymousTextBlock0.TextAlignment = TMPro.TextAlignmentOptions.Midline;
-        _anonymousTextBlock0.Text = "Locked";
-        _anonymousTextBlock0.TextColor = PanelControl.ParseColor("#FF0000");
-        _anonymousTextBlock0.AutoSize = true;
-        _anonymousTextBlock0.MinFontSize = 5;
-        _anonymousTextBlock0.MaxFontSize = 50;
+        var _anonymousTextBlock2 = InstantiateControl<TextBlockControl>("BetterVanilla.Ui.Assets.ui.bundle", "Assets/Prefabs/Controls/TextBlock.prefab", usernameInputLocker.transform);
+        _anonymousTextBlock2.Name = "_anonymousTextBlock2";
+        _anonymousTextBlock2.Initialize();
+        _anonymousTextBlock2.TextAlignment = TMPro.TextAlignmentOptions.Midline;
+        _anonymousTextBlock2.Text = "Locked";
+        _anonymousTextBlock2.TextColor = PanelControl.ParseColor("#FF0000");
+        _anonymousTextBlock2.AutoSize = true;
+        _anonymousTextBlock2.MinFontSize = 5;
+        _anonymousTextBlock2.MaxFontSize = 50;
 
         // Instantiate difficultyDropdown
         difficultyDropdown = InstantiateControl<DropdownControl>("BetterVanilla.Ui.Assets.ui.bundle", "Assets/Prefabs/Controls/Dropdown.prefab", optionsScrollView.ContentTransform);

@@ -12,9 +12,10 @@ namespace BetterVanilla.Ui.Controls;
 /// A button control that displays an icon instead of text.
 /// The icon is displayed as the button's background image.
 /// </summary>
-public sealed class IconButtonControl : BaseControl, IClickableControl
+public sealed class IconButtonControl : BaseControl, IButtonColorsControl
 {
     private IconButtonComponent? _component;
+    private ButtonColorsHelper? _buttonColors;
     private string? _source;
     private Assembly? _sourceAssembly;
     private Color? _pendingColor;
@@ -113,6 +114,52 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
 
     #endregion
 
+    #region IButtonColorsControl
+
+    public Color NormalColor
+    {
+        get => _buttonColors?.NormalColor ?? Color.white;
+        set { if (_buttonColors != null) _buttonColors.NormalColor = value; }
+    }
+
+    public Color HighlightedColor
+    {
+        get => _buttonColors?.HighlightedColor ?? Color.white;
+        set { if (_buttonColors != null) _buttonColors.HighlightedColor = value; }
+    }
+
+    public Color PressedColor
+    {
+        get => _buttonColors?.PressedColor ?? Color.gray;
+        set { if (_buttonColors != null) _buttonColors.PressedColor = value; }
+    }
+
+    public Color SelectedColor
+    {
+        get => _buttonColors?.SelectedColor ?? Color.white;
+        set { if (_buttonColors != null) _buttonColors.SelectedColor = value; }
+    }
+
+    public Color DisabledColor
+    {
+        get => _buttonColors?.DisabledColor ?? new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        set { if (_buttonColors != null) _buttonColors.DisabledColor = value; }
+    }
+
+    public float ColorMultiplier
+    {
+        get => _buttonColors?.ColorMultiplier ?? 1f;
+        set { if (_buttonColors != null) _buttonColors.ColorMultiplier = value; }
+    }
+
+    public float FadeDuration
+    {
+        get => _buttonColors?.FadeDuration ?? 0.1f;
+        set { if (_buttonColors != null) _buttonColors.FadeDuration = value; }
+    }
+
+    #endregion
+
     public override bool IsEnabled
     {
         get => base.IsEnabled;
@@ -130,6 +177,7 @@ public sealed class IconButtonControl : BaseControl, IClickableControl
     {
         base.Awake();
         _component = GetComponent<IconButtonComponent>();
+        _buttonColors = new ButtonColorsHelper(_component?.button);
 
         if (_component != null)
         {

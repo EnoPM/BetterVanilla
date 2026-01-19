@@ -575,7 +575,10 @@ public sealed class CodeGenerator
     };
 
     // Known color properties that need parsing
-    private static readonly HashSet<string> ColorProperties = ["TextColor", "Background", "Color"];
+    private static readonly HashSet<string> ColorProperties = [
+        "TextColor", "Background", "Color",
+        "NormalColor", "HighlightedColor", "PressedColor", "SelectedColor", "DisabledColor"
+    ];
 
     // Known margin/vector properties that need parsing
     private static readonly HashSet<string> MarginProperties = ["TextMargin"];

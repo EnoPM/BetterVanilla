@@ -223,3 +223,44 @@ public interface IValueControl<T> : IViewControl
     /// </summary>
     event Action<T>? ValueChanged;
 }
+
+/// <summary>
+/// Interface for controls that support Unity button color transitions (ColorBlock).
+/// </summary>
+public interface IButtonColorsControl : IClickableControl
+{
+    /// <summary>
+    /// Color when the button is in its normal state.
+    /// </summary>
+    Color NormalColor { get; set; }
+
+    /// <summary>
+    /// Color when the button is highlighted (hovered).
+    /// </summary>
+    Color HighlightedColor { get; set; }
+
+    /// <summary>
+    /// Color when the button is pressed.
+    /// </summary>
+    Color PressedColor { get; set; }
+
+    /// <summary>
+    /// Color when the button is selected.
+    /// </summary>
+    Color SelectedColor { get; set; }
+
+    /// <summary>
+    /// Color when the button is disabled.
+    /// </summary>
+    Color DisabledColor { get; set; }
+
+    /// <summary>
+    /// Multiplier applied to the colors (default: 1).
+    /// </summary>
+    float ColorMultiplier { get; set; }
+
+    /// <summary>
+    /// Duration of the color transition in seconds.
+    /// </summary>
+    float FadeDuration { get; set; }
+}

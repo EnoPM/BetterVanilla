@@ -11,10 +11,11 @@ namespace BetterVanilla.Ui.Controls;
 /// <summary>
 /// A button control that can be clicked.
 /// </summary>
-public sealed class ButtonControl : BaseControl, ILabelStyleControl, IClickableControl
+public sealed class ButtonControl : BaseControl, ILabelStyleControl, IButtonColorsControl
 {
     private ButtonComponent? _component;
     private LabelStyleHelper? _labelStyle;
+    private ButtonColorsHelper? _buttonColors;
     private readonly BindableProperty<string> _textProperty = new();
 
     public event Action? Clicked;
@@ -143,6 +144,52 @@ public sealed class ButtonControl : BaseControl, ILabelStyleControl, IClickableC
 
     #endregion
 
+    #region IButtonColorsControl
+
+    public Color NormalColor
+    {
+        get => _buttonColors?.NormalColor ?? Color.white;
+        set { if (_buttonColors != null) _buttonColors.NormalColor = value; }
+    }
+
+    public Color HighlightedColor
+    {
+        get => _buttonColors?.HighlightedColor ?? Color.white;
+        set { if (_buttonColors != null) _buttonColors.HighlightedColor = value; }
+    }
+
+    public Color PressedColor
+    {
+        get => _buttonColors?.PressedColor ?? Color.gray;
+        set { if (_buttonColors != null) _buttonColors.PressedColor = value; }
+    }
+
+    public Color SelectedColor
+    {
+        get => _buttonColors?.SelectedColor ?? Color.white;
+        set { if (_buttonColors != null) _buttonColors.SelectedColor = value; }
+    }
+
+    public Color DisabledColor
+    {
+        get => _buttonColors?.DisabledColor ?? new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        set { if (_buttonColors != null) _buttonColors.DisabledColor = value; }
+    }
+
+    public float ColorMultiplier
+    {
+        get => _buttonColors?.ColorMultiplier ?? 1f;
+        set { if (_buttonColors != null) _buttonColors.ColorMultiplier = value; }
+    }
+
+    public float FadeDuration
+    {
+        get => _buttonColors?.FadeDuration ?? 0.1f;
+        set { if (_buttonColors != null) _buttonColors.FadeDuration = value; }
+    }
+
+    #endregion
+
     public override bool IsEnabled
     {
         get => base.IsEnabled;
@@ -161,6 +208,7 @@ public sealed class ButtonControl : BaseControl, ILabelStyleControl, IClickableC
         base.Awake();
         _component = GetComponent<ButtonComponent>();
         _labelStyle = new LabelStyleHelper(_component?.buttonText);
+        _buttonColors = new ButtonColorsHelper(_component?.button);
 
         if (_component != null)
         {

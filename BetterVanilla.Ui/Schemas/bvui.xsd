@@ -349,6 +349,47 @@
     </xs:attribute>
   </xs:attributeGroup>
 
+  <xs:attributeGroup name="ButtonColorsAttributes">
+    <xs:annotation>
+      <xs:documentation>Color transition attributes for buttons (Unity ColorBlock)</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="NormalColor" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Color when the button is in its normal state (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="HighlightedColor" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Color when the button is highlighted/hovered (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="PressedColor" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Color when the button is pressed (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="SelectedColor" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Color when the button is selected (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DisabledColor" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Color when the button is disabled (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ColorMultiplier" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Multiplier applied to the colors (default: 1)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FadeDuration" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Duration of the color transition in seconds (default: 0.1)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
   <xs:attributeGroup name="LayoutGroupAttributes">
     <xs:annotation>
       <xs:documentation>LayoutGroup attributes (Panel-specific)</xs:documentation>
@@ -577,6 +618,7 @@
       </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
       <xs:attributeGroup ref="bvui:TextControlAttributes"/>
+      <xs:attributeGroup ref="bvui:ButtonColorsAttributes"/>
       <xs:attribute name="Background" type="xs:string" use="optional">
         <xs:annotation>
           <xs:documentation>Background color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
@@ -855,6 +897,7 @@
         <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
+      <xs:attributeGroup ref="bvui:ButtonColorsAttributes"/>
       <xs:attribute name="Source" type="xs:string" use="optional">
         <xs:annotation>
           <xs:documentation>Embedded resource name or path for the icon</xs:documentation>

@@ -295,6 +295,33 @@ Bouton cliquable.
 | `Text`      | `string` | Texte du bouton       |
 | `IsEnabled` | `bool`   | État activé/désactivé |
 
+#### Couleurs de transition (ColorBlock)
+
+Les boutons supportent les couleurs de transition Unity pour les différents états :
+
+```xml
+<Button x:Name="styledButton"
+        Text="Styled Button"
+        NormalColor="#FFFFFF"
+        HighlightedColor="#E0E0E0"
+        PressedColor="#C0C0C0"
+        SelectedColor="#D0D0D0"
+        DisabledColor="#80808080"
+        ColorMultiplier="1"
+        FadeDuration="0.1"
+        Click="OnClick" />
+```
+
+| Propriété          | Type    | Description                                      |
+|--------------------|---------|--------------------------------------------------|
+| `NormalColor`      | `Color` | Couleur à l'état normal                          |
+| `HighlightedColor` | `Color` | Couleur au survol (hover)                        |
+| `PressedColor`     | `Color` | Couleur quand pressé                             |
+| `SelectedColor`    | `Color` | Couleur quand sélectionné                        |
+| `DisabledColor`    | `Color` | Couleur quand désactivé                          |
+| `ColorMultiplier`  | `float` | Multiplicateur appliqué aux couleurs (défaut: 1) |
+| `FadeDuration`     | `float` | Durée de la transition en secondes (défaut: 0.1) |
+
 | Événement | Signature | Description       |
 |-----------|-----------|-------------------|
 | `Clicked` | `Action`  | Déclenché au clic |
@@ -538,16 +565,16 @@ Bouton avec icône.
             Source="BetterVanilla.Ui.Assets.Images.CloseIcon.png"
             PreserveAspect="true"
             Width="40" Height="40"
-            Background="#FF000080"
             Click="OnCloseClicked" />
 ```
 
 | Propriété       | Type        | Description                       |
 |-----------------|-------------|-----------------------------------|
 | `Source`        | `string`    | Chemin de l'icône                 |
+| `Color`         | `Color`     | Teinte/couleur de l'icône         |
 | `PreserveAspect`| `bool`      | Conserver le ratio d'aspect       |
-| `Background`    | `Color`     | Couleur de fond du bouton         |
-| `ImageType`     | `ImageType` | Type d'image                      |
+
+IconButtonControl supporte également les [couleurs de transition](#couleurs-de-transition-colorblock) comme ButtonControl.
 
 | Événement | Signature | Description       |
 |-----------|-----------|-------------------|
