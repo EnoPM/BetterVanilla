@@ -44,6 +44,18 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="DimensionValue">
+    <xs:annotation>
+      <xs:documentation>
+        Dimension value supporting both fixed pixels and percentages.
+        Formats: "100" (100 pixels), "50%" (50% of parent or screen)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="-?\d+(\.\d+)?%?"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="BindingExpression">
     <xs:annotation>
       <xs:documentation>
@@ -182,34 +194,34 @@
     <xs:annotation>
       <xs:documentation>Common layout attributes for all controls</xs:documentation>
     </xs:annotation>
-    <xs:attribute name="Width" type="xs:float" use="optional">
+    <xs:attribute name="Width" type="bvui:DimensionValue" use="optional">
       <xs:annotation>
-        <xs:documentation>Width in pixels (-1 = auto)</xs:documentation>
+        <xs:documentation>Width in pixels (e.g., "100") or percentage of parent/screen (e.g., "50%")</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="Height" type="xs:float" use="optional">
+    <xs:attribute name="Height" type="bvui:DimensionValue" use="optional">
       <xs:annotation>
-        <xs:documentation>Height in pixels (-1 = auto)</xs:documentation>
+        <xs:documentation>Height in pixels (e.g., "100") or percentage of parent/screen (e.g., "50%")</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="MinWidth" type="xs:float" use="optional">
+    <xs:attribute name="MinWidth" type="bvui:DimensionValue" use="optional">
       <xs:annotation>
-        <xs:documentation>Minimum width in pixels</xs:documentation>
+        <xs:documentation>Minimum width in pixels or percentage</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="MinHeight" type="xs:float" use="optional">
+    <xs:attribute name="MinHeight" type="bvui:DimensionValue" use="optional">
       <xs:annotation>
-        <xs:documentation>Minimum height in pixels</xs:documentation>
+        <xs:documentation>Minimum height in pixels or percentage</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="MaxWidth" type="xs:float" use="optional">
+    <xs:attribute name="MaxWidth" type="bvui:DimensionValue" use="optional">
       <xs:annotation>
-        <xs:documentation>Maximum width in pixels</xs:documentation>
+        <xs:documentation>Maximum width in pixels or percentage</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="MaxHeight" type="xs:float" use="optional">
+    <xs:attribute name="MaxHeight" type="bvui:DimensionValue" use="optional">
       <xs:annotation>
-        <xs:documentation>Maximum height in pixels</xs:documentation>
+        <xs:documentation>Maximum height in pixels or percentage</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="FlexibleWidth" type="xs:float" use="optional">
@@ -418,13 +430,8 @@
 
   <xs:attributeGroup name="LayoutGroupAttributes">
     <xs:annotation>
-      <xs:documentation>LayoutGroup attributes (Panel-specific)</xs:documentation>
+      <xs:documentation>LayoutGroup attributes for Panel.LayoutGroup and ScrollView.LayoutGroup elements</xs:documentation>
     </xs:annotation>
-    <xs:attribute name="Background" type="xs:string" use="optional">
-      <xs:annotation>
-        <xs:documentation>Background color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
     <xs:attribute name="Orientation" type="bvui:Orientation" use="optional">
       <xs:annotation>
         <xs:documentation>LayoutGroup orientation (Vertical, Horizontal, or None)</xs:documentation>
@@ -472,6 +479,66 @@
     </xs:attribute>
   </xs:attributeGroup>
 
+  <xs:complexType name="LayoutGroupType">
+    <xs:annotation>
+      <xs:documentation>LayoutGroup configuration for Panel and ScrollView containers</xs:documentation>
+    </xs:annotation>
+    <xs:attributeGroup ref="bvui:LayoutGroupAttributes"/>
+  </xs:complexType>
+
+  <xs:attributeGroup name="ImageAttributes">
+    <xs:annotation>
+      <xs:documentation>Image attributes for .Image child elements</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Source" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Embedded resource name or path for the image</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Color" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Tint color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="PreserveAspect" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Whether to preserve the aspect ratio of the image</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ImageType" type="bvui:ImageType" use="optional">
+      <xs:annotation>
+        <xs:documentation>Image display type (Simple, Sliced, Tiled, Filled)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="PixelsPerUnit" type="xs:float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Pixels per unit for sprite creation (default: 100)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Pivot" type="bvui:PivotValue" use="optional">
+      <xs:annotation>
+        <xs:documentation>Pivot point as normalized coordinates "x,y" (default: "0.5,0.5" = center)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="WrapMode" type="bvui:TextureWrapMode" use="optional">
+      <xs:annotation>
+        <xs:documentation>Texture wrap mode: Repeat, Clamp, Mirror, MirrorOnce</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FilterMode" type="bvui:TextureFilterMode" use="optional">
+      <xs:annotation>
+        <xs:documentation>Texture filter mode: Point, Bilinear, Trilinear</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:complexType name="ImageInfoType">
+    <xs:annotation>
+      <xs:documentation>Image configuration for IconButton.Image, Panel.Image, ScrollView.Image</xs:documentation>
+    </xs:annotation>
+    <xs:attributeGroup ref="bvui:ImageAttributes"/>
+  </xs:complexType>
+
   <!-- ============================================================ -->
   <!-- VIEW ELEMENT                                                 -->
   <!-- ============================================================ -->
@@ -516,10 +583,19 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
+        <xs:element name="Panel.LayoutGroup" type="bvui:LayoutGroupType" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>LayoutGroup configuration for arranging child elements</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Panel.Image" type="bvui:ImageInfoType" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Background image configuration</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
-      <xs:attributeGroup ref="bvui:LayoutGroupAttributes"/>
       <xs:attributeGroup ref="bvui:ShadowAttributes"/>
     </xs:complexType>
   </xs:element>
@@ -534,14 +610,19 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
+        <xs:element name="ScrollView.LayoutGroup" type="bvui:LayoutGroupType" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>LayoutGroup configuration for arranging child elements in the content area</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ScrollView.Image" type="bvui:ImageInfoType" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Background image configuration</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
-      <xs:attribute name="Background" type="xs:string" use="optional">
-        <xs:annotation>
-          <xs:documentation>Background color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
       <xs:attribute name="Horizontal" type="xs:boolean" use="optional">
         <xs:annotation>
           <xs:documentation>Whether horizontal scrolling is enabled (default: false)</xs:documentation>
@@ -570,46 +651,6 @@
       <xs:attribute name="ScrollSensitivity" type="xs:float" use="optional">
         <xs:annotation>
           <xs:documentation>The scroll sensitivity for scroll wheel input</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="Orientation" type="bvui:Orientation" use="optional">
-        <xs:annotation>
-          <xs:documentation>Content LayoutGroup orientation (Vertical, Horizontal, or None)</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="Spacing" type="xs:float" use="optional">
-        <xs:annotation>
-          <xs:documentation>Spacing between child elements in the content</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="Padding" type="bvui:ThicknessValue" use="optional">
-        <xs:annotation>
-          <xs:documentation>Inner padding of the content area</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="ChildAlignment" type="bvui:ChildAlignment" use="optional">
-        <xs:annotation>
-          <xs:documentation>Alignment of child elements within the content</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="ChildControlWidth" type="xs:boolean" use="optional">
-        <xs:annotation>
-          <xs:documentation>Whether the LayoutGroup controls children's width</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="ChildControlHeight" type="xs:boolean" use="optional">
-        <xs:annotation>
-          <xs:documentation>Whether the LayoutGroup controls children's height</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="ChildForceExpandWidth" type="xs:boolean" use="optional">
-        <xs:annotation>
-          <xs:documentation>Force children to expand to fill available width</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="ChildForceExpandHeight" type="xs:boolean" use="optional">
-        <xs:annotation>
-          <xs:documentation>Force children to expand to fill available height</xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>
@@ -876,6 +917,42 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="TextureWrapMode">
+    <xs:annotation>
+      <xs:documentation>Texture wrap mode (maps to UnityEngine.TextureWrapMode)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Repeat"/>
+      <xs:enumeration value="Clamp"/>
+      <xs:enumeration value="Mirror"/>
+      <xs:enumeration value="MirrorOnce"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TextureFilterMode">
+    <xs:annotation>
+      <xs:documentation>Texture filter mode (maps to UnityEngine.FilterMode)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Point"/>
+      <xs:enumeration value="Bilinear"/>
+      <xs:enumeration value="Trilinear"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PivotValue">
+    <xs:annotation>
+      <xs:documentation>
+        Pivot point as normalized coordinates.
+        Format: "x,y" where x and y are between 0 and 1.
+        Examples: "0.5,0.5" (center), "0,0" (bottom-left), "1,1" (top-right)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\d+(\.\d+)?,\d+(\.\d+)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:element name="Image">
     <xs:annotation>
       <xs:documentation>Image control that can display images from embedded resources or sprites.</xs:documentation>
@@ -911,6 +988,26 @@
           <xs:documentation>Whether the image should receive raycasts for UI interaction</xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="PixelsPerUnit" type="xs:float" use="optional">
+        <xs:annotation>
+          <xs:documentation>Pixels per unit for sprite creation (default: 100)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Pivot" type="bvui:PivotValue" use="optional">
+        <xs:annotation>
+          <xs:documentation>Pivot point as normalized coordinates "x,y" (default: "0.5,0.5" = center)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="WrapMode" type="bvui:TextureWrapMode" use="optional">
+        <xs:annotation>
+          <xs:documentation>Texture wrap mode: Repeat, Clamp, Mirror, MirrorOnce</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="FilterMode" type="bvui:TextureFilterMode" use="optional">
+        <xs:annotation>
+          <xs:documentation>Texture filter mode: Point, Bilinear, Trilinear</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
@@ -924,31 +1021,16 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
+        <xs:element name="IconButton.Image" type="bvui:ImageInfoType" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Icon image configuration</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:group ref="bvui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attributeGroup ref="bvui:BaseControlAttributes"/>
       <xs:attributeGroup ref="bvui:ButtonColorsAttributes"/>
       <xs:attributeGroup ref="bvui:ShadowAttributes"/>
-      <xs:attribute name="Source" type="xs:string" use="optional">
-        <xs:annotation>
-          <xs:documentation>Embedded resource name or path for the icon</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="Color" type="xs:string" use="optional">
-        <xs:annotation>
-          <xs:documentation>Image tint color (format: #RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="PreserveAspect" type="xs:boolean" use="optional">
-        <xs:annotation>
-          <xs:documentation>Whether to preserve the aspect ratio of the icon</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="ImageType" type="bvui:ImageType" use="optional">
-        <xs:annotation>
-          <xs:documentation>Image display type (Simple, Sliced, Tiled, Filled)</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
       <xs:attribute name="Click" type="xs:NCName" use="optional">
         <xs:annotation>
           <xs:documentation>Name of the method called on click</xs:documentation>

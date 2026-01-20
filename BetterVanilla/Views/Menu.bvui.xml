@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<View xmlns="http://schemas.bettervanilla.ui/2025"
+      xmlns:x="http://schemas.bettervanilla.ui/2025/xaml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://schemas.bettervanilla.ui/2025 ../../BetterVanilla/Ui/Schemas/bvui.xsd"
+      x:Class="BetterVanilla.Views.Menu">
+    <Panel x:Name="root" Alias="Controls/Panel"
+           Width="600"
+           HorizontalAlignment="Left"
+           VerticalAlignment="Stretch">
+        <Panel.LayoutGroup Orientation="Vertical"
+                           Spacing="8"
+                           Padding="15,5,15,5"
+                           ChildForceExpandWidth="true"
+                           ChildForceExpandHeight="false"
+                           ChildControlHeight="false"
+                           ChildControlWidth="true"
+                           ChildAlignment="UpperCenter"/>
+        <Panel.Image Color="#1A1A2E" />
+        <Panel x:Name="header" HorizontalAlignment="Stretch" Height="50">
+            <Panel.LayoutGroup Orientation="Horizontal" Padding="5"/>
+            <TextBlock x:Name="titleText"
+                       Alias="Controls/TextBlock"
+                       Text="BetterVanilla"
+                       FontSize="40"
+                       TextAlignment="MidlineLeft"
+                       Height="50"
+                       Width="480"
+                       HorizontalAlignment="Left"/>
+            <IconButton Alias="Controls/IconButton"
+                        x:Name="closeButton"
+                        HorizontalAlignment="Right"
+                        Height="40"
+                        Width="40"
+                        Click="OnCloseClicked">
+                <IconButton.Image Source="BetterVanilla.Ui.Assets.CloseButtonIcon.png" PreserveAspect="true" FilterMode="Bilinear" WrapMode="Clamp" PixelsPerUnit="100" />
+            </IconButton>
+        </Panel>
+        <ScrollView x:Name="optionsScrollView"
+                    HorizontalAlignment="Stretch"
+                    ScrollSensitivity="15"
+                    Height="400"
+                    Vertical="true"
+                    Horizontal="false">
+            <ScrollView.LayoutGroup Orientation="Vertical"
+                                    Spacing="8"
+                                    Padding="5"
+                                    ChildForceExpandWidth="false"
+                                    ChildForceExpandHeight="false"
+                                    ChildControlHeight="false"/>
+            <ScrollView.Image Color="#00000000" />
+            <Image HorizontalAlignment="Stretch"
+                   Margin="10"
+                   Height="300"
+                   PreserveAspect="true"
+                   Source="BetterVanilla.Ui.Assets.SponsorBanner.png">
+                <Button Height="50" Width="300"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Margin="0,0,0,50"
+                        ShadowEnabled="true"
+                        ShadowDistance="2,-2"
+                        ShadowColor="#000000F0"
+                        Click="OnBecomeSponsorButtonClick"
+                        Text="Rejoindre les sponsors">
+                    <Button.TextStyle AutoSize="true" TextMargin="20,0"/>
+                </Button>
+            </Image>
+            <!-- Éléments supplémentaires pour tester le scroll -->
+            <TextBlock IsVisible="{Binding ShouldDisplayAdditionalTexts, Mode=OneWay}" x:Name="testText1"
+                       Text="Test item 1" HorizontalAlignment="Stretch" Height="40"/>
+            <TextBlock IsVisible="{Binding ShouldDisplayAdditionalTexts, Mode=OneWay}" x:Name="testText2"
+                       Text="Test item 2" HorizontalAlignment="Stretch" Height="40"/>
+            <TextBlock IsVisible="{Binding ShouldDisplayAdditionalTexts, Mode=OneWay}" x:Name="testText3"
+                       Text="Test item 3" HorizontalAlignment="Stretch" Height="40"/>
+            <TextBlock IsVisible="{Binding ShouldDisplayAdditionalTexts, Mode=OneWay}" x:Name="testText4"
+                       Text="Test item 4" HorizontalAlignment="Stretch" Height="40"/>
+            <TextBlock IsVisible="{Binding ShouldDisplayAdditionalTexts, Mode=OneWay}" x:Name="testText5"
+                       Text="Test item 5" HorizontalAlignment="Stretch" Height="40"/>
+        </ScrollView>
+    </Panel>
+</View>

@@ -1,10 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <!-- Exclude the nested XamlGenerator project from default globbing -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);Ui\Tools\**\*</DefaultItemExcludes>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -22,8 +24,26 @@
         <CopyToMods>$(AssemblyName)</CopyToMods>
     </PropertyGroup>
 
+    <!-- BVUI Code Generation -->
+    <PropertyGroup>
+        <EnableBvuiGeneration>true</EnableBvuiGeneration>
+    </PropertyGroup>
+
+    <!-- Import BVUI build system -->
+    <Import Project="Ui\Build\BetterVanilla.Ui.Xaml.props" />
+    <Import Project="Ui\Build\BetterVanilla.Ui.Xaml.targets" />
+
+    <!-- Embedded resources -->
     <ItemGroup>
         <EmbeddedResource Include="Assets\**"/>
+        <!-- UI Assets with correct namespace prefix -->
+        <EmbeddedResource Include="Ui\Assets\**" LogicalName="BetterVanilla.Ui.Assets.%(Filename)%(Extension)"/>
+    </ItemGroup>
+
+    <!-- Additional content files -->
+    <ItemGroup>
+        <None Include="Ui\ui-aliases.json" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="Ui\ui-aliases.schema.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<View xmlns="http://schemas.bettervanilla.ui/2025"
+      xmlns:x="http://schemas.bettervanilla.ui/2025/xaml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://schemas.bettervanilla.ui/2025 ../../BetterVanilla/Ui/Schemas/bvui.xsd"
+      x:Class="BetterVanilla.Views.MenuButtonOverlay">
+    <Panel Width="150" Height="250"
+           VerticalAlignment="Bottom"
+           Margin="0,0,0,250"
+           HorizontalAlignment="Left">
+        <Panel.LayoutGroup Orientation="Vertical"
+                           ChildAlignment="LowerCenter"
+                           ChildControlWidth="false"
+                           ChildControlHeight="false"
+                           ChildForceExpandWidth="false"
+                           ChildForceExpandHeight="false"/>
+        <Panel.Image Color="#0000FF2F" />
+        <IconButton x:Name="menuButton"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    NormalColor="#FFFFFF80"
+                    HighlightedColor="#F5F5F5"
+                    PressedColor="#C8C8C8"
+                    SelectedColor="#F5F5F5"
+                    DisabledColor="#C8C8C880"
+                    Height="150"
+                    Width="150"
+                    IsEnabled="{Binding IsButtonInteractable, Mode=OneWay}"
+                    Click="OnOkClicked">
+            <IconButton.Image Source="BetterVanilla.Ui.Assets.MenuButton.png" ImageType="Sliced" />
+        </IconButton>
+    </Panel>
+</View>
