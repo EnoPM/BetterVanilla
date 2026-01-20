@@ -1,5 +1,4 @@
-﻿using System;
-using BetterVanilla.Core;
+﻿using BetterVanilla.Core;
 using BetterVanilla.Ui.Core;
 
 namespace BetterVanilla.Views;

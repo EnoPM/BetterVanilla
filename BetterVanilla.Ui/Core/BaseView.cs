@@ -164,7 +164,7 @@ public abstract class BaseView : MonoBehaviour, IDisposable
         var bindableProperty = control.GetBindableProperty(targetProperty);
         if (bindableProperty == null)
         {
-            Plugin.Instance.Log.LogWarning($"Property '{targetProperty}' not found on control '{control.Name}'");
+            UiLogger.LogWarning($"Property '{targetProperty}' not found on control '{control.Name}'");
             return EmptyDisposable.Instance;
         }
 
@@ -180,14 +180,14 @@ public abstract class BaseView : MonoBehaviour, IDisposable
         var parsed = BindingExpression.Parse(expression);
         if (parsed == null)
         {
-            Plugin.Instance.Log.LogWarning($"Failed to parse binding expression: {expression}");
+            UiLogger.LogWarning($"Failed to parse binding expression: {expression}");
             return EmptyDisposable.Instance;
         }
 
         var bindableProperty = control.GetBindableProperty(targetProperty);
         if (bindableProperty == null)
         {
-            Plugin.Instance.Log.LogWarning($"Property '{targetProperty}' not found on control '{control.Name}'");
+            UiLogger.LogWarning($"Property '{targetProperty}' not found on control '{control.Name}'");
             return EmptyDisposable.Instance;
         }
 
@@ -222,7 +222,7 @@ public abstract class BaseView : MonoBehaviour, IDisposable
             }
             else if (attr.Required)
             {
-                Plugin.Instance.Log.LogWarning($"Required view element '{attr.Name}' is null in {type.Name}");
+                UiLogger.LogWarning($"Required view element '{attr.Name}' is null in {type.Name}");
             }
         }
     }

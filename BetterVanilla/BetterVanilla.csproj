@@ -5,8 +5,6 @@
         <LangVersion>latest</LangVersion>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <!-- Exclude the nested XamlGenerator project from default globbing -->
-        <DefaultItemExcludes>$(DefaultItemExcludes);Ui\Tools\**\*</DefaultItemExcludes>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -24,26 +22,27 @@
         <CopyToMods>$(AssemblyName)</CopyToMods>
     </PropertyGroup>
 
-    <!-- BVUI Code Generation -->
-    <PropertyGroup>
-        <EnableBvuiGeneration>true</EnableBvuiGeneration>
-    </PropertyGroup>
+    <!-- Reference BetterVanilla.Ui project -->
+    <ItemGroup>
+        <ProjectReference Include="..\BetterVanilla.Ui\BetterVanilla.Ui.csproj" />
+    </ItemGroup>
 
-    <!-- Import BVUI build system -->
-    <Import Project="Ui\Build\BetterVanilla.Ui.Xaml.props" />
-    <Import Project="Ui\Build\BetterVanilla.Ui.Xaml.targets" />
+    <!-- Reference the Source Generator -->
+    <ItemGroup>
+        <ProjectReference Include="..\BetterVanilla.Ui.SourceGenerator\BetterVanilla.Ui.SourceGenerator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <!-- UI XML files as AdditionalFiles for the source generator -->
+    <ItemGroup>
+        <AdditionalFiles Include="**\*.ui.xml" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**" />
+        <AdditionalFiles Include="..\BetterVanilla.Ui\ui-aliases.json" />
+    </ItemGroup>
 
     <!-- Embedded resources -->
     <ItemGroup>
         <EmbeddedResource Include="Assets\**"/>
-        <!-- UI Assets with correct namespace prefix -->
-        <EmbeddedResource Include="Ui\Assets\**" LogicalName="BetterVanilla.Ui.Assets.%(Filename)%(Extension)"/>
-    </ItemGroup>
-
-    <!-- Additional content files -->
-    <ItemGroup>
-        <None Include="Ui\ui-aliases.json" CopyToOutputDirectory="PreserveNewest" />
-        <None Include="Ui\ui-aliases.schema.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>

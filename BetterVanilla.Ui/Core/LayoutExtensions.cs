@@ -145,7 +145,38 @@ public static class LayoutExtensions
             if (minHeight.HasValue)
                 layoutElement.minHeight = minHeight.Value;
         }
-        
+
+        /// <summary>
+        /// Sets the maximum size using LayoutElement constraints.
+        /// Note: Unity's LayoutElement doesn't have direct max size support,
+        /// so this sets preferred size and prevents expansion.
+        /// </summary>
+        public void SetMaxSize(float? maxWidth, float? maxHeight)
+        {
+            if (!maxWidth.HasValue && !maxHeight.HasValue)
+                return;
+
+            var layoutElement = rectTransform.GetComponent<LayoutElement>();
+            if (layoutElement == null)
+                layoutElement = rectTransform.gameObject.AddComponent<LayoutElement>();
+
+            // Unity LayoutElement doesn't have direct maxWidth/maxHeight
+            // We use preferredWidth/Height with flexibleWidth/Height = 0 to cap size
+            if (maxWidth.HasValue)
+            {
+                // Only set preferred if it would be larger than current preferred
+                if (layoutElement.preferredWidth < 0 || layoutElement.preferredWidth > maxWidth.Value)
+                    layoutElement.preferredWidth = maxWidth.Value;
+                layoutElement.flexibleWidth = 0;
+            }
+            if (maxHeight.HasValue)
+            {
+                if (layoutElement.preferredHeight < 0 || layoutElement.preferredHeight > maxHeight.Value)
+                    layoutElement.preferredHeight = maxHeight.Value;
+                layoutElement.flexibleHeight = 0;
+            }
+        }
+
         /// <summary>
         /// Sets the flexible size on LayoutElement component.
         /// </summary>
@@ -186,9 +217,23 @@ public static class LayoutExtensions
             }
             else
             {
-                // Fixed X: adjust anchoredPosition.x
+                // Fixed X: adjust anchoredPosition.x based on anchor position
                 var pos = rectTransform.anchoredPosition;
-                pos.x = margin.Left - margin.Right;
+                if (Mathf.Approximately(anchorMin.x, 0f))
+                {
+                    // Left-aligned: push right by left margin
+                    pos.x = margin.Left;
+                }
+                else if (Mathf.Approximately(anchorMin.x, 1f))
+                {
+                    // Right-aligned: push left by right margin (negative)
+                    pos.x = -margin.Right;
+                }
+                else
+                {
+                    // Center-aligned: offset by difference
+                    pos.x = margin.Left - margin.Right;
+                }
                 rectTransform.anchoredPosition = pos;
             }
 
@@ -201,9 +246,23 @@ public static class LayoutExtensions
             }
             else
             {
-                // Fixed Y: adjust anchoredPosition.y
+                // Fixed Y: adjust anchoredPosition.y based on anchor position
                 var pos = rectTransform.anchoredPosition;
-                pos.y = margin.Bottom - margin.Top;
+                if (Mathf.Approximately(anchorMin.y, 0f))
+                {
+                    // Bottom-aligned: push up by bottom margin
+                    pos.y = margin.Bottom;
+                }
+                else if (Mathf.Approximately(anchorMin.y, 1f))
+                {
+                    // Top-aligned: push down by top margin (negative)
+                    pos.y = -margin.Top;
+                }
+                else
+                {
+                    // Center-aligned: offset by difference
+                    pos.y = margin.Bottom - margin.Top;
+                }
                 rectTransform.anchoredPosition = pos;
             }
         }
@@ -337,11 +396,13 @@ public static class LayoutExtensions
             var layoutGroup = rectTransform.GetComponent<LayoutGroup>();
             if (layoutGroup != null)
             {
-                var rectOffset = new RectOffset();
-                rectOffset.left = (int)padding.Left;
-                rectOffset.right = (int)padding.Right;
-                rectOffset.top = (int)padding.Top;
-                rectOffset.bottom = (int)padding.Bottom;
+                var rectOffset = new RectOffset
+                {
+                    left = (int)padding.Left,
+                    right = (int)padding.Right,
+                    top = (int)padding.Top,
+                    bottom = (int)padding.Bottom
+                };
                 layoutGroup.padding = rectOffset;
             }
         }

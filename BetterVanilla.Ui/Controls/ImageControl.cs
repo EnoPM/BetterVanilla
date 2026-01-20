@@ -1,8 +1,10 @@
 using System;
-using System.IO;
+using System.Collections;
 using System.Reflection;
 using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
+using BetterVanilla.Ui.Helpers;
+using EnoUnityLoader.Il2Cpp.Utils;
 using Il2CppInterop.Runtime.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,36 +12,96 @@ using UnityEngine.UI;
 namespace BetterVanilla.Ui.Controls;
 
 /// <summary>
-/// Image control that can display images from embedded resources or sprites.
+/// Image control that can display images from embedded resources, URLs, or local files.
 /// </summary>
 public sealed class ImageControl : BaseControl, IShadowControl
 {
     private ImageComponent? _component;
     private ShadowHelper? _shadow;
-    private string? _source;
+    private string? _embeddedResource;
+    private string? _url;
+    private string? _filePath;
     private Assembly? _sourceAssembly;
+    private float _pixelsPerUnit = ImageLoadingHelper.DefaultPixelsPerUnit;
+    private Vector2 _pivot = ImageLoadingHelper.DefaultPivot;
+    private TextureWrapMode _wrapMode = TextureWrapMode.Clamp;
+    private FilterMode _filterMode = FilterMode.Bilinear;
+    private bool _generateMipmaps = true;
+    private bool _isInitialized;
+    private Coroutine? _loadingCoroutine;
 
     /// <summary>
     /// The Unity Image component.
     /// </summary>
     public Image? Image => _component?.image;
 
+    #region Source Properties
+
     /// <summary>
     /// The embedded resource name or path to load the image from.
-    /// Format: "Namespace.Folder.FileName.png" or just "FileName.png" if using SourceAssembly.
     /// </summary>
-    public string? Source
+    public string? EmbeddedResource
     {
-        get => _source;
+        get => _embeddedResource;
         set
         {
-            _source = value;
-            LoadImageFromSource();
+            _embeddedResource = value;
+            _url = null;
+            _filePath = null;
+            if (_isInitialized && !string.IsNullOrEmpty(value))
+            {
+                LoadFromEmbeddedResource();
+            }
         }
     }
 
     /// <summary>
-    /// The assembly to load embedded resources from. Defaults to the calling assembly.
+    /// URL to load the image from (http/https).
+    /// </summary>
+    public string? Url
+    {
+        get => _url;
+        set
+        {
+            _url = value;
+            _embeddedResource = null;
+            _filePath = null;
+            if (_isInitialized && !string.IsNullOrEmpty(value))
+            {
+                LoadFromUrl();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Local file path to load the image from.
+    /// </summary>
+    public string? FilePath
+    {
+        get => _filePath;
+        set
+        {
+            _filePath = value;
+            _embeddedResource = null;
+            _url = null;
+            if (_isInitialized && !string.IsNullOrEmpty(value))
+            {
+                LoadFromFile();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Legacy property - sets EmbeddedResource for backward compatibility.
+    /// </summary>
+    public string? Source
+    {
+        get => _embeddedResource ?? _url ?? _filePath;
+        set => EmbeddedResource = value;
+    }
+
+    /// <summary>
+    /// The assembly to load embedded resources from.
     /// </summary>
     public Assembly? SourceAssembly
     {
@@ -47,12 +109,30 @@ public sealed class ImageControl : BaseControl, IShadowControl
         set
         {
             _sourceAssembly = value;
-            if (!string.IsNullOrEmpty(_source))
+            if (_isInitialized && !string.IsNullOrEmpty(_embeddedResource))
             {
-                LoadImageFromSource();
+                LoadFromEmbeddedResource();
             }
         }
     }
+
+    /// <summary>
+    /// Gets the current source type.
+    /// </summary>
+    public ImageSourceType SourceType
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(_embeddedResource)) return ImageSourceType.EmbeddedResource;
+            if (!string.IsNullOrEmpty(_url)) return ImageSourceType.Url;
+            if (!string.IsNullOrEmpty(_filePath)) return ImageSourceType.FilePath;
+            return ImageSourceType.None;
+        }
+    }
+
+    #endregion
+
+    #region Display Properties
 
     /// <summary>
     /// Directly set a sprite on the image.
@@ -129,6 +209,77 @@ public sealed class ImageControl : BaseControl, IShadowControl
         }
     }
 
+    #endregion
+
+    #region Loading Options
+
+    /// <summary>
+    /// Pixels per unit for sprite creation (default: 100).
+    /// </summary>
+    public float PixelsPerUnit
+    {
+        get => _pixelsPerUnit;
+        set
+        {
+            _pixelsPerUnit = value;
+            if (_isInitialized) ReloadCurrentSource();
+        }
+    }
+
+    /// <summary>
+    /// Pivot point for sprite creation (normalized coordinates, default: 0.5,0.5 = center).
+    /// </summary>
+    public Vector2 Pivot
+    {
+        get => _pivot;
+        set
+        {
+            _pivot = value;
+            if (_isInitialized) ReloadCurrentSource();
+        }
+    }
+
+    /// <summary>
+    /// Texture wrap mode (default: Clamp).
+    /// </summary>
+    public TextureWrapMode WrapMode
+    {
+        get => _wrapMode;
+        set
+        {
+            _wrapMode = value;
+            if (_isInitialized) ReloadCurrentSource();
+        }
+    }
+
+    /// <summary>
+    /// Texture filter mode (default: Bilinear).
+    /// </summary>
+    public FilterMode FilterMode
+    {
+        get => _filterMode;
+        set
+        {
+            _filterMode = value;
+            if (_isInitialized) ReloadCurrentSource();
+        }
+    }
+
+    /// <summary>
+    /// Whether to generate mipmaps (default: true).
+    /// </summary>
+    public bool GenerateMipmaps
+    {
+        get => _generateMipmaps;
+        set
+        {
+            _generateMipmaps = value;
+            if (_isInitialized) ReloadCurrentSource();
+        }
+    }
+
+    #endregion
+
     #region IShadowControl
 
     public bool ShadowEnabled
@@ -162,199 +313,155 @@ public sealed class ImageControl : BaseControl, IShadowControl
         base.Awake();
         _component = GetComponent<ImageComponent>();
         _shadow = new ShadowHelper(_component?.shadow);
+        _isInitialized = true;
+
+        // Load the image if a source was set before Awake
+        ReloadCurrentSource();
     }
 
-    private void LoadImageFromSource()
+    private void ReloadCurrentSource()
     {
-        if (string.IsNullOrEmpty(_source) || _component == null)
+        switch (SourceType)
+        {
+            case ImageSourceType.EmbeddedResource:
+                LoadFromEmbeddedResource();
+                break;
+            case ImageSourceType.Url:
+                LoadFromUrl();
+                break;
+            case ImageSourceType.FilePath:
+                LoadFromFile();
+                break;
+        }
+    }
+
+    private void CleanupPreviousSprite()
+    {
+        if (_component?.image.sprite != null && _component.image.sprite.texture != null)
+        {
+            var oldSprite = _component.image.sprite;
+            var oldTexture = oldSprite.texture;
+            _component.image.sprite = null;
+            Destroy(oldSprite);
+            Destroy(oldTexture);
+        }
+    }
+
+    private void LoadFromEmbeddedResource()
+    {
+        if (string.IsNullOrEmpty(_embeddedResource) || _component == null)
             return;
 
-        var assembly = _sourceAssembly ?? Assembly.GetCallingAssembly();
-        var texture = LoadTextureFromEmbeddedResource(assembly, _source);
+        CleanupPreviousSprite();
 
-        if (texture != null)
+        var sprite = ImageLoadingHelper.LoadSpriteFromEmbeddedResource(
+            _embeddedResource,
+            _sourceAssembly,
+            _pixelsPerUnit,
+            _pivot,
+            _wrapMode,
+            _filterMode,
+            _generateMipmaps
+        );
+
+        if (sprite != null)
         {
-            var sprite = Sprite.Create(
-                texture,
-                new Rect(0, 0, texture.width, texture.height),
-                new Vector2(0.5f, 0.5f),
-                100f
-            );
             _component.image.sprite = sprite;
         }
     }
 
-    /// <summary>
-    /// Loads a texture from an embedded resource.
-    /// </summary>
-    /// <param name="assembly">The assembly containing the resource.</param>
-    /// <param name="resourceName">The resource name. Can be partial (will search for matching resource).</param>
-    /// <returns>The loaded texture, or null if not found.</returns>
-    public static Texture2D? LoadTextureFromEmbeddedResource(Assembly assembly, string resourceName)
+    private void LoadFromFile()
     {
-        // Try exact match first
-        using var stream = assembly.GetManifestResourceStream(resourceName);
-        if (stream != null)
-        {
-            return LoadTextureFromStream(stream);
-        }
+        if (string.IsNullOrEmpty(_filePath) || _component == null)
+            return;
 
-        // Try to find a matching resource name
-        var resourceNames = assembly.GetManifestResourceNames();
-        foreach (var name in resourceNames)
-        {
-            if (name.EndsWith(resourceName, StringComparison.OrdinalIgnoreCase) ||
-                name.EndsWith("." + resourceName, StringComparison.OrdinalIgnoreCase))
-            {
-                using var matchedStream = assembly.GetManifestResourceStream(name);
-                if (matchedStream != null)
-                {
-                    return LoadTextureFromStream(matchedStream);
-                }
-            }
-        }
+        CleanupPreviousSprite();
 
-        Plugin.Instance.Log.LogWarning($"[ImageControl] Embedded resource not found in assembly {assembly.GetName().Name}: {resourceName}");
-        return null;
+        var sprite = ImageLoadingHelper.LoadSpriteFromFile(
+            _filePath,
+            _pixelsPerUnit,
+            _pivot,
+            _wrapMode,
+            _filterMode,
+            _generateMipmaps
+        );
+
+        if (sprite != null)
+        {
+            _component.image.sprite = sprite;
+        }
     }
 
-    /// <summary>
-    /// Searches for and loads a texture from any loaded assembly.
-    /// </summary>
-    /// <param name="resourceName">The resource name to search for.</param>
-    /// <returns>The loaded texture, or null if not found.</returns>
-    public static Texture2D? LoadTextureFromAnyAssembly(string resourceName)
+    private void LoadFromUrl()
     {
-        // Try exact match first in all assemblies
-        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        if (string.IsNullOrEmpty(_url) || _component == null)
+            return;
+
+        // Cancel any previous loading coroutine
+        if (_loadingCoroutine != null)
         {
-            try
-            {
-                using var stream = assembly.GetManifestResourceStream(resourceName);
-                if (stream != null)
-                {
-                    return LoadTextureFromStream(stream);
-                }
-            }
-            catch
-            {
-                // Ignore assemblies that can't be inspected
-            }
+            StopCoroutine(_loadingCoroutine);
         }
 
-        // Try partial match in all assemblies
-        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-        {
-            try
-            {
-                var resourceNames = assembly.GetManifestResourceNames();
-                foreach (var name in resourceNames)
-                {
-                    if (name.EndsWith(resourceName, StringComparison.OrdinalIgnoreCase) ||
-                        name.EndsWith("." + resourceName, StringComparison.OrdinalIgnoreCase) ||
-                        name.Equals(resourceName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        using var matchedStream = assembly.GetManifestResourceStream(name);
-                        if (matchedStream != null)
-                        {
-                            return LoadTextureFromStream(matchedStream);
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                // Ignore assemblies that can't be inspected
-            }
-        }
+        CleanupPreviousSprite();
 
-        // Log available resources for debugging
-        Plugin.Instance.Log.LogWarning($"[ImageControl] Embedded resource not found in any assembly: {resourceName}");
-        Plugin.Instance.Log.LogWarning("[ImageControl] Available embedded resources:");
-        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-        {
-            try
-            {
-                var names = assembly.GetManifestResourceNames();
-                foreach (var name in names)
-                {
-                    if (name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                        name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                        name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
-                    {
-                        Plugin.Instance.Log.LogWarning($"  - {name}");
-                    }
-                }
-            }
-            catch
-            {
-                // Ignore
-            }
-        }
-        return null;
+        _loadingCoroutine = this.StartCoroutine(CoLoadFromUrl());
     }
 
-    private static Texture2D LoadTextureFromStream(Stream stream)
+    private IEnumerator CoLoadFromUrl()
     {
-        using var memoryStream = new MemoryStream();
-        stream.CopyTo(memoryStream);
-        var bytes = memoryStream.ToArray();
-
-        var texture = new Texture2D(2, 2);
-        if (texture.LoadImage(bytes))
-        {
-            return texture;
-        }
-
-        Plugin.Instance.Log.LogWarning("[ImageControl] Failed to load texture from stream");
-        return null!;
-    }
-
-    /// <summary>
-    /// Loads an image from embedded resources using a specific assembly.
-    /// </summary>
-    /// <param name="assembly">The assembly containing the embedded resource.</param>
-    /// <param name="resourceName">The resource name.</param>
-    public void LoadFromEmbeddedResource(Assembly assembly, string resourceName)
-    {
-        _sourceAssembly = assembly;
-        Source = resourceName;
+        yield return ImageLoadingHelper.LoadSpriteFromUrlAsync(
+            _url!,
+            sprite =>
+            {
+                if (_component != null && sprite != null)
+                {
+                    _component.image.sprite = sprite;
+                }
+                _loadingCoroutine = null;
+            },
+            _pixelsPerUnit,
+            _pivot,
+            _wrapMode,
+            _filterMode,
+            _generateMipmaps
+        );
     }
 
     /// <summary>
     /// Loads an image from a byte array.
     /// </summary>
-    /// <param name="imageData">The image data (PNG, JPG, etc.).</param>
     [HideFromIl2Cpp]
     public void LoadFromBytes(byte[] imageData)
     {
         if (_component == null) return;
 
-        var texture = new Texture2D(2, 2);
-        if (texture.LoadImage(imageData))
+        CleanupPreviousSprite();
+
+        var sprite = ImageLoadingHelper.CreateSpriteFromBytes(
+            imageData,
+            _pixelsPerUnit,
+            _pivot,
+            _wrapMode,
+            _filterMode,
+            _generateMipmaps
+        );
+
+        if (sprite != null)
         {
-            var sprite = Sprite.Create(
-                texture,
-                new Rect(0, 0, texture.width, texture.height),
-                new Vector2(0.5f, 0.5f),
-                100f
-            );
             _component.image.sprite = sprite;
         }
     }
 
     public override void Dispose()
     {
-        // Clean up created textures/sprites if needed
-        if (_component?.image.sprite != null && _component.image.sprite.texture != null)
+        if (_loadingCoroutine != null)
         {
-            // Only destroy if we created it (not from an asset bundle)
-            if (!string.IsNullOrEmpty(_source))
-            {
-                Destroy(_component.image.sprite.texture);
-                Destroy(_component.image.sprite);
-            }
+            StopCoroutine(_loadingCoroutine);
+            _loadingCoroutine = null;
         }
+
+        CleanupPreviousSprite();
         base.Dispose();
     }
 }

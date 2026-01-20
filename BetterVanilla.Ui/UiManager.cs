@@ -38,8 +38,12 @@ public sealed class UiManager
         _uiContainer.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
         Object.DontDestroyOnLoad(_uiContainer);
 
-        Plugin.Instance.Log.LogMessage("[UiManager] UiContainer created");
+        UiLogger.LogMessage("[UiManager] UiContainer created");
     }
+
+    public TView CreateView<TView, TViewModel>()
+        where TView : BaseView
+        where TViewModel : ViewModelBase, new() => CreateView<TView, TViewModel>(new TViewModel());
 
     public TView CreateView<TView, TViewModel>(TViewModel viewModel)
         where TView : BaseView

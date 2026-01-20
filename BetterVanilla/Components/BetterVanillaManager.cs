@@ -23,7 +23,7 @@ public sealed class BetterVanillaManager : MonoBehaviour
     public ChatCommandsManager ChatCommands { get; private set; } = null!;
     public CheatersManager Cheaters { get; private set; } = null!;
     public ModMenu Menu { get; private set; } = null!;
-    public ZoomBehaviourManager ZoomBehaviour { get; internal set; } = null!;
+    public ZoomBehaviourManager? ZoomBehaviour { get; internal set; } = null!;
     public Sprite VentSprite { get; private set; } = null!;
     public BetterPlayerTexts PlayerTextsPrefab { get; private set; } = null!;
     public BetterPlayerTexts BetterVoteAreaTextsPrefab { get; private set; } = null!;

@@ -65,18 +65,18 @@ public sealed class ViewEventAttribute : Attribute
 }
 
 /// <summary>
-/// Marks a class as a view with the specified BVUI file.
+/// Marks a class as a view with the specified UI file.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class ViewAttribute : Attribute
 {
     /// <summary>
-    /// The path to the .bvui.xml file.
+    /// The path to the .ui.xml file.
     /// </summary>
-    public string BvuiFile { get; }
+    public string UiFile { get; }
 
-    public ViewAttribute(string bvuiFile)
+    public ViewAttribute(string uiFile)
     {
-        BvuiFile = bvuiFile ?? throw new ArgumentNullException(nameof(bvuiFile));
+        UiFile = uiFile ?? throw new ArgumentNullException(nameof(uiFile));
     }
 }

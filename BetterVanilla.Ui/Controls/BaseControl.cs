@@ -1,9 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using BetterVanilla.Ui.Binding;
 using BetterVanilla.Ui.Core;
 using BetterVanilla.Ui.Helpers;
+using EnoUnityLoader.Il2Cpp.Utils;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BetterVanilla.Ui.Controls;
 
@@ -82,12 +85,28 @@ public abstract class BaseControl : MonoBehaviour, IViewControl
     /// <summary>
     /// Maximum width in pixels.
     /// </summary>
-    public float? MaxWidth { get; set; }
+    public float? MaxWidth
+    {
+        get;
+        set
+        {
+            field = value;
+            ApplyMaxSize();
+        }
+    }
 
     /// <summary>
     /// Maximum height in pixels.
     /// </summary>
-    public float? MaxHeight { get; set; }
+    public float? MaxHeight
+    {
+        get;
+        set
+        {
+            field = value;
+            ApplyMaxSize();
+        }
+    }
 
     /// <summary>
     /// Flexible width for LayoutGroup expansion. Higher values = more expansion.
@@ -164,6 +183,11 @@ public abstract class BaseControl : MonoBehaviour, IViewControl
         RectTransform.SetMinSize(MinWidth, MinHeight);
     }
 
+    private void ApplyMaxSize()
+    {
+        RectTransform.SetMaxSize(MaxWidth, MaxHeight);
+    }
+
     private void ApplyMargin()
     {
         if (Margin.HasValue)
@@ -182,21 +206,189 @@ public abstract class BaseControl : MonoBehaviour, IViewControl
         RectTransform.SetFlexibleSize(FlexibleWidth, FlexibleHeight);
     }
 
+    #region Percentage-based dimensions
+
+    // Pending percentage values (null = not set as percentage)
+    private float? _pendingWidthPercent;
+    private float? _pendingHeightPercent;
+    private float? _pendingMinWidthPercent;
+    private float? _pendingMinHeightPercent;
+    private float? _pendingMaxWidthPercent;
+    private float? _pendingMaxHeightPercent;
+    private Coroutine? _percentageCoroutine;
+
+    /// <summary>
+    /// Gets the reference size for percentage calculations.
+    /// Uses parent RectTransform size if available, otherwise uses screen size.
+    /// </summary>
+    private Vector2 GetReferenceSize()
+    {
+        var parentRect = transform.parent?.TryCast<RectTransform>();
+        if (parentRect != null)
+        {
+            // Force layout rebuild to ensure parent has correct size
+            LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+            return parentRect.rect.size;
+        }
+        // No parent - use screen size
+        return new Vector2(Screen.width, Screen.height);
+    }
+
+    /// <summary>
+    /// Sets width as a percentage of parent (or screen if no parent).
+    /// The calculation is deferred until the layout is stabilized.
+    /// </summary>
+    /// <param name="percent">Percentage value (e.g., 50 for 50%)</param>
+    public void SetWidthPercent(float percent)
+    {
+        _pendingWidthPercent = percent;
+        SchedulePercentageApplication();
+    }
+
+    /// <summary>
+    /// Sets height as a percentage of parent (or screen if no parent).
+    /// The calculation is deferred until the layout is stabilized.
+    /// </summary>
+    /// <param name="percent">Percentage value (e.g., 50 for 50%)</param>
+    public void SetHeightPercent(float percent)
+    {
+        _pendingHeightPercent = percent;
+        SchedulePercentageApplication();
+    }
+
+    /// <summary>
+    /// Sets minimum width as a percentage of parent (or screen if no parent).
+    /// The calculation is deferred until the layout is stabilized.
+    /// </summary>
+    /// <param name="percent">Percentage value (e.g., 50 for 50%)</param>
+    public void SetMinWidthPercent(float percent)
+    {
+        _pendingMinWidthPercent = percent;
+        SchedulePercentageApplication();
+    }
+
+    /// <summary>
+    /// Sets minimum height as a percentage of parent (or screen if no parent).
+    /// The calculation is deferred until the layout is stabilized.
+    /// </summary>
+    /// <param name="percent">Percentage value (e.g., 50 for 50%)</param>
+    public void SetMinHeightPercent(float percent)
+    {
+        _pendingMinHeightPercent = percent;
+        SchedulePercentageApplication();
+    }
+
+    /// <summary>
+    /// Sets maximum width as a percentage of parent (or screen if no parent).
+    /// The calculation is deferred until the layout is stabilized.
+    /// </summary>
+    /// <param name="percent">Percentage value (e.g., 50 for 50%)</param>
+    public void SetMaxWidthPercent(float percent)
+    {
+        _pendingMaxWidthPercent = percent;
+        SchedulePercentageApplication();
+    }
+
+    /// <summary>
+    /// Sets maximum height as a percentage of parent (or screen if no parent).
+    /// The calculation is deferred until the layout is stabilized.
+    /// </summary>
+    /// <param name="percent">Percentage value (e.g., 50 for 50%)</param>
+    public void SetMaxHeightPercent(float percent)
+    {
+        _pendingMaxHeightPercent = percent;
+        SchedulePercentageApplication();
+    }
+
+    /// <summary>
+    /// Schedules the percentage application to run after layout stabilization.
+    /// </summary>
+    private void SchedulePercentageApplication()
+    {
+        if (_percentageCoroutine != null) return;
+        _percentageCoroutine = this.StartCoroutine(CoApplyPercentages());
+    }
+
+    /// <summary>
+    /// Coroutine that waits for layout to stabilize, then applies percentage-based dimensions.
+    /// </summary>
+    private IEnumerator CoApplyPercentages()
+    {
+        // Wait for end of frame to ensure all layouts are calculated
+        yield return new WaitForEndOfFrame();
+
+        // Wait one more frame to ensure parent layouts are fully resolved
+        yield return null;
+
+        ApplyPendingPercentages();
+        _percentageCoroutine = null;
+    }
+
+    /// <summary>
+    /// Applies all pending percentage-based dimensions.
+    /// </summary>
+    private void ApplyPendingPercentages()
+    {
+        var refSize = GetReferenceSize();
+
+        if (_pendingWidthPercent.HasValue)
+        {
+            Width = refSize.x * (_pendingWidthPercent.Value / 100f);
+            _pendingWidthPercent = null;
+        }
+
+        if (_pendingHeightPercent.HasValue)
+        {
+            Height = refSize.y * (_pendingHeightPercent.Value / 100f);
+            _pendingHeightPercent = null;
+        }
+
+        if (_pendingMinWidthPercent.HasValue)
+        {
+            MinWidth = refSize.x * (_pendingMinWidthPercent.Value / 100f);
+            _pendingMinWidthPercent = null;
+        }
+
+        if (_pendingMinHeightPercent.HasValue)
+        {
+            MinHeight = refSize.y * (_pendingMinHeightPercent.Value / 100f);
+            _pendingMinHeightPercent = null;
+        }
+
+        if (_pendingMaxWidthPercent.HasValue)
+        {
+            MaxWidth = refSize.x * (_pendingMaxWidthPercent.Value / 100f);
+            _pendingMaxWidthPercent = null;
+        }
+
+        if (_pendingMaxHeightPercent.HasValue)
+        {
+            MaxHeight = refSize.y * (_pendingMaxHeightPercent.Value / 100f);
+            _pendingMaxHeightPercent = null;
+        }
+
+        // Re-apply layout after percentage calculations
+        ApplyLayout();
+    }
+
+    #endregion
+
     /// <summary>
     /// Applies all layout properties at once.
     /// </summary>
     public void ApplyLayout()
     {
-        Helpers.UiDebugger.LogControlWithParent(gameObject, $"[BEFORE] '{Name}' W={Width} H={Height} HA={HorizontalAlignment} VA={VerticalAlignment}");
+        UiDebugger.LogControlWithParent(gameObject, $"[BEFORE] '{Name}' W={Width} H={Height} HA={HorizontalAlignment} VA={VerticalAlignment}");
 
         // Order matters: alignment sets anchors, which affects how sizeDelta is interpreted
         ApplyAlignment();
         ApplySize();
         ApplyMinSize();
+        ApplyMaxSize();
         ApplyFlexibleSize();
         ApplyMargin();
 
-        Helpers.UiDebugger.LogControlWithParent(gameObject, $"[AFTER] '{Name}'");
+        UiDebugger.LogControlWithParent(gameObject, $"[AFTER] '{Name}'");
     }
 
     #endregion
@@ -264,6 +456,11 @@ public abstract class BaseControl : MonoBehaviour, IViewControl
         // Register common bindable properties
         RegisterBindableProperty("IsVisible", _isVisibleProperty);
         RegisterBindableProperty("IsEnabled", _isEnabledProperty);
+
+        // Sync initial values with actual property values
+        // This ensures bindings work correctly even when the bound value equals the default
+        _isVisibleProperty.Value = IsVisible;
+        _isEnabledProperty.Value = IsEnabled;
 
         // Sync bindable property changes to actual properties
         _isVisibleProperty.ValueChanged += value =>

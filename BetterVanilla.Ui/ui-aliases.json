@@ -84,6 +84,10 @@
       "prefab": "Assets/Prefabs/Controls/IconButton.prefab",
       "component": "BetterVanilla.Ui.Controls.IconButtonControl"
     },
+    "Controls/CloseButton": {
+      "prefab": "Assets/Prefabs/Controls/CloseButton.prefab",
+      "component": "BetterVanilla.Ui.Controls.IconButtonControl"
+    },
     "Windows/OptionsPanel": {
       "prefab": "Assets/Prefabs/Windows/OptionsPanel.prefab",
       "component": "BetterVanilla.Ui.Controls.PanelControl"

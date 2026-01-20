@@ -12,24 +12,24 @@ public sealed class ZoomUi : MonoBehaviour
 
     public void OnZoomInButtonClicked()
     {
-        BetterVanillaManager.Instance.ZoomBehaviour.ZoomIn(3f);
+        BetterVanillaManager.Instance.ZoomBehaviour?.ZoomIn(3f);
     }
 
     public void OnZoomOutButtonClicked()
     {
-        BetterVanillaManager.Instance.ZoomBehaviour.ZoomOut(3f);
+        BetterVanillaManager.Instance.ZoomBehaviour?.ZoomOut(3f);
     }
 
     private void Update()
     {
         if (zoomInButton != null)
         {
-            zoomInButton.interactable = BetterVanillaManager.Instance.ZoomBehaviour.CanZoomIn(3f);
+            zoomInButton.interactable = BetterVanillaManager.Instance.ZoomBehaviour?.CanZoomIn(3f) ?? false;
         }
 
         if (zoomOutButton != null)
         {
-            zoomOutButton.interactable = BetterVanillaManager.Instance.ZoomBehaviour.CanZoomOut(3f);
+            zoomOutButton.interactable = BetterVanillaManager.Instance.ZoomBehaviour?.CanZoomOut(3f) ?? false;
         }
     }
 }

@@ -10,8 +10,8 @@ namespace BetterVanilla.Ui.Helpers;
 /// </summary>
 public static class UiDebugger
 {
-    private const string UiDebugLogFilePath = @"D:\Projects\EnoUnityLoader.BetterVanilla\BetterVanilla.Ui\ui.log";
-    private const string ComponentLogFilePath = @"D:\Projects\EnoUnityLoader.BetterVanilla\BetterVanilla.Ui\component.log";
+    private const string UiDebugLogFilePath = @"D:\Projects\EnoUnityLoader.BetterVanilla\ui.log";
+    private const string ComponentLogFilePath = @"D:\Projects\EnoUnityLoader.BetterVanilla\component.log";
     
     static UiDebugger()
     {
@@ -471,7 +471,7 @@ public static class UiDebugger
     {
         if (!Enabled) return;
         WriteLogInFile($"[UiDebug] {message}");
-        //Plugin.Instance.Log.LogMessage($"[UiDebug] {message}");
+        //BetterVanilla.Core.Ls.LogMessage($"[UiDebug] {message}");
     }
 
     private static void Log(StringBuilder message) => Log(message.ToString());
@@ -488,7 +488,7 @@ public static class UiDebugger
     {
         if (!Enabled) return;
         WriteLogInFile2($"[Component] {message}");
-        //Plugin.Instance.Log.LogMessage($"[UiDebug] {message}");
+        //BetterVanilla.Core.Ls.LogMessage($"[UiDebug] {message}");
     }
 
     private static void Log2(StringBuilder message) => Log2(message.ToString());

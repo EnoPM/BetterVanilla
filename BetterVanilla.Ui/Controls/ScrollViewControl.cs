@@ -312,11 +312,13 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
 
         if (Padding.HasValue)
         {
-            var rectOffset = new RectOffset();
-            rectOffset.left = (int)Padding.Value.Left;
-            rectOffset.right = (int)Padding.Value.Right;
-            rectOffset.top = (int)Padding.Value.Top;
-            rectOffset.bottom = (int)Padding.Value.Bottom;
+            var rectOffset = new RectOffset
+            {
+                left = (int)Padding.Value.Left,
+                right = (int)Padding.Value.Right,
+                top = (int)Padding.Value.Top,
+                bottom = (int)Padding.Value.Bottom
+            };
             _layoutGroup.padding = rectOffset;
         }
 

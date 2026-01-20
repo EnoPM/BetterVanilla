@@ -1,7 +1,10 @@
 using System;
+using System.Collections;
 using System.Reflection;
 using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
+using BetterVanilla.Ui.Helpers;
+using EnoUnityLoader.Il2Cpp.Utils;
 using Il2CppInterop.Runtime.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,31 +20,86 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShad
     private IconButtonComponent? _component;
     private ButtonColorsHelper? _buttonColors;
     private ShadowHelper? _shadow;
-    private string? _source;
+    private string? _embeddedResource;
+    private string? _url;
+    private string? _filePath;
     private Assembly? _sourceAssembly;
     private Color? _pendingColor;
     private bool? _pendingPreserveAspect;
+    private Image.Type? _pendingImageType;
+    private float _pixelsPerUnit = ImageLoadingHelper.DefaultPixelsPerUnit;
+    private Vector2 _pivot = ImageLoadingHelper.DefaultPivot;
+    private TextureWrapMode _wrapMode = TextureWrapMode.Clamp;
+    private FilterMode _filterMode = FilterMode.Bilinear;
+    private bool _generateMipmaps = true;
     private bool _isInitialized;
+    private Coroutine? _loadingCoroutine;
 
     public event Action? Clicked;
 
-    #region Icon Properties
+    #region Source Properties
 
     /// <summary>
     /// The embedded resource name or path to load the icon from.
-    /// This sets the button's background image.
+    /// </summary>
+    public string? EmbeddedResource
+    {
+        get => _embeddedResource;
+        set
+        {
+            _embeddedResource = value;
+            _url = null;
+            _filePath = null;
+            if (_isInitialized && !string.IsNullOrEmpty(value))
+            {
+                LoadFromEmbeddedResource();
+            }
+        }
+    }
+
+    /// <summary>
+    /// URL to load the icon from (http/https).
+    /// </summary>
+    public string? Url
+    {
+        get => _url;
+        set
+        {
+            _url = value;
+            _embeddedResource = null;
+            _filePath = null;
+            if (_isInitialized && !string.IsNullOrEmpty(value))
+            {
+                LoadFromUrl();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Local file path to load the icon from.
+    /// </summary>
+    public string? FilePath
+    {
+        get => _filePath;
+        set
+        {
+            _filePath = value;
+            _embeddedResource = null;
+            _url = null;
+            if (_isInitialized && !string.IsNullOrEmpty(value))
+            {
+                LoadFromFile();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Legacy property - sets EmbeddedResource for backward compatibility.
     /// </summary>
     public string? Source
     {
-        get => _source;
-        set
-        {
-            _source = value;
-            if (_isInitialized)
-            {
-                LoadIconFromSource();
-            }
-        }
+        get => _embeddedResource ?? _url ?? _filePath;
+        set => EmbeddedResource = value;
     }
 
     /// <summary>
@@ -53,12 +111,30 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShad
         set
         {
             _sourceAssembly = value;
-            if (_isInitialized && !string.IsNullOrEmpty(_source))
+            if (_isInitialized && !string.IsNullOrEmpty(_embeddedResource))
             {
-                LoadIconFromSource();
+                LoadFromEmbeddedResource();
             }
         }
     }
+
+    /// <summary>
+    /// Gets the current source type.
+    /// </summary>
+    public ImageSourceType SourceType
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(_embeddedResource)) return ImageSourceType.EmbeddedResource;
+            if (!string.IsNullOrEmpty(_url)) return ImageSourceType.Url;
+            if (!string.IsNullOrEmpty(_filePath)) return ImageSourceType.FilePath;
+            return ImageSourceType.None;
+        }
+    }
+
+    #endregion
+
+    #region Icon Display Properties
 
     /// <summary>
     /// Directly set a sprite on the button's image.
@@ -110,6 +186,94 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShad
             {
                 _pendingPreserveAspect = value;
             }
+        }
+    }
+
+    /// <summary>
+    /// The image display type (Simple, Sliced, Tiled, Filled).
+    /// </summary>
+    public Image.Type ImageType
+    {
+        get => _component?.background.type ?? _pendingImageType ?? Image.Type.Simple;
+        set
+        {
+            if (_component != null)
+            {
+                _component.background.type = value;
+            }
+            else
+            {
+                _pendingImageType = value;
+            }
+        }
+    }
+
+    #endregion
+
+    #region Loading Options
+
+    /// <summary>
+    /// Pixels per unit for sprite creation (default: 100).
+    /// </summary>
+    public float PixelsPerUnit
+    {
+        get => _pixelsPerUnit;
+        set
+        {
+            _pixelsPerUnit = value;
+            if (_isInitialized) ReloadCurrentSource();
+        }
+    }
+
+    /// <summary>
+    /// Pivot point for sprite creation (normalized coordinates, default: 0.5,0.5 = center).
+    /// </summary>
+    public Vector2 Pivot
+    {
+        get => _pivot;
+        set
+        {
+            _pivot = value;
+            if (_isInitialized) ReloadCurrentSource();
+        }
+    }
+
+    /// <summary>
+    /// Texture wrap mode (default: Clamp).
+    /// </summary>
+    public TextureWrapMode WrapMode
+    {
+        get => _wrapMode;
+        set
+        {
+            _wrapMode = value;
+            if (_isInitialized) ReloadCurrentSource();
+        }
+    }
+
+    /// <summary>
+    /// Texture filter mode (default: Bilinear).
+    /// </summary>
+    public FilterMode FilterMode
+    {
+        get => _filterMode;
+        set
+        {
+            _filterMode = value;
+            if (_isInitialized) ReloadCurrentSource();
+        }
+    }
+
+    /// <summary>
+    /// Whether to generate mipmaps (default: true).
+    /// </summary>
+    public bool GenerateMipmaps
+    {
+        get => _generateMipmaps;
+        set
+        {
+            _generateMipmaps = value;
+            if (_isInitialized) ReloadCurrentSource();
         }
     }
 
@@ -223,57 +387,129 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShad
             {
                 _component.background.preserveAspect = _pendingPreserveAspect.Value;
             }
+
+            if (_pendingImageType.HasValue)
+            {
+                _component.background.type = _pendingImageType.Value;
+            }
         }
 
         _isInitialized = true;
 
-        // Load the icon if Source was set before Awake
-        if (!string.IsNullOrEmpty(_source))
+        // Load the icon if a source was set before Awake
+        ReloadCurrentSource();
+    }
+
+    private void ReloadCurrentSource()
+    {
+        switch (SourceType)
         {
-            LoadIconFromSource();
+            case ImageSourceType.EmbeddedResource:
+                LoadFromEmbeddedResource();
+                break;
+            case ImageSourceType.Url:
+                LoadFromUrl();
+                break;
+            case ImageSourceType.FilePath:
+                LoadFromFile();
+                break;
         }
     }
 
-    private void LoadIconFromSource()
+    private void CleanupPreviousSprite()
     {
-        if (string.IsNullOrEmpty(_source) || _component == null)
+        if (_component?.background.sprite != null && _component.background.sprite.texture != null)
+        {
+            var oldSprite = _component.background.sprite;
+            var oldTexture = oldSprite.texture;
+            _component.background.sprite = null;
+            Destroy(oldSprite);
+            Destroy(oldTexture);
+        }
+    }
+
+    private void LoadFromEmbeddedResource()
+    {
+        if (string.IsNullOrEmpty(_embeddedResource) || _component == null)
             return;
 
-        Texture2D? texture = null;
+        CleanupPreviousSprite();
 
-        // If a specific assembly is set, use it
-        if (_sourceAssembly != null)
-        {
-            texture = ImageControl.LoadTextureFromEmbeddedResource(_sourceAssembly, _source);
-        }
-        else
-        {
-            // Search in all loaded assemblies for the resource
-            texture = ImageControl.LoadTextureFromAnyAssembly(_source);
-        }
+        var sprite = ImageLoadingHelper.LoadSpriteFromEmbeddedResource(
+            _embeddedResource,
+            _sourceAssembly,
+            _pixelsPerUnit,
+            _pivot,
+            _wrapMode,
+            _filterMode,
+            _generateMipmaps
+        );
 
-        if (texture != null)
+        if (sprite != null)
         {
-            var sprite = Sprite.Create(
-                texture,
-                new Rect(0, 0, texture.width, texture.height),
-                new Vector2(0.5f, 0.5f),
-                100f
-            );
             _component.background.sprite = sprite;
-            // Force Simple type so PreserveAspect works correctly
-            _component.background.type = Image.Type.Simple;
+            _component.background.type = _pendingImageType ?? Image.Type.Simple;
         }
     }
 
-    /// <summary>
-    /// Loads an icon from embedded resources using a specific assembly.
-    /// </summary>
-    [HideFromIl2Cpp]
-    public void LoadFromEmbeddedResource(Assembly assembly, string resourceName)
+    private void LoadFromFile()
     {
-        _sourceAssembly = assembly;
-        Source = resourceName;
+        if (string.IsNullOrEmpty(_filePath) || _component == null)
+            return;
+
+        CleanupPreviousSprite();
+
+        var sprite = ImageLoadingHelper.LoadSpriteFromFile(
+            _filePath,
+            _pixelsPerUnit,
+            _pivot,
+            _wrapMode,
+            _filterMode,
+            _generateMipmaps
+        );
+
+        if (sprite != null)
+        {
+            _component.background.sprite = sprite;
+            _component.background.type = _pendingImageType ?? Image.Type.Simple;
+        }
+    }
+
+    private void LoadFromUrl()
+    {
+        if (string.IsNullOrEmpty(_url) || _component == null)
+            return;
+
+        // Cancel any previous loading coroutine
+        if (_loadingCoroutine != null)
+        {
+            StopCoroutine(_loadingCoroutine);
+        }
+
+        CleanupPreviousSprite();
+
+        _loadingCoroutine = this.StartCoroutine(CoLoadFromUrl());
+    }
+
+    private IEnumerator CoLoadFromUrl()
+    {
+        yield return ImageLoadingHelper.LoadSpriteFromUrlAsync(
+            _url!,
+            sprite =>
+            {
+                if (_component != null && sprite != null)
+                {
+                    _component.background.sprite = sprite;
+                    _component.background.type = _pendingImageType ?? Image.Type.Simple;
+                }
+                _loadingCoroutine = null;
+            },
+            _pixelsPerUnit,
+            _pivot,
+            _wrapMode,
+            _filterMode,
+            _generateMipmaps
+        );
     }
 
     /// <summary>
@@ -284,18 +520,21 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShad
     {
         if (_component == null) return;
 
-        var texture = new Texture2D(2, 2);
-        if (texture.LoadImage(imageData))
+        CleanupPreviousSprite();
+
+        var sprite = ImageLoadingHelper.CreateSpriteFromBytes(
+            imageData,
+            _pixelsPerUnit,
+            _pivot,
+            _wrapMode,
+            _filterMode,
+            _generateMipmaps
+        );
+
+        if (sprite != null)
         {
-            var sprite = Sprite.Create(
-                texture,
-                new Rect(0, 0, texture.width, texture.height),
-                new Vector2(0.5f, 0.5f),
-                100f
-            );
             _component.background.sprite = sprite;
-            // Force Simple type so PreserveAspect works correctly
-            _component.background.type = Image.Type.Simple;
+            _component.background.type = _pendingImageType ?? Image.Type.Simple;
         }
     }
 
@@ -317,21 +556,18 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShad
 
     public override void Dispose()
     {
+        if (_loadingCoroutine != null)
+        {
+            StopCoroutine(_loadingCoroutine);
+            _loadingCoroutine = null;
+        }
+
         if (_component != null)
         {
             _component.button.onClick.RemoveListener(OnClick);
-
-            // Clean up created textures/sprites
-            if (_component.background.sprite != null && _component.background.sprite.texture != null)
-            {
-                if (!string.IsNullOrEmpty(_source))
-                {
-                    Destroy(_component.background.sprite.texture);
-                    Destroy(_component.background.sprite);
-                }
-            }
         }
 
+        CleanupPreviousSprite();
         Clicked = null;
         base.Dispose();
     }

@@ -1,6 +1,7 @@
 ﻿using BetterVanilla.Components;
 using BetterVanilla.Core;
 using BetterVanilla.Ui;
+using BetterVanilla.Ui.Core;
 using BetterVanilla.Views;
 using EnoUnityLoader.Attributes;
 using EnoUnityLoader.Il2Cpp;
@@ -20,6 +21,7 @@ public sealed class Plugin : BasePlugin
     public override void Load()
     {
         Ls.SetLogSource(Log);
+        UiLogger.SetLogSource(Log);
         AddComponent<UnityThreadDispatcher>();
         AddComponent<FeatureCodeBehaviour>();
         AddComponent<BetterVanillaManager>();

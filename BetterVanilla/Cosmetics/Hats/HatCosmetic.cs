@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using BetterVanilla.Core;
 using BetterVanilla.Cosmetics.Api.Hats;
 using BetterVanilla.Cosmetics.Core;
 using BetterVanilla.Cosmetics.Core.Spritesheet;
@@ -39,9 +37,8 @@ public sealed class HatCosmetic : BaseCosmetic<HatViewData, HatParent, HatData>,
     public float FrontTime { get; set; }
     public float BackTime { get; set; }
 
-    public HatCosmetic(SerializedHat hat, SpritesheetCache cache) : this(hat, cache.GetSprite(hat.MainResource))
+    public HatCosmetic(SerializedHat hat, SpritesheetCache cache) : this(hat, cache.GetSprite(hat.MainResource), cache.GetSprite(hat.PreviewResource))
     {
-        PreviewResource = cache.GetSprite(hat.PreviewResource);
         FlipResource = hat.FlipResource != null ? cache.GetSprite(hat.FlipResource) : null;
         BackResource = hat.BackResource != null ? cache.GetSprite(hat.BackResource) : null;
         BackFlipResource = hat.BackFlipResource != null ? cache.GetSprite(hat.BackFlipResource) : null;
@@ -51,8 +48,9 @@ public sealed class HatCosmetic : BaseCosmetic<HatViewData, HatParent, HatData>,
         NoVisors = hat.NoVisors;
     }
 
-    private HatCosmetic(SerializedHat hat, Sprite mainResource) : base(hat.Name, hat.Author)
+    private HatCosmetic(SerializedHat hat, Sprite mainResource, Sprite previewResource) : base(hat.Name, hat.Author)
     {
+        PreviewResource = previewResource;
         Adaptive = hat.Adaptive;
         Bounce = hat.Bounce;
         MainResource = mainResource;

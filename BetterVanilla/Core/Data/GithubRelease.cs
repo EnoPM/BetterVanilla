@@ -11,10 +11,10 @@ public class GithubRelease
     public int Id { get; set; }
     
     [JsonPropertyName("tag_name")]
-    public string Tag { get; set; }
+    public string Tag { get; set; } = null!;
     
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     
     [JsonPropertyName("draft")]
     public bool Draft { get; set; }
@@ -23,16 +23,16 @@ public class GithubRelease
     public bool Prerelease { get; set; }
     
     [JsonPropertyName("created_at")]
-    public string CreatedAt { get; set; }
+    public string CreatedAt { get; set; } = null!;
     
     [JsonPropertyName("published_at")]
-    public string PublishedAt { get; set; }
+    public string PublishedAt { get; set; } = null!;
     
     [JsonPropertyName("body")]
-    public string Description { get; set; }
+    public string Description { get; set; } = null!;
     
     [JsonPropertyName("assets")]
-    public List<GithubAsset> Assets { get; set; }
+    public List<GithubAsset> Assets { get; set; } = null!;
 
     internal Version Version => Version.Parse(Tag.Replace("v", string.Empty));
 

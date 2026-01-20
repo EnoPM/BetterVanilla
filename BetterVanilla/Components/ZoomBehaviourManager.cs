@@ -7,7 +7,7 @@ public sealed class ZoomBehaviourManager : MonoBehaviour
     private const float MinOrthographicSize = 3f;
     private const float MaxOrthographicSize = 12f;
     
-    private Camera MainCamera { get; set; }
+    private Camera? MainCamera { get; set; }
     private float CameraOrthographicSize { get; set; }
     private float DefaultCameraOrthographicSize { get; set; }
     private float CachedCameraOrthographicSize { get; set; }
@@ -51,7 +51,7 @@ public sealed class ZoomBehaviourManager : MonoBehaviour
         IsMeeting = MeetingHud.Instance;
         if (MainCamera)
         {
-            var orthographicSize = MainCamera.orthographicSize;
+            var orthographicSize = MainCamera?.orthographicSize ?? 0f;
             if (!Mathf.Approximately(orthographicSize, CameraOrthographicSize))
             {
                 UpdateOrthographicSize();

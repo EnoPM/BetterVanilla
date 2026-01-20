@@ -228,11 +228,13 @@ public sealed class PanelControl : BaseControl, IContainerControl, IShadowContro
 
         if (Padding.HasValue)
         {
-            var offset = new RectOffset();
-            offset.left = (int)Padding.Value.Left;
-            offset.right = (int)Padding.Value.Right;
-            offset.top = (int)Padding.Value.Top;
-            offset.bottom = (int)Padding.Value.Bottom;
+            var offset = new RectOffset
+            {
+                left = (int)Padding.Value.Left,
+                right = (int)Padding.Value.Right,
+                top = (int)Padding.Value.Top,
+                bottom = (int)Padding.Value.Bottom
+            };
             lg.padding = offset;
         }
 
