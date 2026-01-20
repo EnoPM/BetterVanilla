@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using BetterVanilla.Ui.Core;
 using Il2CppInterop.Runtime.Attributes;
 using UnityEngine;
 
@@ -121,7 +122,7 @@ public static class ImageLoadingHelper
         var fullResourceName = FindResourceName(resourceName, assembly);
         if (fullResourceName == null)
         {
-            Debug.LogWarning($"[ImageLoadingHelper] Resource not found: {resourceName}");
+            UiLogger.LogWarning($"[ImageLoadingHelper] Resource not found: {resourceName}");
             return null;
         }
 
@@ -130,7 +131,7 @@ public static class ImageLoadingHelper
             using var stream = assembly.GetManifestResourceStream(fullResourceName);
             if (stream == null)
             {
-                Debug.LogWarning($"[ImageLoadingHelper] Could not open stream for resource: {fullResourceName}");
+                UiLogger.LogWarning($"[ImageLoadingHelper] Could not open stream for resource: {fullResourceName}");
                 return null;
             }
 
@@ -141,7 +142,7 @@ public static class ImageLoadingHelper
         }
         catch (Exception ex)
         {
-            Debug.LogError($"[ImageLoadingHelper] Error loading sprite '{resourceName}': {ex.Message}");
+            UiLogger.LogError($"[ImageLoadingHelper] Error loading sprite '{resourceName}': {ex.Message}");
             return null;
         }
     }
@@ -180,7 +181,7 @@ public static class ImageLoadingHelper
         {
             if (!File.Exists(filePath))
             {
-                Debug.LogWarning($"[ImageLoadingHelper] File not found: {filePath}");
+                UiLogger.LogWarning($"[ImageLoadingHelper] File not found: {filePath}");
                 return null;
             }
 
@@ -189,7 +190,7 @@ public static class ImageLoadingHelper
         }
         catch (Exception ex)
         {
-            Debug.LogError($"[ImageLoadingHelper] Error loading sprite from file '{filePath}': {ex.Message}");
+            UiLogger.LogError($"[ImageLoadingHelper] Error loading sprite from file '{filePath}': {ex.Message}");
             return null;
         }
     }
@@ -249,14 +250,14 @@ public static class ImageLoadingHelper
 
         if (error != null)
         {
-            Debug.LogWarning($"[ImageLoadingHelper] Failed to load image from URL '{url}': {error.Message}");
+            UiLogger.LogWarning($"[ImageLoadingHelper] Failed to load image from URL '{url}': {error.Message}");
             onComplete(null);
             yield break;
         }
 
         if (imageBytes == null || imageBytes.Length == 0)
         {
-            Debug.LogWarning($"[ImageLoadingHelper] Empty response from URL: {url}");
+            UiLogger.LogWarning($"[ImageLoadingHelper] Empty response from URL: {url}");
             onComplete(null);
             yield break;
         }
@@ -285,7 +286,7 @@ public static class ImageLoadingHelper
         }
         catch (Exception ex)
         {
-            Debug.LogError($"[ImageLoadingHelper] Error loading sprite from URL '{url}': {ex.Message}");
+            UiLogger.LogError($"[ImageLoadingHelper] Error loading sprite from URL '{url}': {ex.Message}");
             return null;
         }
     }

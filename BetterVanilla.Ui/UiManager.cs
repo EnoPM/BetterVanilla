@@ -24,7 +24,7 @@ public sealed class UiManager
         }
     }
 
-    public UiManager()
+    private UiManager()
     {
         CreateUiContainer();
     }
@@ -38,7 +38,7 @@ public sealed class UiManager
         _uiContainer.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
         Object.DontDestroyOnLoad(_uiContainer);
 
-        UiLogger.LogMessage("[UiManager] UiContainer created");
+        UiLogger.LogDebug("[UiManager] UiContainer created");
     }
 
     public TView CreateView<TView, TViewModel>()

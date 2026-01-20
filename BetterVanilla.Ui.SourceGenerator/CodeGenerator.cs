@@ -588,10 +588,17 @@ public sealed class CodeGenerator
         if (source.GenerateMipmaps.HasValue)
             statements.Add(CreateAssignment(varName, "GenerateMipmaps", CreateBoolLiteral(source.GenerateMipmaps.Value)));
 
-        // Set source last
+        // Set source last (SourceAssembly must be set before EmbeddedResource)
         if (!string.IsNullOrEmpty(source.EmbeddedResource))
+        {
+            // Set SourceAssembly to the view's assembly so embedded resources are loaded from the correct assembly
+            statements.Add(CreateAssignment(varName, "SourceAssembly",
+                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                    InvocationExpression(IdentifierName("GetType")),
+                    IdentifierName("Assembly"))));
             statements.Add(CreateAssignment(varName, "EmbeddedResource",
                 LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(source.EmbeddedResource!))));
+        }
         else if (!string.IsNullOrEmpty(source.Url))
             statements.Add(CreateAssignment(varName, "Url",
                 LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(source.Url!))));

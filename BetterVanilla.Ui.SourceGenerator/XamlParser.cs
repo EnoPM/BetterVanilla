@@ -140,6 +140,15 @@ public sealed class XamlParser
                 continue;
             }
 
+            // Handle Source attribute on Image elements specially - convert to SourceInfo
+            // This ensures SourceAssembly is set correctly when loading embedded resources
+            if (name == "Source" && element.TagName == "Image")
+            {
+                element.Source ??= new SourceInfo();
+                element.Source.EmbeddedResource = value;
+                continue;
+            }
+
             // Literal property value
             element.LiteralProperties[name] = value;
         }

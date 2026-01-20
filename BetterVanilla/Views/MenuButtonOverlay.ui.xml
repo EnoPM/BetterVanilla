@@ -2,7 +2,7 @@
 <View xmlns="http://schemas.bettervanilla.ui/2025"
       xmlns:x="http://schemas.bettervanilla.ui/2025/xaml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://schemas.bettervanilla.ui/2025 ../Ui/Schemas/ui.xsd"
+      xsi:schemaLocation="http://schemas.bettervanilla.ui/2025 ../../BetterVanilla.Ui/Schemas/ui.xsd"
       x:Class="BetterVanilla.Views.MenuButtonOverlay">
     <Panel Width="150" Height="250"
            VerticalAlignment="Bottom"
@@ -28,7 +28,7 @@
                     IsEnabled="{Binding IsButtonInteractable, Mode=OneWay}"
                     Click="OnOkClicked">
             <IconButton.Image ImageType="Sliced">
-                <Image.Source EmbeddedResource="BetterVanilla.Ui.Assets.MenuButton.png" />
+                <Image.Source EmbeddedResource="BetterVanilla.Assets.MenuButton.png" />
             </IconButton.Image>
         </IconButton>
     </Panel>
