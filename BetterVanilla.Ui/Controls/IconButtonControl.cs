@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using BetterVanilla.Extensions;
+using BetterVanilla.Ui.Extensions;
 using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using BetterVanilla.Ui.Helpers;
@@ -284,43 +286,43 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShad
     public Color NormalColor
     {
         get => _buttonColors?.NormalColor ?? Color.white;
-        set { if (_buttonColors != null) _buttonColors.NormalColor = value; }
+        set => _buttonColors?.NormalColor = value;
     }
 
     public Color HighlightedColor
     {
         get => _buttonColors?.HighlightedColor ?? Color.white;
-        set { if (_buttonColors != null) _buttonColors.HighlightedColor = value; }
+        set => _buttonColors?.HighlightedColor = value;
     }
 
     public Color PressedColor
     {
         get => _buttonColors?.PressedColor ?? Color.gray;
-        set { if (_buttonColors != null) _buttonColors.PressedColor = value; }
+        set => _buttonColors?.PressedColor = value;
     }
 
     public Color SelectedColor
     {
         get => _buttonColors?.SelectedColor ?? Color.white;
-        set { if (_buttonColors != null) _buttonColors.SelectedColor = value; }
+        set => _buttonColors?.SelectedColor = value;
     }
 
     public Color DisabledColor
     {
         get => _buttonColors?.DisabledColor ?? new Color(0.5f, 0.5f, 0.5f, 0.5f);
-        set { if (_buttonColors != null) _buttonColors.DisabledColor = value; }
+        set => _buttonColors?.DisabledColor = value;
     }
 
     public float ColorMultiplier
     {
         get => _buttonColors?.ColorMultiplier ?? 1f;
-        set { if (_buttonColors != null) _buttonColors.ColorMultiplier = value; }
+        set => _buttonColors?.ColorMultiplier = value;
     }
 
     public float FadeDuration
     {
         get => _buttonColors?.FadeDuration ?? 0.1f;
-        set { if (_buttonColors != null) _buttonColors.FadeDuration = value; }
+        set => _buttonColors?.FadeDuration = value;
     }
 
     #endregion
@@ -330,25 +332,25 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShad
     public bool ShadowEnabled
     {
         get => _shadow?.Enabled ?? false;
-        set { if (_shadow != null) _shadow.Enabled = value; }
+        set => _shadow?.Enabled = value;
     }
 
     public Color ShadowColor
     {
         get => _shadow?.Color ?? new Color(0, 0, 0, 0.5f);
-        set { if (_shadow != null) _shadow.Color = value; }
+        set => _shadow?.Color = value;
     }
 
     public Vector2 ShadowDistance
     {
         get => _shadow?.Distance ?? new Vector2(1, -1);
-        set { if (_shadow != null) _shadow.Distance = value; }
+        set => _shadow?.Distance = value;
     }
 
     public bool ShadowUseGraphicAlpha
     {
         get => _shadow?.UseGraphicAlpha ?? true;
-        set { if (_shadow != null) _shadow.UseGraphicAlpha = value; }
+        set => _shadow?.UseGraphicAlpha = value;
     }
 
     #endregion
@@ -418,38 +420,53 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShad
 
     private void CleanupPreviousSprite()
     {
-        if (_component?.background.sprite != null && _component.background.sprite.texture != null)
+        if (_component?.background.sprite == null) return;
+        var oldSprite = _component.background.sprite;
+        _component.background.sprite = null;
+
+        // Don't destroy assets that come from AssetBundles (they have DontUnloadUnusedAsset flag)
+        if ((oldSprite.hideFlags & HideFlags.DontUnloadUnusedAsset) != 0) return;
+        var oldTexture = oldSprite.texture;
+        Destroy(oldSprite);
+        if (oldTexture != null && (oldTexture.hideFlags & HideFlags.DontUnloadUnusedAsset) == 0)
         {
-            var oldSprite = _component.background.sprite;
-            var oldTexture = oldSprite.texture;
-            _component.background.sprite = null;
-            Destroy(oldSprite);
             Destroy(oldTexture);
         }
     }
 
     private void LoadFromEmbeddedResource()
     {
-        if (string.IsNullOrEmpty(_embeddedResource) || _component == null)
-            return;
+        if (string.IsNullOrEmpty(_embeddedResource) || _component == null) return;
 
         CleanupPreviousSprite();
 
-        var sprite = ImageLoadingHelper.LoadSpriteFromEmbeddedResource(
-            _embeddedResource,
-            _sourceAssembly,
-            _pixelsPerUnit,
-            _pivot,
-            _wrapMode,
-            _filterMode,
-            _generateMipmaps
-        );
+        Sprite? sprite;
 
-        if (sprite != null)
+        // Check for AssetBundle syntax (bundleName::assetPath)
+        if (ImageLoadingHelper.TryParseAssetBundlePath(_embeddedResource, out var bundleName, out var assetPath))
         {
-            _component.background.sprite = sprite;
-            _component.background.type = _pendingImageType ?? Image.Type.Simple;
+            UiLogger.LogMessage($"Loading resource from embedded asset bundle: {_embeddedResource}");
+            var assembly = _sourceAssembly ?? Assembly.GetCallingAssembly();
+            var bundle = assembly.LoadAssetBundle(bundleName);
+            sprite = bundle.LoadSprite(assetPath);
         }
+        else
+        {
+            sprite = ImageLoadingHelper.LoadSpriteFromEmbeddedResource(
+                _embeddedResource,
+                _sourceAssembly,
+                _pixelsPerUnit,
+                _pivot,
+                _wrapMode,
+                _filterMode,
+                _generateMipmaps
+            );
+        }
+
+        if (sprite == null) return;
+        sprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+        _component.background.sprite = sprite;
+        _component.background.type = _pendingImageType ?? Image.Type.Simple;
     }
 
     private void LoadFromFile()
@@ -468,11 +485,9 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShad
             _generateMipmaps
         );
 
-        if (sprite != null)
-        {
-            _component.background.sprite = sprite;
-            _component.background.type = _pendingImageType ?? Image.Type.Simple;
-        }
+        if (sprite == null) return;
+        _component.background.sprite = sprite;
+        _component.background.type = _pendingImageType ?? Image.Type.Simple;
     }
 
     private void LoadFromUrl()
@@ -531,11 +546,9 @@ public sealed class IconButtonControl : BaseControl, IButtonColorsControl, IShad
             _generateMipmaps
         );
 
-        if (sprite != null)
-        {
-            _component.background.sprite = sprite;
-            _component.background.type = _pendingImageType ?? Image.Type.Simple;
-        }
+        if (sprite == null) return;
+        _component.background.sprite = sprite;
+        _component.background.type = _pendingImageType ?? Image.Type.Simple;
     }
 
     private void OnClick()

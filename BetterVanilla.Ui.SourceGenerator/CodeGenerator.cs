@@ -75,7 +75,14 @@ public sealed class CodeGenerator
     {
         var usings = new[]
         {
-            "System", "System.Collections.Generic", "BetterVanilla.Ui.Binding", "BetterVanilla.Ui.Controls", "BetterVanilla.Ui.Core", "BetterVanilla.Ui.Helpers", "UnityEngine"
+            "System",
+            "System.Collections.Generic",
+            "BetterVanilla.Ui.Extensions",
+            "BetterVanilla.Ui.Binding",
+            "BetterVanilla.Ui.Controls",
+            "BetterVanilla.Ui.Core",
+            "BetterVanilla.Ui.Helpers",
+            "UnityEngine"
         };
 
         return List(usings.Select(u => UsingDirective(ParseName(u))));

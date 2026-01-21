@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using AmongUs.GameOptions;
 using BetterVanilla.Core.Data;
-using BetterVanilla.Core.Extensions;
+using BetterVanilla.Extensions;
 using BetterVanilla.Options;
 using EnoUnityLoader;
 
@@ -58,7 +58,7 @@ public sealed class CustomTasksAssignation
         var usedTaskTypes = new Il2CppSystem.Collections.Generic.HashSet<TaskTypes>();
         var tasks = new Il2CppSystem.Collections.Generic.List<byte>();
 
-        var commonTasks = CommonTasks.ToIl2Cpp();
+        var commonTasks = CommonTasks.ToIl2CppList();
         var commonStart = 1;
 
         CurrentShipStatus.AddTasksFromList(ref commonStart, CommonTasksCount, tasks, usedTaskTypes, commonTasks);
@@ -74,8 +74,8 @@ public sealed class CustomTasksAssignation
             commonTasks.RemoveAt(index);
         }
 
-        var longTasks = LongTasks.ToIl2Cpp();
-        var shortTasks = ShortTasks.ToIl2Cpp();
+        var longTasks = LongTasks.ToIl2CppList();
+        var shortTasks = ShortTasks.ToIl2CppList();
 
         var longStart = 0;
         var shortStart = 0;

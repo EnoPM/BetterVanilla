@@ -1,4 +1,5 @@
 using System;
+using BetterVanilla.Ui.Extensions;
 using BetterVanilla.Ui.Binding;
 using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
@@ -92,7 +93,7 @@ public sealed class SliderControl : BaseControl, IValueControl<float>
     {
         base.RegisterBindableProperties();
 
-        RegisterBindableProperty("Value", _valueProperty);
+        RegisterBindableProperty(nameof(Value), _valueProperty);
 
         _valueProperty.ValueChanged += value =>
         {

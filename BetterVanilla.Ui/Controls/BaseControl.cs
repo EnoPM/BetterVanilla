@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using BetterVanilla.Ui.Extensions;
 using BetterVanilla.Ui.Binding;
 using BetterVanilla.Ui.Core;
 using BetterVanilla.Ui.Helpers;
@@ -16,13 +17,9 @@ namespace BetterVanilla.Ui.Controls;
 public abstract class BaseControl : MonoBehaviour, IViewControl
 {
     private readonly Dictionary<string, IBindableProperty> _bindableProperties = new();
-    protected readonly CompositeDisposable Disposables = new();
+    protected CompositeDisposable Disposables { get; } = new();
 
-    public string Name
-    {
-        get => field;
-        set => field = value;
-    } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     public GameObject GameObject => gameObject;
 
@@ -224,14 +221,14 @@ public abstract class BaseControl : MonoBehaviour, IViewControl
     private Vector2 GetReferenceSize()
     {
         var parentRect = transform.parent?.TryCast<RectTransform>();
-        if (parentRect != null)
+        if (parentRect == null)
         {
-            // Force layout rebuild to ensure parent has correct size
-            LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
-            return parentRect.rect.size;
+            return new Vector2(Screen.width, Screen.height);
         }
+        // Force layout rebuild to ensure parent has correct size
+        LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+        return parentRect.rect.size;
         // No parent - use screen size
-        return new Vector2(Screen.width, Screen.height);
     }
 
     /// <summary>
@@ -408,7 +405,7 @@ public abstract class BaseControl : MonoBehaviour, IViewControl
 
     public virtual bool IsEnabled
     {
-        get => field;
+        get;
         set
         {
             field = value;
@@ -454,8 +451,8 @@ public abstract class BaseControl : MonoBehaviour, IViewControl
     protected virtual void RegisterBindableProperties()
     {
         // Register common bindable properties
-        RegisterBindableProperty("IsVisible", _isVisibleProperty);
-        RegisterBindableProperty("IsEnabled", _isEnabledProperty);
+        RegisterBindableProperty(nameof(IsVisible), _isVisibleProperty);
+        RegisterBindableProperty(nameof(IsEnabled), _isEnabledProperty);
 
         // Sync initial values with actual property values
         // This ensures bindings work correctly even when the bound value equals the default

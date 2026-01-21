@@ -4,7 +4,7 @@ using System.Linq;
 using AmongUs.GameOptions;
 using BetterVanilla.Components;
 using BetterVanilla.Core.Data;
-using BetterVanilla.Core.Extensions;
+using BetterVanilla.Extensions;
 using BetterVanilla.Options;
 using MonoMod.Utils;
 using UnityEngine;

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using BetterVanilla.BetterModMenu;
 using BetterVanilla.Core;
 using BetterVanilla.Core.Data;
-using BetterVanilla.Core.Extensions;
-using BetterVanilla.Core.Helpers;
+using BetterVanilla.Extensions;
 using EnoUnityLoader.Il2Cpp.Utils;
 using HarmonyLib;
 using UnityEngine;
@@ -16,7 +16,7 @@ public sealed class BetterVanillaManager : MonoBehaviour
 {
     public static BetterVanillaManager Instance { get; private set; } = null!;
 
-    private readonly Harmony _harmony = new (ModData.Guid);
+    private readonly Harmony _harmony = new(ModData.Guid);
     public readonly List<BetterPlayerControl> AllPlayers = [];
     public readonly Dictionary<int, TeamPreferences> AllTeamPreferences = [];
     public readonly Dictionary<int, TeamPreferences> AllForcedTeamAssignments = [];
@@ -27,46 +27,47 @@ public sealed class BetterVanillaManager : MonoBehaviour
     public Sprite VentSprite { get; private set; } = null!;
     public BetterPlayerTexts PlayerTextsPrefab { get; private set; } = null!;
     public BetterPlayerTexts BetterVoteAreaTextsPrefab { get; private set; } = null!;
-    
+
     private void Awake()
     {
         if (Instance) throw new Exception($"{nameof(BetterVanillaManager)} must be a singleton");
         Instance = this;
-        
+
         ChatCommands = new ChatCommandsManager();
         Cheaters = new CheatersManager();
         Menu = new ModMenu();
-        
-        var betterGame = AssetBundleUtils.LoadFromExecutingAssembly("BetterVanilla.Assets.better.game");
-        
+
+        var betterGame = Assembly.GetExecutingAssembly()
+            .LoadAssetBundle("BetterVanilla.Assets.better.game");
+
         VentSprite = betterGame.LoadAsset<Sprite>("Assets/Ui/Icons/Vent.png");
         VentSprite.hideFlags = HideFlags.HideAndDontSave;
-        
-        PlayerTextsPrefab = Instantiate(betterGame.LoadComponent<BetterPlayerTexts>("Assets/Ui/BetterPlayerTexts.prefab"), transform);
+
+        PlayerTextsPrefab = betterGame.InstantiatePrefab<BetterPlayerTexts>("Assets/Ui/BetterPlayerTexts.prefab", transform);
         PlayerTextsPrefab.gameObject.SetActive(false);
-        
-        BetterVoteAreaTextsPrefab = Instantiate(betterGame.LoadComponent<BetterPlayerTexts>("Assets/Ui/BetterVoteAreaTexts.prefab"), transform);
+
+        BetterVoteAreaTextsPrefab = betterGame.InstantiatePrefab<BetterPlayerTexts>("Assets/Ui/BetterVoteAreaTexts.prefab", transform);
         BetterVoteAreaTextsPrefab.gameObject.SetActive(false);
-        
+
         betterGame.Unload(false);
 
         GameEventManager.PlayerJoined += OnPlayerJoined;
-        
+
         Ls.LogInfo($"Plugin {ModData.Name} v{ModData.Version} is loaded!");
     }
-    
+
     private void Start()
     {
         try
         {
             _harmony.PatchAll();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Ls.LogWarning($"Unable to apply patches: {ex.Message}");
             throw;
         }
-        
+
         this.StartCoroutine(CoStart());
     }
 
@@ -77,11 +78,11 @@ public sealed class BetterVanillaManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
         }
-        
+
         ModManager.Instance.ShowModStamp();
-        
+
         yield return CoLoadCosmetics();
-        
+
         Ls.LogInfo($"Plugin {ModData.Name} v{ModData.Version} was successfully started!");
     }
 
@@ -97,7 +98,7 @@ public sealed class BetterVanillaManager : MonoBehaviour
     {
         return AllPlayers.Find(x => x.Player.PlayerId == playerId);
     }
-    
+
     public BetterPlayerControl? GetPlayerByOwnerId(int ownerId)
     {
         return AllPlayers.Find(x => x.Player.OwnerId == ownerId);

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using BetterVanilla.Core.Extensions;
+using BetterVanilla.Extensions;
 using BetterVanilla.Options;
 using EnoUnityLoader.Il2Cpp.Utils;
 using HarmonyLib;

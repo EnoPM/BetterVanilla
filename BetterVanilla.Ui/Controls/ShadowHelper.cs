@@ -22,7 +22,9 @@ public sealed class ShadowHelper
         set
         {
             if (_shadow != null)
+            {
                 _shadow.enabled = value;
+            }
         }
     }
 
@@ -32,7 +34,9 @@ public sealed class ShadowHelper
         set
         {
             if (_shadow != null)
+            {
                 _shadow.effectColor = value;
+            }
         }
     }
 
@@ -42,7 +46,9 @@ public sealed class ShadowHelper
         set
         {
             if (_shadow != null)
+            {
                 _shadow.effectDistance = value;
+            }
         }
     }
 
@@ -52,7 +58,9 @@ public sealed class ShadowHelper
         set
         {
             if (_shadow != null)
+            {
                 _shadow.useGraphicAlpha = value;
+            }
         }
     }
 
@@ -63,7 +71,9 @@ public sealed class ShadowHelper
     public static Vector2 ParseDistance(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
+        {
             return new Vector2(1, -1);
+        }
 
         var parts = value.Split(',');
         return parts.Length switch

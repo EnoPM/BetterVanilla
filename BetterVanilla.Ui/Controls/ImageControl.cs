@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Reflection;
+using BetterVanilla.Extensions;
 using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using BetterVanilla.Ui.Helpers;
@@ -285,25 +285,25 @@ public sealed class ImageControl : BaseControl, IShadowControl
     public bool ShadowEnabled
     {
         get => _shadow?.Enabled ?? false;
-        set { if (_shadow != null) _shadow.Enabled = value; }
+        set => _shadow?.Enabled = value;
     }
 
     public Color ShadowColor
     {
         get => _shadow?.Color ?? new Color(0, 0, 0, 0.5f);
-        set { if (_shadow != null) _shadow.Color = value; }
+        set => _shadow?.Color = value;
     }
 
     public Vector2 ShadowDistance
     {
         get => _shadow?.Distance ?? new Vector2(1, -1);
-        set { if (_shadow != null) _shadow.Distance = value; }
+        set => _shadow?.Distance = value;
     }
 
     public bool ShadowUseGraphicAlpha
     {
         get => _shadow?.UseGraphicAlpha ?? true;
-        set { if (_shadow != null) _shadow.UseGraphicAlpha = value; }
+        set => _shadow?.UseGraphicAlpha = value;
     }
 
     #endregion
@@ -337,12 +337,16 @@ public sealed class ImageControl : BaseControl, IShadowControl
 
     private void CleanupPreviousSprite()
     {
-        if (_component?.image.sprite != null && _component.image.sprite.texture != null)
+        if (_component?.image.sprite == null) return;
+        var oldSprite = _component.image.sprite;
+        _component.image.sprite = null;
+
+        // Don't destroy assets that come from AssetBundles (they have DontUnloadUnusedAsset flag)
+        if ((oldSprite.hideFlags & HideFlags.DontUnloadUnusedAsset) != 0) return;
+        var oldTexture = oldSprite.texture;
+        Destroy(oldSprite);
+        if (oldTexture != null && (oldTexture.hideFlags & HideFlags.DontUnloadUnusedAsset) == 0)
         {
-            var oldSprite = _component.image.sprite;
-            var oldTexture = oldSprite.texture;
-            _component.image.sprite = null;
-            Destroy(oldSprite);
             Destroy(oldTexture);
         }
     }
@@ -354,37 +358,59 @@ public sealed class ImageControl : BaseControl, IShadowControl
 
         CleanupPreviousSprite();
 
-        var sprite = ImageLoadingHelper.LoadSpriteFromEmbeddedResource(
-            _embeddedResource,
-            _sourceAssembly,
-            _pixelsPerUnit,
-            _pivot,
-            _wrapMode,
-            _filterMode,
-            _generateMipmaps
-        );
+        Sprite? sprite;
 
-        if (sprite != null)
+        // Check for AssetBundle syntax (bundleName::assetPath)
+        if (ImageLoadingHelper.TryParseAssetBundlePath(_embeddedResource, out var bundleName, out var assetPath))
         {
-            _component.image.sprite = sprite;
+            UiLogger.LogMessage($"Loading resource from embedded asset bundle: {_embeddedResource}");
+            var assembly = _sourceAssembly ?? Assembly.GetCallingAssembly();
+            var bundle = assembly.LoadAssetBundle(bundleName);
+            sprite = bundle.LoadSprite(assetPath);
         }
+        else
+        {
+            sprite = ImageLoadingHelper.LoadSpriteFromEmbeddedResource(
+                _embeddedResource,
+                _sourceAssembly,
+                _pixelsPerUnit,
+                _pivot,
+                _wrapMode,
+                _filterMode,
+                _generateMipmaps
+            );
+        }
+
+        if (sprite == null) return;
+        sprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+        _component.image.sprite = sprite;
     }
 
     private void LoadFromFile()
     {
-        if (string.IsNullOrEmpty(_filePath) || _component == null)
-            return;
+        if (string.IsNullOrEmpty(_filePath) || _component == null) return;
 
         CleanupPreviousSprite();
 
-        var sprite = ImageLoadingHelper.LoadSpriteFromFile(
-            _filePath,
-            _pixelsPerUnit,
-            _pivot,
-            _wrapMode,
-            _filterMode,
-            _generateMipmaps
-        );
+        Sprite? sprite;
+
+        // Check for AssetBundle syntax (bundlePath::assetPath)
+        if (ImageLoadingHelper.TryParseAssetBundlePath(_filePath, out var bundlePath, out var assetPath))
+        {
+            var bundle = AssetBundleExtensions.LoadFromFile(bundlePath);
+            sprite = bundle.LoadSprite(assetPath);
+        }
+        else
+        {
+            sprite = ImageLoadingHelper.LoadSpriteFromFile(
+                _filePath,
+                _pixelsPerUnit,
+                _pivot,
+                _wrapMode,
+                _filterMode,
+                _generateMipmaps
+            );
+        }
 
         if (sprite != null)
         {

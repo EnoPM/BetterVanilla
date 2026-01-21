@@ -1,9 +1,7 @@
-using System;
-using TMPro;
+﻿using System;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
-namespace BetterVanilla.Ui.Core;
+namespace BetterVanilla.Ui.Extensions;
 
 /// <summary>
 /// Extension methods for Unity events to handle IL2CPP delegate conversions.

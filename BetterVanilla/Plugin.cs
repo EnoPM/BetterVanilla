@@ -1,4 +1,5 @@
-﻿using BetterVanilla.Components;
+﻿using System;
+using BetterVanilla.Components;
 using BetterVanilla.Core;
 using BetterVanilla.Ui;
 using BetterVanilla.Ui.Core;
@@ -17,11 +18,11 @@ public sealed class Plugin : BasePlugin
     {
         Instance = this;
     }
-    
+
     public override void Load()
     {
         Ls.SetLogSource(Log);
-        UiLogger.SetLogSource(Log);
+        UiLogger.SetLogSource(EnoUnityLoader.Logging.Logger.CreateLogSource(typeof(UiLogger).Assembly.GetName().Name ?? nameof(UiLogger)));
         AddComponent<UnityThreadDispatcher>();
         AddComponent<FeatureCodeBehaviour>();
         AddComponent<BetterVanillaManager>();

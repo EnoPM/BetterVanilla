@@ -225,7 +225,7 @@ public sealed class TextBlockControl : BaseControl, ITextStyleControl
     {
         base.RegisterBindableProperties();
 
-        RegisterBindableProperty("Text", _textProperty);
+        RegisterBindableProperty(nameof(Text), _textProperty);
         _textProperty.ValueChanged += value =>
         {
             if (_component != null && value is string strValue)
@@ -235,11 +235,11 @@ public sealed class TextBlockControl : BaseControl, ITextStyleControl
         };
     }
 
-    protected override void OnEnabledChanged(bool enabled)
+    protected override void OnEnabledChanged(bool state)
     {
         if (_component != null)
         {
-            _component.text.alpha = enabled ? 1f : 0.5f;
+            _component.text.alpha = state ? 1f : 0.5f;
         }
     }
 }

@@ -28,7 +28,7 @@
                     IsEnabled="{Binding IsButtonInteractable, Mode=OneWay}"
                     Click="OnOkClicked">
             <IconButton.Image ImageType="Sliced">
-                <Image.Source EmbeddedResource="BetterVanilla.Assets.MenuButton.png" />
+                <Image.Source EmbeddedResource="BetterVanilla.Assets.extras.bundle::Assets/Ui/MenuButton.png" />
             </IconButton.Image>
         </IconButton>
     </Panel>

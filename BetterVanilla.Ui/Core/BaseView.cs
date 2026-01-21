@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using BetterVanilla.Extensions;
 using BetterVanilla.Ui.Binding;
 using BetterVanilla.Ui.Controls;
 using BetterVanilla.Ui.Helpers;
@@ -19,9 +20,9 @@ public abstract class BaseView : MonoBehaviour, IDisposable
     private BindingEngine? _bindingEngine;
     private CompositeDisposable? _disposables;
 
-    private Dictionary<string, IViewControl> NamedElements => _namedElements ??= new();
-    protected BindingEngine BindingEngine => _bindingEngine ??= new();
-    protected CompositeDisposable Disposables => _disposables ??= new();
+    private Dictionary<string, IViewControl> NamedElements => _namedElements ??= new Dictionary<string, IViewControl>();
+    protected BindingEngine BindingEngine => _bindingEngine ??= new BindingEngine();
+    protected CompositeDisposable Disposables => _disposables ??= new CompositeDisposable();
 
     private bool _isInitialized;
 
@@ -137,7 +138,8 @@ public abstract class BaseView : MonoBehaviour, IDisposable
     /// </summary>
     protected GameObject InstantiatePrefab(string bundleName, string prefabPath, Transform? parent = null)
     {
-        return AssetBundleManager.Instance.InstantiatePrefab(bundleName, prefabPath, parent ?? transform);
+        var bundle = Assembly.GetExecutingAssembly().LoadAssetBundle(bundleName);
+        return bundle.InstantiatePrefab(prefabPath, parent ?? transform);
     }
 
     /// <summary>
@@ -168,7 +170,10 @@ public abstract class BaseView : MonoBehaviour, IDisposable
             return EmptyDisposable.Instance;
         }
 
-        var definition = new BindingDefinition(sourcePath, targetProperty) { Mode = mode };
+        var definition = new BindingDefinition(sourcePath, targetProperty)
+        {
+            Mode = mode
+        };
         return BindingEngine.Bind(definition, bindableProperty);
     }
 
@@ -202,8 +207,7 @@ public abstract class BaseView : MonoBehaviour, IDisposable
         foreach (var member in members)
         {
             var attr = member.GetCustomAttribute<ViewElementAttribute>();
-            if (attr == null)
-                continue;
+            if (attr == null) continue;
 
             IViewControl? control = null;
 
@@ -283,7 +287,11 @@ public abstract class BaseView : MonoBehaviour, IDisposable
     /// </summary>
     protected T GetRequiredViewModel<T>() where T : class
     {
+        if (DataContext == null)
+        {
+            throw new InvalidOperationException("DataContext is not set");
+        }
         return DataContext as T ?? throw new InvalidOperationException(
-            $"DataContext is not set or is not of type {typeof(T).Name}.");
+            $"DataContext is not of type {typeof(T).Name}.");
     }
 }

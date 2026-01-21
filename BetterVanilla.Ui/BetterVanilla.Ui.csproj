@@ -16,9 +16,9 @@
         <AssemblyGuid>pm.eno.ui.bettervanilla</AssemblyGuid>
         <AssemblyName>BetterVanilla.Ui</AssemblyName>
         <AssemblyVersion>$(Version).0</AssemblyVersion>
-    </PropertyGroup>
-
-    <PropertyGroup>
+        <GenerateModMetadata>false</GenerateModMetadata>
+        <IncludeInteropLibrairies>true</IncludeInteropLibrairies>
+        <IncludeCoreLibrairies>true</IncludeCoreLibrairies>
         <CopyToMods>BetterVanilla</CopyToMods>
     </PropertyGroup>
 
@@ -29,8 +29,12 @@
 
     <!-- Additional content files -->
     <ItemGroup>
-        <None Include="ui-aliases.json" CopyToOutputDirectory="PreserveNewest" />
-        <None Include="ui-aliases.schema.json" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="ui-aliases.json" CopyToOutputDirectory="PreserveNewest"/>
+        <None Include="ui-aliases.schema.json" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\BetterVanilla.Ui.Extensions\BetterVanilla.Ui.Extensions.csproj" />
+      <ProjectReference Include="..\BetterVanilla.Extensions\BetterVanilla.Extensions.csproj" />
     </ItemGroup>
 
 </Project>

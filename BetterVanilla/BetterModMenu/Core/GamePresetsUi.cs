@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using BetterVanilla.Core;
 using BetterVanilla.Core.Extensions;
+using BetterVanilla.Extensions;
 using BetterVanilla.Options.Components.Controllers;
 using TMPro;
 using UnityEngine;

@@ -12,13 +12,13 @@ public static class UiDebugger
 {
     private const string UiDebugLogFilePath = @"D:\Projects\EnoUnityLoader.BetterVanilla\ui.log";
     private const string ComponentLogFilePath = @"D:\Projects\EnoUnityLoader.BetterVanilla\component.log";
-    
+
     static UiDebugger()
     {
         File.WriteAllText(UiDebugLogFilePath, string.Empty);
         File.WriteAllText(ComponentLogFilePath, string.Empty);
     }
-    
+
     public static bool Enabled { get; set; } = true;
 
     /// <summary>
@@ -480,7 +480,7 @@ public static class UiDebugger
     {
         File.AppendAllText(UiDebugLogFilePath, $"\n{message}");
     }
-    
+
     /// <summary>
     /// Logs a message if debugging is enabled.
     /// </summary>
@@ -490,8 +490,6 @@ public static class UiDebugger
         WriteLogInFile2($"[Component] {message}");
         //BetterVanilla.Core.Ls.LogMessage($"[UiDebug] {message}");
     }
-
-    private static void Log2(StringBuilder message) => Log2(message.ToString());
 
     private static void WriteLogInFile2(string message)
     {

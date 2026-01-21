@@ -1,87 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace BetterVanilla.Ui.Core;
+namespace BetterVanilla.Ui.Extensions;
 
-/// <summary>
-/// Horizontal alignment options for UI elements.
-/// </summary>
-public enum HorizontalAlignment
-{
-    /// <summary>Keep prefab's default alignment.</summary>
-    None,
-    Left,
-    Center,
-    Right,
-    Stretch
-}
-
-/// <summary>
-/// Vertical alignment options for UI elements.
-/// </summary>
-public enum VerticalAlignment
-{
-    /// <summary>Keep prefab's default alignment.</summary>
-    None,
-    Top,
-    Center,
-    Bottom,
-    Stretch
-}
-
-/// <summary>
-/// Represents thickness values for margins and padding.
-/// </summary>
-public readonly struct Thickness
-{
-    public float Left { get; }
-    public float Top { get; }
-    public float Right { get; }
-    public float Bottom { get; }
-
-    public Thickness(float uniform) : this(uniform, uniform, uniform, uniform) { }
-
-    public Thickness(float horizontal, float vertical) : this(horizontal, vertical, horizontal, vertical) { }
-
-    public Thickness(float left, float top, float right, float bottom)
-    {
-        Left = left;
-        Top = top;
-        Right = right;
-        Bottom = bottom;
-    }
-
-    public static Thickness Zero => new(0);
-
-    /// <summary>
-    /// Parses a thickness string. Formats: "10", "10,5", "10,5,10,5"
-    /// </summary>
-    public static Thickness Parse(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-            return Zero;
-
-        var parts = value.Split(',');
-        return parts.Length switch
-        {
-            1 => new Thickness(float.Parse(parts[0].Trim())),
-            2 => new Thickness(float.Parse(parts[0].Trim()), float.Parse(parts[1].Trim())),
-            4 => new Thickness(
-                float.Parse(parts[0].Trim()),
-                float.Parse(parts[1].Trim()),
-                float.Parse(parts[2].Trim()),
-                float.Parse(parts[3].Trim())),
-            _ => Zero
-        };
-    }
-
-    public override string ToString() => $"{Left},{Top},{Right},{Bottom}";
-}
-
-/// <summary>
-/// Extension methods for applying layout properties to RectTransform.
-/// </summary>
-public static class LayoutExtensions
+public static class RectTransformExtensions
 {
     extension(RectTransform rectTransform)
     {
@@ -90,15 +12,17 @@ public static class LayoutExtensions
         /// </summary>
         public void SetSize(float? width, float? height)
         {
-            if (width.HasValue || height.HasValue)
+            if (!width.HasValue && !height.HasValue) return;
+            var sizeDelta = rectTransform.sizeDelta;
+            if (width >= 0)
             {
-                var sizeDelta = rectTransform.sizeDelta;
-                if (width.HasValue && width.Value >= 0)
-                    sizeDelta.x = width.Value;
-                if (height.HasValue && height.Value >= 0)
-                    sizeDelta.y = height.Value;
-                rectTransform.sizeDelta = sizeDelta;
+                sizeDelta.x = width.Value;
             }
+            if (height >= 0)
+            {
+                sizeDelta.y = height.Value;
+            }
+            rectTransform.sizeDelta = sizeDelta;
         }
         
         /// <summary>
@@ -106,19 +30,21 @@ public static class LayoutExtensions
         /// </summary>
         public void SetPreferredSize(float? width, float? height)
         {
-            if (!width.HasValue && !height.HasValue)
-                return;
+            if (!width.HasValue && !height.HasValue) return;
 
             var layoutElement = rectTransform.GetComponent<LayoutElement>();
             if (layoutElement == null)
+            {
                 layoutElement = rectTransform.gameObject.AddComponent<LayoutElement>();
+            }
 
-            if (width.HasValue && width.Value >= 0)
+            if (width >= 0)
             {
                 layoutElement.preferredWidth = width.Value;
                 layoutElement.flexibleWidth = 0; // Prevent expansion
             }
-            if (height.HasValue && height.Value >= 0)
+            
+            if (height >= 0)
             {
                 layoutElement.preferredHeight = height.Value;
                 layoutElement.flexibleHeight = 0; // Prevent expansion
@@ -133,17 +59,24 @@ public static class LayoutExtensions
         /// </summary>
         public void SetMinSize(float? minWidth, float? minHeight)
         {
-            if (!minWidth.HasValue && !minHeight.HasValue)
-                return;
+            if (!minWidth.HasValue && !minHeight.HasValue) return;
 
             var layoutElement = rectTransform.GetComponent<LayoutElement>();
+            
             if (layoutElement == null)
+            {
                 layoutElement = rectTransform.gameObject.AddComponent<LayoutElement>();
+            }
 
             if (minWidth.HasValue)
+            {
                 layoutElement.minWidth = minWidth.Value;
+            }
+            
             if (minHeight.HasValue)
+            {
                 layoutElement.minHeight = minHeight.Value;
+            }
         }
 
         /// <summary>
@@ -153,12 +86,13 @@ public static class LayoutExtensions
         /// </summary>
         public void SetMaxSize(float? maxWidth, float? maxHeight)
         {
-            if (!maxWidth.HasValue && !maxHeight.HasValue)
-                return;
+            if (!maxWidth.HasValue && !maxHeight.HasValue) return;
 
             var layoutElement = rectTransform.GetComponent<LayoutElement>();
             if (layoutElement == null)
+            {
                 layoutElement = rectTransform.gameObject.AddComponent<LayoutElement>();
+            }
 
             // Unity LayoutElement doesn't have direct maxWidth/maxHeight
             // We use preferredWidth/Height with flexibleWidth/Height = 0 to cap size
@@ -182,17 +116,22 @@ public static class LayoutExtensions
         /// </summary>
         public void SetFlexibleSize(float? flexWidth, float? flexHeight)
         {
-            if (!flexWidth.HasValue && !flexHeight.HasValue)
-                return;
+            if (!flexWidth.HasValue && !flexHeight.HasValue) return;
 
             var layoutElement = rectTransform.GetComponent<LayoutElement>();
             if (layoutElement == null)
+            {
                 layoutElement = rectTransform.gameObject.AddComponent<LayoutElement>();
+            }
 
             if (flexWidth.HasValue)
+            {
                 layoutElement.flexibleWidth = flexWidth.Value;
+            }
             if (flexHeight.HasValue)
+            {
                 layoutElement.flexibleHeight = flexHeight.Value;
+            }
         }
         
         /// <summary>
@@ -272,8 +211,7 @@ public static class LayoutExtensions
         /// </summary>
         public void SetHorizontalAlignment(HorizontalAlignment alignment)
         {
-            if (alignment == HorizontalAlignment.None)
-                return; // Keep prefab's default
+            if (alignment == HorizontalAlignment.None) return; // Keep prefab's default
 
             var anchorMin = rectTransform.anchorMin;
             var anchorMax = rectTransform.anchorMax;
@@ -305,7 +243,9 @@ public static class LayoutExtensions
                     // For LayoutGroups: set flexibleWidth to allow expansion
                     var layoutElement = rectTransform.GetComponent<LayoutElement>();
                     if (layoutElement == null)
+                    {
                         layoutElement = rectTransform.gameObject.AddComponent<LayoutElement>();
+                    }
                     layoutElement.flexibleWidth = 1f;
                     break;
             }
@@ -328,8 +268,7 @@ public static class LayoutExtensions
         /// </summary>
         public void SetVerticalAlignment(VerticalAlignment alignment)
         {
-            if (alignment == VerticalAlignment.None)
-                return; // Keep prefab's default
+            if (alignment == VerticalAlignment.None) return; // Keep prefab's default
 
             var anchorMin = rectTransform.anchorMin;
             var anchorMax = rectTransform.anchorMax;
@@ -361,7 +300,9 @@ public static class LayoutExtensions
                     // For LayoutGroups: set flexibleHeight to allow expansion
                     var layoutElement = rectTransform.GetComponent<LayoutElement>();
                     if (layoutElement == null)
+                    {
                         layoutElement = rectTransform.gameObject.AddComponent<LayoutElement>();
+                    }
                     layoutElement.flexibleHeight = 1f;
                     break;
             }
@@ -394,17 +335,15 @@ public static class LayoutExtensions
         public void SetPadding(Thickness padding)
         {
             var layoutGroup = rectTransform.GetComponent<LayoutGroup>();
-            if (layoutGroup != null)
+            if (layoutGroup == null) return;
+            var rectOffset = new RectOffset
             {
-                var rectOffset = new RectOffset
-                {
-                    left = (int)padding.Left,
-                    right = (int)padding.Right,
-                    top = (int)padding.Top,
-                    bottom = (int)padding.Bottom
-                };
-                layoutGroup.padding = rectOffset;
-            }
+                left = (int)padding.Left,
+                right = (int)padding.Right,
+                top = (int)padding.Top,
+                bottom = (int)padding.Bottom
+            };
+            layoutGroup.padding = rectOffset;
         }
     }
 }

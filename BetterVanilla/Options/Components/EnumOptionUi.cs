@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using BetterVanilla.Core;
-using BetterVanilla.Core.Extensions;
+using BetterVanilla.Extensions;
 using BetterVanilla.Options.Core.Local;
-using BetterVanilla.Options.Core.Serialization;
 using TMPro;
 
 namespace BetterVanilla.Options.Components;
@@ -13,7 +10,7 @@ namespace BetterVanilla.Options.Components;
 public sealed class EnumOptionUi : BaseOptionUi
 {
     public TMP_Dropdown dropdown = null!;
-    
+
     private EnumLocalOption? SerializableOption { get; set; }
 
     public void SetOption(EnumLocalOption option)
@@ -52,7 +49,7 @@ public sealed class EnumOptionUi : BaseOptionUi
     {
         SerializableOption?.RefreshUiLock();
     }
-    
+
     public override void RefreshVisibility()
     {
         SerializableOption?.RefreshUiVisibility();

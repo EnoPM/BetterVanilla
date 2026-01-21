@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using BetterVanilla.Core.Extensions;
 using BetterVanilla.Core.Helpers;
+using BetterVanilla.Extensions;
 using HarmonyLib;
 
 namespace BetterVanilla.Core.Patches;
@@ -49,7 +49,7 @@ internal static class NormalPlayerTaskPatches
 
         var data = new byte[1];
         var randomConsoles = TaskUtils.PickRandomConsolesFrom(consoles, task.TaskType, data);
-        
+
         task.Data = data;
         task.StartAt = randomConsoles.First(x => x.ConsoleId == data[0]).Room;
     }
@@ -58,21 +58,21 @@ internal static class NormalPlayerTaskPatches
     {
         if (!TaskUtils.ShouldRandomizeUploadTaskLocation) return;
         if (!task.Is<UploadDataTask>(out var uploadDataTask)) return;
-        
+
         var consoles = TaskUtils.GetAllConsoles(uploadDataTask.TaskType);
-        
+
         for (var i = 0; i < consoles.Count; i++)
         {
             consoles[i].ConsoleId = i;
         }
-        
+
         var data = new byte[2];
         var randomConsoles = TaskUtils.PickRandomConsolesFrom(consoles, uploadDataTask.TaskType, data);
-        
+
         uploadDataTask.Data = data;
         uploadDataTask.StartAt = randomConsoles.First(x => x.ConsoleId == data[0]).Room;
         uploadDataTask.EndAt = randomConsoles.First(x => x.ConsoleId == data[1]).Room;
-        
+
         Ls.LogMessage($"Download {uploadDataTask.StartAt.ToString()}, Upload: {uploadDataTask.EndAt.ToString()}");
     }
 
@@ -93,7 +93,7 @@ internal static class NormalPlayerTaskPatches
         }
 
         var consoleId = task.Data[0];
-        
+
         result = console.ConsoleId == consoleId && console.Room == task.StartAt && TaskUtils.IsConsoleOfType(console, task.TaskType);
         return false;
     }

@@ -2,6 +2,7 @@
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using BetterVanilla.Core.Extensions;
+using BetterVanilla.Extensions;
 using EnoUnityLoader.Il2Cpp.Utils;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;

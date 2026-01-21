@@ -8,41 +8,24 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Version>2.0.0</Version>
-        <FileVersion>$(AssemblyVersion)</FileVersion>
-    </PropertyGroup>
-
-    <PropertyGroup>
         <AssemblyGuid>pm.eno.bettervanilla</AssemblyGuid>
         <AssemblyName>BetterVanilla</AssemblyName>
-        <AssemblyVersion>$(Version).0</AssemblyVersion>
+        <Version>2.0.0</Version>
     </PropertyGroup>
 
     <PropertyGroup>
+        <IncludeInteropLibrairies>true</IncludeInteropLibrairies>
+        <IncludeCoreLibrairies>true</IncludeCoreLibrairies>
+        <BetterVanillaUiGenerator>true</BetterVanillaUiGenerator>
         <CopyToMods>$(AssemblyName)</CopyToMods>
     </PropertyGroup>
-
-    <!-- Reference BetterVanilla.Ui project -->
-    <ItemGroup>
-        <ProjectReference Include="..\BetterVanilla.Ui\BetterVanilla.Ui.csproj" />
-    </ItemGroup>
-
-    <!-- Reference the Source Generator -->
-    <ItemGroup>
-        <ProjectReference Include="..\BetterVanilla.Ui.SourceGenerator\BetterVanilla.Ui.SourceGenerator.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false" />
-    </ItemGroup>
-
-    <!-- UI XML files as AdditionalFiles for the source generator -->
-    <ItemGroup>
-        <AdditionalFiles Include="**\*.ui.xml" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**" />
-        <AdditionalFiles Include="..\BetterVanilla.Ui\ui-aliases.json" />
-    </ItemGroup>
 
     <!-- Embedded resources -->
     <ItemGroup>
         <EmbeddedResource Include="Assets\**"/>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\BetterVanilla.Cosmetics.Api\BetterVanilla.Cosmetics.Api.csproj" />
     </ItemGroup>
 
 </Project>

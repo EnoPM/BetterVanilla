@@ -1,4 +1,5 @@
 ﻿using AmongUs.GameOptions;
+using BetterVanilla.Extensions;
 using BetterVanilla.Options;
 using BetterVanilla.Options.Core.Host;
 using UnityEngine;

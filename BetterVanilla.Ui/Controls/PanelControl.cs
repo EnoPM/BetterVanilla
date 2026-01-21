@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BetterVanilla.Ui.Extensions;
 using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using UnityEngine;
@@ -48,11 +49,11 @@ public sealed class PanelControl : BaseControl, IContainerControl, IShadowContro
     {
         get
         {
+            if (_layoutGroup != null) return _layoutGroup;
+            _layoutGroup = GetComponent<VerticalLayoutGroup>();
             if (_layoutGroup == null)
             {
-                _layoutGroup = GetComponent<VerticalLayoutGroup>();
-                if (_layoutGroup == null)
-                    _layoutGroup = GetComponent<HorizontalLayoutGroup>();
+                _layoutGroup = GetComponent<HorizontalLayoutGroup>();
             }
             return _layoutGroup;
         }
@@ -88,7 +89,9 @@ public sealed class PanelControl : BaseControl, IContainerControl, IShadowContro
 
         var existingHorizontal = GetComponent<HorizontalLayoutGroup>();
         if (existingHorizontal != null)
+        {
             Destroy(existingHorizontal);
+        }
 
         // Create new layout group based on orientation
         switch (_orientation)
@@ -224,7 +227,9 @@ public sealed class PanelControl : BaseControl, IContainerControl, IShadowContro
         if (lg == null) return;
 
         if (Spacing.HasValue)
+        {
             lg.spacing = Spacing.Value;
+        }
 
         if (Padding.HasValue)
         {
@@ -239,22 +244,34 @@ public sealed class PanelControl : BaseControl, IContainerControl, IShadowContro
         }
 
         if (ChildAlignment.HasValue)
+        {
             lg.childAlignment = (TextAnchor)(int)ChildAlignment.Value;
+        }
 
         if (ChildControlWidth.HasValue)
+        {
             lg.childControlWidth = ChildControlWidth.Value;
+        }
 
         if (ChildControlHeight.HasValue)
+        {
             lg.childControlHeight = ChildControlHeight.Value;
+        }
 
         if (ChildForceExpandWidth.HasValue)
+        {
             lg.childForceExpandWidth = ChildForceExpandWidth.Value;
+        }
 
         if (ChildForceExpandHeight.HasValue)
+        {
             lg.childForceExpandHeight = ChildForceExpandHeight.Value;
+        }
 
         if (ReverseArrangement.HasValue)
+        {
             lg.reverseArrangement = ReverseArrangement.Value;
+        }
     }
 
     #endregion
@@ -325,25 +342,25 @@ public sealed class PanelControl : BaseControl, IContainerControl, IShadowContro
     public bool ShadowEnabled
     {
         get => _shadow?.Enabled ?? false;
-        set { if (_shadow != null) _shadow.Enabled = value; }
+        set => _shadow?.Enabled = value;
     }
 
     public Color ShadowColor
     {
         get => _shadow?.Color ?? new Color(0, 0, 0, 0.5f);
-        set { if (_shadow != null) _shadow.Color = value; }
+        set => _shadow?.Color = value;
     }
 
     public Vector2 ShadowDistance
     {
         get => _shadow?.Distance ?? new Vector2(1, -1);
-        set { if (_shadow != null) _shadow.Distance = value; }
+        set => _shadow?.Distance = value;
     }
 
     public bool ShadowUseGraphicAlpha
     {
         get => _shadow?.UseGraphicAlpha ?? true;
-        set { if (_shadow != null) _shadow.UseGraphicAlpha = value; }
+        set => _shadow?.UseGraphicAlpha = value;
     }
 
     #endregion

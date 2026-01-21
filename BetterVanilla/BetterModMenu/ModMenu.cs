@@ -1,6 +1,8 @@
-﻿using BetterVanilla.Components;
+﻿using System.Reflection;
+using BetterVanilla.Components;
 using BetterVanilla.Core.Extensions;
 using BetterVanilla.Core.Helpers;
+using BetterVanilla.Extensions;
 using UnityEngine;
 
 namespace BetterVanilla.BetterModMenu;
@@ -12,17 +14,11 @@ public sealed class ModMenu
 
     public ModMenu()
     {
-        var bundle = AssetBundleUtils.LoadFromExecutingAssembly("BetterVanilla.Assets.menu.ui");
-        
-        ButtonUi = Object.Instantiate(
-            bundle.LoadComponent<BetterModMenuButtonUi>("Assets/Ui/BetterModMenuButton.prefab"),
-            BetterVanillaManager.Instance.transform
-        );
-        
-        Ui = Object.Instantiate(
-            bundle.LoadComponent<BetterModMenuUi>("Assets/Ui/BetterModMenu.prefab"),
-            BetterVanillaManager.Instance.transform
-        );
+        var bundle = Assembly.GetExecutingAssembly()
+            .LoadAssetBundle("BetterVanilla.Assets.menu.ui");
+
+        ButtonUi = bundle.InstantiatePrefab<BetterModMenuButtonUi>("Assets/Ui/BetterModMenuButton.prefab", BetterVanillaManager.Instance.transform);
+        Ui = bundle.InstantiatePrefab<BetterModMenuUi>("Assets/Ui/BetterModMenu.prefab", BetterVanillaManager.Instance.transform);
 
         bundle.Unload(false);
     }

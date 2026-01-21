@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BetterVanilla.Ui.Extensions;
 using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
 using UnityEngine;
@@ -48,7 +49,9 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
         set
         {
             if (_component != null)
+            {
                 _component.scrollRect.horizontal = value;
+            }
         }
     }
 
@@ -61,7 +64,9 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
         set
         {
             if (_component != null)
+            {
                 _component.scrollRect.vertical = value;
+            }
         }
     }
 
@@ -74,7 +79,9 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
         set
         {
             if (_component != null)
+            {
                 _component.scrollRect.decelerationRate = value;
+            }
         }
     }
 
@@ -87,7 +94,9 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
         set
         {
             if (_component != null)
+            {
                 _component.scrollRect.elasticity = value;
+            }
         }
     }
 
@@ -100,7 +109,9 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
         set
         {
             if (_component != null)
+            {
                 _component.scrollRect.inertia = value;
+            }
         }
     }
 
@@ -113,7 +124,9 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
         set
         {
             if (_component != null)
+            {
                 _component.scrollRect.scrollSensitivity = value;
+            }
         }
     }
 
@@ -126,7 +139,9 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
         set
         {
             if (_component != null)
+            {
                 _component.scrollRect.normalizedPosition = value;
+            }
         }
     }
 
@@ -254,11 +269,15 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
 
         var existingVertical = _component.content.GetComponent<VerticalLayoutGroup>();
         if (existingVertical != null)
-            Destroy(existingVertical);
+        {
+            
+        }
 
         var existingHorizontal = _component.content.GetComponent<HorizontalLayoutGroup>();
         if (existingHorizontal != null)
+        {
             Destroy(existingHorizontal);
+        }
 
         // Create new layout group based on orientation
         switch (_orientation)
@@ -286,20 +305,18 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
             sizeFitter = _component.content.gameObject.AddComponent<ContentSizeFitter>();
         }
 
-        if (sizeFitter != null)
-        {
-            sizeFitter.horizontalFit = _orientation == Orientation.Horizontal
-                ? ContentSizeFitter.FitMode.PreferredSize
-                : ContentSizeFitter.FitMode.Unconstrained;
-            sizeFitter.verticalFit = _orientation == Orientation.Vertical
-                ? ContentSizeFitter.FitMode.PreferredSize
-                : ContentSizeFitter.FitMode.Unconstrained;
-        }
+        if (sizeFitter == null) return;
+        sizeFitter.horizontalFit = _orientation == Orientation.Horizontal
+            ? ContentSizeFitter.FitMode.PreferredSize
+            : ContentSizeFitter.FitMode.Unconstrained;
+        sizeFitter.verticalFit = _orientation == Orientation.Vertical
+            ? ContentSizeFitter.FitMode.PreferredSize
+            : ContentSizeFitter.FitMode.Unconstrained;
     }
 
     private void ApplyLayoutGroupProperties()
     {
-        // If no layout group exists yet but we have content and orientation, create it
+        // If no layout group exists yet, but we have content and orientation, create it
         if (_layoutGroup == null && _component != null && _orientation != Orientation.None)
         {
             ApplyOrientation();
@@ -308,7 +325,9 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
         if (_layoutGroup == null) return;
 
         if (Spacing.HasValue)
+        {
             _layoutGroup.spacing = Spacing.Value;
+        }
 
         if (Padding.HasValue)
         {
@@ -323,19 +342,29 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
         }
 
         if (ChildAlignment.HasValue)
+        {
             _layoutGroup.childAlignment = (TextAnchor)(int)ChildAlignment.Value;
+        }
 
         if (ChildControlWidth.HasValue)
+        {
             _layoutGroup.childControlWidth = ChildControlWidth.Value;
+        }
 
         if (ChildControlHeight.HasValue)
+        {
             _layoutGroup.childControlHeight = ChildControlHeight.Value;
+        }
 
         if (ChildForceExpandWidth.HasValue)
+        {
             _layoutGroup.childForceExpandWidth = ChildForceExpandWidth.Value;
+        }
 
         if (ChildForceExpandHeight.HasValue)
+        {
             _layoutGroup.childForceExpandHeight = ChildForceExpandHeight.Value;
+        }
     }
 
     #endregion
@@ -415,7 +444,9 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     public void ScrollToTop()
     {
         if (_component != null)
+        {
             _component.scrollRect.normalizedPosition = new Vector2(0, 1);
+        }
     }
 
     /// <summary>
@@ -424,7 +455,9 @@ public sealed class ScrollViewControl : BaseControl, IContainerControl
     public void ScrollToBottom()
     {
         if (_component != null)
+        {
             _component.scrollRect.normalizedPosition = new Vector2(0, 0);
+        }
     }
 
     protected override void OnEnabledChanged(bool state)

@@ -19,85 +19,127 @@ public sealed class LabelStyleHelper
     public float FontSize
     {
         get => _text != null ? _text.fontSize : 14f;
-        set { if (_text != null) _text.fontSize = value; }
+        set
+        {
+            if (_text != null) _text.fontSize = value;
+        }
     }
 
     public Color TextColor
     {
         get => _text != null ? _text.color : Color.white;
-        set { if (_text != null) _text.color = value; }
+        set
+        {
+            if (_text != null) _text.color = value;
+        }
     }
 
     public TextAlignmentOptions TextAlignment
     {
         get => _text != null ? _text.alignment : TextAlignmentOptions.Left;
-        set { if (_text != null) _text.alignment = value; }
+        set
+        {
+            if (_text != null) _text.alignment = value;
+        }
     }
 
     public FontStyles FontStyle
     {
         get => _text != null ? _text.fontStyle : FontStyles.Normal;
-        set { if (_text != null) _text.fontStyle = value; }
+        set
+        {
+            if (_text != null) _text.fontStyle = value;
+        }
     }
 
     public float CharacterSpacing
     {
         get => _text != null ? _text.characterSpacing : 0f;
-        set { if (_text != null) _text.characterSpacing = value; }
+        set
+        {
+            if (_text != null) _text.characterSpacing = value;
+        }
     }
 
     public float LineSpacing
     {
         get => _text != null ? _text.lineSpacing : 0f;
-        set { if (_text != null) _text.lineSpacing = value; }
+        set
+        {
+            if (_text != null) _text.lineSpacing = value;
+        }
     }
 
     public float WordSpacing
     {
         get => _text != null ? _text.wordSpacing : 0f;
-        set { if (_text != null) _text.wordSpacing = value; }
+        set
+        {
+            if (_text != null) _text.wordSpacing = value;
+        }
     }
 
     public bool WordWrapping
     {
         get => _text != null && _text.enableWordWrapping;
-        set { if (_text != null) _text.enableWordWrapping = value; }
+        set
+        {
+            if (_text != null) _text.enableWordWrapping = value;
+        }
     }
 
     public TextOverflowModes TextOverflow
     {
         get => _text != null ? _text.overflowMode : TextOverflowModes.Overflow;
-        set { if (_text != null) _text.overflowMode = value; }
+        set
+        {
+            if (_text != null) _text.overflowMode = value;
+        }
     }
 
     public bool RichText
     {
         get => _text != null && _text.richText;
-        set { if (_text != null) _text.richText = value; }
+        set
+        {
+            if (_text != null) _text.richText = value;
+        }
     }
 
     public bool AutoSize
     {
         get => _text != null && _text.enableAutoSizing;
-        set { if (_text != null) _text.enableAutoSizing = value; }
+        set
+        {
+            if (_text != null) _text.enableAutoSizing = value;
+        }
     }
 
     public float MinFontSize
     {
         get => _text != null ? _text.fontSizeMin : 10f;
-        set { if (_text != null) _text.fontSizeMin = value; }
+        set
+        {
+            if (_text != null) _text.fontSizeMin = value;
+        }
     }
 
     public float MaxFontSize
     {
         get => _text != null ? _text.fontSizeMax : 72f;
-        set { if (_text != null) _text.fontSizeMax = value; }
+        set
+        {
+            if (_text != null) _text.fontSizeMax = value;
+        }
     }
 
     public Vector4 TextMargin
     {
         get => _text != null ? _text.margin : Vector4.zero;
-        set { if (_text != null) _text.margin = value; }
+        set
+        {
+            if (_text != null) _text.margin = value;
+        }
     }
 
     /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using AmongUs.Data;
 using BetterVanilla.Components;
 using BetterVanilla.Core.Helpers;
+using BetterVanilla.Extensions;
 using BetterVanilla.Options;
 using EnoUnityLoader.Il2Cpp.Utils;
 using InnerNet;

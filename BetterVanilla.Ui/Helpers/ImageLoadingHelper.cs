@@ -37,6 +37,50 @@ public static class ImageLoadingHelper
     public static readonly Vector2 DefaultPivot = new(0.5f, 0.5f);
 
     /// <summary>
+    /// Separator used to indicate AssetBundle paths (e.g., "bundleName::assetPath").
+    /// </summary>
+    public const string AssetBundleSeparator = "::";
+
+    #region AssetBundle Syntax Parsing
+
+    /// <summary>
+    /// Checks if the path uses AssetBundle syntax (contains "::").
+    /// </summary>
+    /// <param name="path">The path to check</param>
+    /// <returns>True if the path is an AssetBundle path</returns>
+    public static bool IsAssetBundlePath(string? path)
+    {
+        return !string.IsNullOrEmpty(path) && path.Contains(AssetBundleSeparator);
+    }
+
+    /// <summary>
+    /// Parses an AssetBundle path into bundle name and asset path.
+    /// </summary>
+    /// <param name="path">The full path (e.g., "ui::Assets/Sprites/Icon.png")</param>
+    /// <param name="bundleName">The bundle name (e.g., "ui")</param>
+    /// <param name="assetPath">The asset path within the bundle (e.g., "Assets/Sprites/Icon.png")</param>
+    /// <returns>True if parsing succeeded, false otherwise</returns>
+    public static bool TryParseAssetBundlePath(string? path, out string bundleName, out string assetPath)
+    {
+        bundleName = string.Empty;
+        assetPath = string.Empty;
+
+        if (string.IsNullOrEmpty(path))
+            return false;
+
+        var separatorIndex = path.IndexOf(AssetBundleSeparator, StringComparison.Ordinal);
+        if (separatorIndex <= 0 || separatorIndex >= path.Length - AssetBundleSeparator.Length)
+            return false;
+
+        bundleName = path.Substring(0, separatorIndex);
+        assetPath = path.Substring(separatorIndex + AssetBundleSeparator.Length);
+
+        return !string.IsNullOrEmpty(bundleName) && !string.IsNullOrEmpty(assetPath);
+    }
+
+    #endregion
+
+    /// <summary>
     /// Parses a pivot string in format "x,y" to a Vector2.
     /// </summary>
     /// <param name="value">Pivot string (e.g., "0.5,0.5" for center)</param>

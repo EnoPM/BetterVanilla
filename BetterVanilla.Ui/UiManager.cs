@@ -1,3 +1,5 @@
+using System.Reflection;
+using BetterVanilla.Extensions;
 using BetterVanilla.Ui.Core;
 using BetterVanilla.Ui.Helpers;
 using UnityEngine;
@@ -31,10 +33,9 @@ public sealed class UiManager
 
     private void CreateUiContainer()
     {
-        _uiContainer = AssetBundleManager.Instance.InstantiatePrefab(
-            "BetterVanilla.Ui.Assets.ui.bundle",
-            "Assets/Prefabs/UiContainer.prefab"
-        );
+        _uiContainer = Assembly.GetExecutingAssembly()
+            .LoadAssetBundle("BetterVanilla.Ui.Assets.ui.bundle")
+            .InstantiatePrefab("Assets/Prefabs/UiContainer.prefab");
         _uiContainer.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
         Object.DontDestroyOnLoad(_uiContainer);
 

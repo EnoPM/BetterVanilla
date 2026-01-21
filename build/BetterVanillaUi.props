@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <!-- Reference BetterVanilla.Ui project -->
+    <ItemGroup>
+        <ProjectReference Include="$(MSBuildThisFileDirectory)..\BetterVanilla.Ui\BetterVanilla.Ui.csproj" />
+    </ItemGroup>
+
+    <!-- Reference the Source Generator -->
+    <ItemGroup>
+        <ProjectReference Include="$(MSBuildThisFileDirectory)..\BetterVanilla.Ui.SourceGenerator\BetterVanilla.Ui.SourceGenerator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <!-- UI XML files as AdditionalFiles for the source generator -->
+    <ItemGroup>
+        <AdditionalFiles Include="**\*.ui.xml" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**" />
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\BetterVanilla.Ui\ui-aliases.json" />
+    </ItemGroup>
+
+</Project>

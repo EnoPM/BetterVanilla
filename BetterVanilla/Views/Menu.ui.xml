@@ -34,7 +34,7 @@
                         Width="40"
                         Click="OnCloseClicked">
                 <IconButton.Image ImageType="Simple" PreserveAspect="true">
-                    <Image.Source EmbeddedResource="BetterVanilla.Assets.CloseButtonIcon.png"
+                    <Image.Source EmbeddedResource="BetterVanilla.Assets.extras.bundle::Assets/Ui/CloseButton.png"
                                   FilterMode="Bilinear"
                                   WrapMode="Clamp"
                                   PixelsPerUnit="100" />
@@ -44,7 +44,7 @@
         <ScrollView x:Name="optionsScrollView"
                     HorizontalAlignment="Stretch"
                     ScrollSensitivity="15"
-                    Height="400"
+                    Height="700"
                     Vertical="true"
                     Horizontal="false">
             <ScrollView.LayoutGroup Orientation="Vertical"
@@ -55,10 +55,11 @@
                                     ChildControlHeight="false"/>
             <ScrollView.Image Color="#00000000" />
             <Image HorizontalAlignment="Stretch"
+                   x:Name="hello"
                    Margin="10"
                    Height="300"
-                   PreserveAspect="true"
-                   Source="BetterVanilla.Assets.SponsorBanner.png">
+                   PreserveAspect="true">
+                <Image.Source EmbeddedResource="BetterVanilla.Assets.extras.bundle::Assets/Ui/SponsorBanner.png" />
                 <Button Height="50" Width="300"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"

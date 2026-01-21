@@ -2,6 +2,7 @@
 using System.Linq;
 using BetterVanilla.Core;
 using BetterVanilla.Core.Extensions;
+using BetterVanilla.Extensions;
 using EnoUnityLoader.Il2Cpp.Utils;
 using UnityEngine;
 using UnityEngine.UI;

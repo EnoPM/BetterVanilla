@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BetterVanilla.Ui.Extensions;
 using BetterVanilla.Ui.Binding;
 using BetterVanilla.Ui.Components;
 using BetterVanilla.Ui.Core;
@@ -100,8 +101,7 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
     /// </summary>
     public void SetOptions(IEnumerable<string> options)
     {
-        if (_component == null)
-            return;
+        if (_component == null) return;
 
         _component.dropdown.ClearOptions();
         var optionData = new Il2CppSystem.Collections.Generic.List<string>();
@@ -143,85 +143,85 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
     public float LabelFontSize
     {
         get => _labelStyle?.FontSize ?? 14f;
-        set { if (_labelStyle != null) _labelStyle.FontSize = value; }
+        set => _labelStyle?.FontSize = value;
     }
 
     public Color LabelTextColor
     {
         get => _labelStyle?.TextColor ?? Color.white;
-        set { if (_labelStyle != null) _labelStyle.TextColor = value; }
+        set => _labelStyle?.TextColor = value;
     }
 
     public TextAlignmentOptions LabelTextAlignment
     {
         get => _labelStyle?.TextAlignment ?? TextAlignmentOptions.Left;
-        set { if (_labelStyle != null) _labelStyle.TextAlignment = value; }
+        set => _labelStyle?.TextAlignment = value;
     }
 
     public FontStyles LabelFontStyle
     {
         get => _labelStyle?.FontStyle ?? FontStyles.Normal;
-        set { if (_labelStyle != null) _labelStyle.FontStyle = value; }
+        set => _labelStyle?.FontStyle = value;
     }
 
     public float LabelCharacterSpacing
     {
         get => _labelStyle?.CharacterSpacing ?? 0f;
-        set { if (_labelStyle != null) _labelStyle.CharacterSpacing = value; }
+        set => _labelStyle?.CharacterSpacing = value;
     }
 
     public float LabelLineSpacing
     {
         get => _labelStyle?.LineSpacing ?? 0f;
-        set { if (_labelStyle != null) _labelStyle.LineSpacing = value; }
+        set => _labelStyle?.LineSpacing = value;
     }
 
     public float LabelWordSpacing
     {
         get => _labelStyle?.WordSpacing ?? 0f;
-        set { if (_labelStyle != null) _labelStyle.WordSpacing = value; }
+        set => _labelStyle?.WordSpacing = value;
     }
 
     public bool LabelWordWrapping
     {
         get => _labelStyle?.WordWrapping ?? false;
-        set { if (_labelStyle != null) _labelStyle.WordWrapping = value; }
+        set => _labelStyle?.WordWrapping = value;
     }
 
     public TextOverflowModes LabelTextOverflow
     {
         get => _labelStyle?.TextOverflow ?? TextOverflowModes.Overflow;
-        set { if (_labelStyle != null) _labelStyle.TextOverflow = value; }
+        set => _labelStyle?.TextOverflow = value;
     }
 
     public bool LabelRichText
     {
         get => _labelStyle?.RichText ?? true;
-        set { if (_labelStyle != null) _labelStyle.RichText = value; }
+        set => _labelStyle?.RichText = value;
     }
 
     public bool LabelAutoSize
     {
         get => _labelStyle?.AutoSize ?? false;
-        set { if (_labelStyle != null) _labelStyle.AutoSize = value; }
+        set => _labelStyle?.AutoSize = value;
     }
 
     public float LabelMinFontSize
     {
         get => _labelStyle?.MinFontSize ?? 10f;
-        set { if (_labelStyle != null) _labelStyle.MinFontSize = value; }
+        set => _labelStyle?.MinFontSize = value;
     }
 
     public float LabelMaxFontSize
     {
         get => _labelStyle?.MaxFontSize ?? 72f;
-        set { if (_labelStyle != null) _labelStyle.MaxFontSize = value; }
+        set => _labelStyle?.MaxFontSize = value;
     }
 
     public Vector4 LabelTextMargin
     {
         get => _labelStyle?.TextMargin ?? Vector4.zero;
-        set { if (_labelStyle != null) _labelStyle.TextMargin = value; }
+        set => _labelStyle?.TextMargin = value;
     }
 
     #endregion
@@ -257,10 +257,10 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
 
         _optionsProperty = new OptionsBindableProperty(this);
 
-        RegisterBindableProperty("SelectedIndex", _selectedIndexProperty);
-        RegisterBindableProperty("Value", _selectedIndexProperty);
-        RegisterBindableProperty("Text", _textProperty);
-        RegisterBindableProperty("Options", _optionsProperty);
+        RegisterBindableProperty(nameof(SelectedIndex), _selectedIndexProperty);
+        RegisterBindableProperty(nameof(Value), _selectedIndexProperty);
+        RegisterBindableProperty(nameof(Text), _textProperty);
+        RegisterBindableProperty(nameof(Options), _optionsProperty);
 
         _selectedIndexProperty.ValueChanged += value =>
         {
@@ -322,13 +322,11 @@ public sealed class DropdownControl : BaseControl, IValueControl<int>, ILabelSty
 
         public void SetValue(object? value)
         {
-            if (value is IEnumerable<string> options)
-            {
-                // Convert to list to avoid multiple enumeration
-                var optionsList = options as IList<string> ?? new List<string>(options);
-                _options = optionsList;
-                _control.SetOptions(optionsList);
-            }
+            if (value is not IEnumerable<string> options) return;
+            // Convert to list to avoid multiple enumeration
+            var optionsList = options as IList<string> ?? new List<string>(options);
+            _options = optionsList;
+            _control.SetOptions(optionsList);
         }
 
         public event Action<object?>? ValueChanged;
