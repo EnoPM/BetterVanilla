@@ -1,20 +1,21 @@
 ﻿using BetterVanilla.Core;
 using BetterVanilla.Ui.Core;
+using BetterVanilla.Views.MenuButtonOverlay;
 
-namespace BetterVanilla.Views;
+namespace BetterVanilla.Views.Menu;
 
-public sealed partial class Menu : BaseView
+public sealed partial class MenuUi : BaseView
 {
-    public MenuViewModel? ViewModel { get; private set; }
+    public MenuUiViewModel? ViewModel { get; private set; }
 
     private void Start()
     {
-        ViewModel = GetRequiredViewModel<MenuViewModel>();
+        ViewModel = GetRequiredViewModel<MenuUiViewModel>();
     }
 
     partial void OnCloseClicked()
     {
-        MenuButtonOverlay.Instance?.CloseMenu();
+        MenuButtonOverlayUi.Instance?.CloseMenu();
     }
 
     partial void OnBecomeSponsorButtonClick()

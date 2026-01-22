@@ -7,6 +7,7 @@
 
     <ItemGroup Condition="'$(IncludeCoreLibrairies)' == 'true'">
         <Reference Include="$(CoreDirectoryPath)\*.dll"/>
+        <Reference Remove="$(CoreDirectoryPath)\dobby.dll"/>
     </ItemGroup>
 
     <Import Project="$(MSBuildThisFileDirectory)build\GenerateModData.targets" Condition="'$(AssemblyGuid)' != '' AND '$(AssemblyName)' != '' AND '$(Version)' != ''"/>

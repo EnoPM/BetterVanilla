@@ -12,7 +12,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected readonly CompositeDisposable Disposables = new();
+    protected CompositeDisposable Disposables { get; } = new();
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {

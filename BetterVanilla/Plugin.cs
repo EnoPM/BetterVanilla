@@ -1,9 +1,7 @@
-﻿using System;
-using BetterVanilla.Components;
+﻿using BetterVanilla.Components;
 using BetterVanilla.Core;
 using BetterVanilla.Ui;
-using BetterVanilla.Ui.Core;
-using BetterVanilla.Views;
+using BetterVanilla.Views.MenuButtonOverlay;
 using EnoUnityLoader.Attributes;
 using EnoUnityLoader.Il2Cpp;
 
@@ -22,13 +20,12 @@ public sealed class Plugin : BasePlugin
     public override void Load()
     {
         Ls.SetLogSource(Log);
-        UiLogger.SetLogSource(EnoUnityLoader.Logging.Logger.CreateLogSource(typeof(UiLogger).Assembly.GetName().Name ?? nameof(UiLogger)));
         AddComponent<UnityThreadDispatcher>();
         AddComponent<FeatureCodeBehaviour>();
         AddComponent<BetterVanillaManager>();
         AddComponent<ModUpdaterBehaviour>();
         AddComponent<PlayerShieldBehaviour>();
 
-        UiManager.Instance.CreateView<MenuButtonOverlay, MenuButtonOverlayViewModel>();
+        UiManager.Instance.CreateView<MenuButtonOverlayUi, MenuButtonOverlayUiViewModel>();
     }
 }

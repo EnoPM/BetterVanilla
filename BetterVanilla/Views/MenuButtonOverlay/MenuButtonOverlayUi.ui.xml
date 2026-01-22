@@ -2,8 +2,8 @@
 <View xmlns="http://schemas.bettervanilla.ui/2025"
       xmlns:x="http://schemas.bettervanilla.ui/2025/xaml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://schemas.bettervanilla.ui/2025 ../../BetterVanilla.Ui/Schemas/ui.xsd"
-      x:Class="BetterVanilla.Views.MenuButtonOverlay">
+      xsi:schemaLocation="http://schemas.bettervanilla.ui/2025 ../../../BetterVanilla.Ui/Schemas/ui.xsd"
+      x:Class="BetterVanilla.Views.MenuButtonOverlay.MenuButtonOverlayUi">
     <Panel Width="150" Height="250"
            VerticalAlignment="Bottom"
            Margin="0,0,0,250"

@@ -1,3 +1,4 @@
+using System.Reflection;
 using EnoUnityLoader.Logging;
 
 namespace BetterVanilla.Ui.Core;
@@ -8,19 +9,11 @@ namespace BetterVanilla.Ui.Core;
 /// </summary>
 public static class UiLogger
 {
-    private static ManualLogSource? _logger;
+    private static readonly ManualLogSource Logger = EnoUnityLoader.Logging.Logger.CreateLogSource(Assembly.GetExecutingAssembly().GetName().Name ?? nameof(UiLogger));
 
-    /// <summary>
-    /// Sets the log source for the UI library.
-    /// </summary>
-    public static void SetLogSource(ManualLogSource logSource)
-    {
-        _logger = logSource;
-    }
-
-    public static void LogError(object data) => _logger?.LogError(data);
-    public static void LogWarning(object data) => _logger?.LogWarning(data);
-    public static void LogMessage(object data) => _logger?.LogMessage(data);
-    public static void LogInfo(object data) => _logger?.LogInfo(data);
-    public static void LogDebug(object data) => _logger?.LogDebug(data);
+    public static void LogError(object data) => Logger.LogError(data);
+    public static void LogWarning(object data) => Logger.LogWarning(data);
+    public static void LogMessage(object data) => Logger.LogMessage(data);
+    public static void LogInfo(object data) => Logger.LogInfo(data);
+    public static void LogDebug(object data) => Logger.LogDebug(data);
 }

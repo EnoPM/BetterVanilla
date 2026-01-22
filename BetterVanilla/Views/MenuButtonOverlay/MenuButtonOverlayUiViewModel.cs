@@ -1,8 +1,8 @@
 ﻿using BetterVanilla.Ui.Helpers;
 
-namespace BetterVanilla.Views;
+namespace BetterVanilla.Views.MenuButtonOverlay;
 
-public class MenuButtonOverlayViewModel : ViewModelBase
+public class MenuButtonOverlayUiViewModel : ViewModelBase
 {
     public bool IsButtonInteractable
     {

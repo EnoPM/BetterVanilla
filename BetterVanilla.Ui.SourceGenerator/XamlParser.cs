@@ -30,6 +30,8 @@ public sealed class XamlParser
 
     public ViewDefinition Parse(string xmlContent, string filePath)
     {
+        ResetAutoNameCounter();
+
         var doc = new XmlDocument();
         doc.LoadXml(xmlContent);
 
@@ -536,8 +538,16 @@ public sealed class XamlParser
         return parts;
     }
 
+    private static int _autoNameCounter;
+
     private static void CollectNamedElements(ViewElement element, List<ViewElement> namedElements)
     {
+        // If element has no name but has bindings or event handlers, assign an auto-generated name
+        if (string.IsNullOrEmpty(element.Name) && (element.Bindings.Count > 0 || element.EventHandlers.Count > 0))
+        {
+            element.Name = $"_auto{element.TagName}{_autoNameCounter++}";
+        }
+
         if (!string.IsNullOrEmpty(element.Name))
         {
             namedElements.Add(element);
@@ -547,5 +557,13 @@ public sealed class XamlParser
         {
             CollectNamedElements(child, namedElements);
         }
+    }
+
+    /// <summary>
+    /// Resets the auto name counter. Should be called before parsing each view.
+    /// </summary>
+    public static void ResetAutoNameCounter()
+    {
+        _autoNameCounter = 0;
     }
 }

@@ -2,49 +2,64 @@
 <View xmlns="http://schemas.bettervanilla.ui/2025"
       xmlns:x="http://schemas.bettervanilla.ui/2025/xaml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://schemas.bettervanilla.ui/2025 ../../BetterVanilla.Ui/Schemas/ui.xsd"
-      x:Class="BetterVanilla.Views.Menu">
+      xsi:schemaLocation="http://schemas.bettervanilla.ui/2025 ../../../BetterVanilla.Ui/Schemas/ui.xsd"
+      x:Class="BetterVanilla.Views.Menu.MenuUi">
     <Panel x:Name="root" Alias="Controls/Panel"
            Width="600"
            HorizontalAlignment="Left"
            VerticalAlignment="Stretch">
         <Panel.LayoutGroup Orientation="Vertical"
-                           Spacing="8"
-                           Padding="15,5,15,5"
+                           Spacing="10"
+                           Padding="5"
                            ChildForceExpandWidth="true"
                            ChildForceExpandHeight="false"
-                           ChildControlHeight="false"
+                           ChildControlHeight="true"
                            ChildControlWidth="true"
                            ChildAlignment="UpperCenter"/>
-        <Panel.Image Color="#1A1A2E" />
-        <Panel x:Name="header" HorizontalAlignment="Stretch" Height="50">
-            <Panel.LayoutGroup Orientation="Horizontal" Padding="5"/>
-            <TextBlock x:Name="titleText"
-                       Alias="Controls/TextBlock"
-                       Text="BetterVanilla"
-                       FontSize="40"
-                       TextAlignment="MidlineLeft"
-                       Height="50"
-                       Width="480"
-                       HorizontalAlignment="Left"/>
+        <Panel.Image Color="#1A1A2E"/>
+        <Panel x:Name="header" HorizontalAlignment="Stretch" Height="40">
+            <Panel.LayoutGroup Orientation="Horizontal"
+                               ChildAlignment="UpperLeft"
+                               ChildControlWidth="true"
+                               ChildControlHeight="false"
+                               ChildForceExpandWidth="false"
+                               ChildForceExpandHeight="false"/>
+            <Panel x:Name="titleContainer" FlexibleWidth="1" Height="40">
+                <Panel.LayoutGroup Orientation="Horizontal"
+                                   ChildControlWidth="false"
+                                   ChildControlHeight="false"/>
+                <TextBlock x:Name="nameText"
+                           Alias="Controls/TextBlock"
+                           Text="{Binding MenuName, Mode=OneWay}"
+                           AutoSize="true"
+                           MinFontSize="15"
+                           MaxFontSize="40"
+                           TextAlignment="MidlineLeft"
+                           FontStyle="Bold"
+                           Height="40"/>
+                <TextBlock x:Name="versionText"
+                           Alias="Controls/TextBlock"
+                           Text="{Binding MenuVersion, Mode=OneWay}"
+                           AutoSize="true"
+                           MinFontSize="10"
+                           MaxFontSize="25"
+                           TextAlignment="BottomLeft"
+                           Height="40"/>
+            </Panel>
             <IconButton Alias="Controls/IconButton"
                         x:Name="closeButton"
-                        HorizontalAlignment="Right"
                         Height="40"
                         Width="40"
                         Click="OnCloseClicked">
                 <IconButton.Image ImageType="Simple" PreserveAspect="true">
-                    <Image.Source EmbeddedResource="BetterVanilla.Assets.extras.bundle::Assets/Ui/CloseButton.png"
-                                  FilterMode="Bilinear"
-                                  WrapMode="Clamp"
-                                  PixelsPerUnit="100" />
+                    <Image.Source EmbeddedResource="BetterVanilla.Assets.extras.bundle::Assets/Ui/CloseButton.png"/>
                 </IconButton.Image>
             </IconButton>
         </Panel>
         <ScrollView x:Name="optionsScrollView"
                     HorizontalAlignment="Stretch"
                     ScrollSensitivity="15"
-                    Height="700"
+                    FlexibleHeight="1"
                     Vertical="true"
                     Horizontal="false">
             <ScrollView.LayoutGroup Orientation="Vertical"
@@ -53,13 +68,16 @@
                                     ChildForceExpandWidth="false"
                                     ChildForceExpandHeight="false"
                                     ChildControlHeight="false"/>
-            <ScrollView.Image Color="#00000000" />
+            <ScrollView.Image Color="#00000000"/>
+            <Dropdown x:Name="language"
+                      Options="{Binding AvailableLanguages, Mode=OneWay}"
+                      SelectedIndex="{Binding SelectedLanguage, Mode=TwoWay}"
+                      HorizontalAlignment="Stretch"/>
             <Image HorizontalAlignment="Stretch"
-                   x:Name="hello"
                    Margin="10"
                    Height="300"
                    PreserveAspect="true">
-                <Image.Source EmbeddedResource="BetterVanilla.Assets.extras.bundle::Assets/Ui/SponsorBanner.png" />
+                <Image.Source EmbeddedResource="BetterVanilla.Assets.extras.bundle::Assets/Ui/SponsorBanner.png"/>
                 <Button Height="50" Width="300"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -68,12 +86,12 @@
                         ShadowDistance="2,-2"
                         ShadowColor="#000000F0"
                         Click="OnBecomeSponsorButtonClick"
-                        Text="Rejoindre les sponsors">
+                        Text="{Binding BecomeSponsorButtonText, Mode=OneWay}">
                     <Button.TextStyle AutoSize="true" TextMargin="20,0"/>
                 </Button>
             </Image>
             <Image Width="100%" Height="500" ImageType="Simple" PreserveAspect="true">
-                <Image.Source Url="https://live.staticflickr.com/3739/13679012225_4e419bfbdc_b.jpg"  />
+                <Image.Source Url="https://live.staticflickr.com/3739/13679012225_4e419bfbdc_b.jpg"/>
             </Image>
             <!-- Éléments supplémentaires pour tester le scroll -->
             <TextBlock IsVisible="{Binding ShouldDisplayAdditionalTexts, Mode=OneWay}" x:Name="testText1"

@@ -85,6 +85,10 @@
     <xs:union memberTypes="xs:float ui:BindingExpression"/>
   </xs:simpleType>
 
+  <xs:simpleType name="IntOrBinding">
+    <xs:union memberTypes="xs:int ui:BindingExpression"/>
+  </xs:simpleType>
+
   <xs:simpleType name="StringOrBinding">
     <xs:union memberTypes="xs:string ui:BindingExpression"/>
   </xs:simpleType>
@@ -906,12 +910,12 @@
           <xs:documentation>Binding to IEnumerable&lt;string&gt; for dropdown options</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="SelectedIndex" type="xs:int" use="optional">
+      <xs:attribute name="SelectedIndex" type="ui:IntOrBinding" use="optional">
         <xs:annotation>
           <xs:documentation>The selected option index (0-based)</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="Value" type="xs:int" use="optional">
+      <xs:attribute name="Value" type="ui:IntOrBinding" use="optional">
         <xs:annotation>
           <xs:documentation>Alias for SelectedIndex</xs:documentation>
         </xs:annotation>

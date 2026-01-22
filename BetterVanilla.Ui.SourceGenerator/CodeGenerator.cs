@@ -238,18 +238,21 @@ public sealed class CodeGenerator
         }
 
         // Register elements
-        statements.Add(CreateComment("Register elements"));
+        var isFirstRegister = true;
         foreach (var element in definition.NamedElements)
         {
             if (string.IsNullOrEmpty(element.Name))
                 continue;
 
-            statements.Add(ExpressionStatement(
+            var registerStatement = ExpressionStatement(
                 InvocationExpression(IdentifierName("RegisterElement"))
                     .WithArgumentList(ArgumentList(SeparatedList([
                         Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(element.Name!))),
                         Argument(IdentifierName(element.Name!))
-                    ])))));
+                    ]))));
+
+            statements.Add(isFirstRegister ? WithLeadingComment(registerStatement, "Register elements") : registerStatement);
+            isFirstRegister = false;
         }
 
         // Call base
@@ -282,9 +285,7 @@ public sealed class CodeGenerator
         var componentType = ResolveComponentType(element);
         var isAnonymous = string.IsNullOrEmpty(element.Name);
         var varName = isAnonymous ? $"_anonymous{element.TagName}{_anonymousCounter++}" : element.Name!;
-
-        // Comment
-        statements.Add(CreateComment($"Instantiate {(isAnonymous ? "anonymous " : "")}{element.TagName}"));
+        var commentText = $"Instantiate {(isAnonymous ? "anonymous " : "")}{element.TagName}";
 
         // Instantiation
         if (_aliasConfig.Aliases.TryGetValue(alias, out var aliasDef))
@@ -302,31 +303,31 @@ public sealed class CodeGenerator
 
             if (isAnonymous)
             {
-                statements.Add(LocalDeclarationStatement(
+                statements.Add(WithLeadingComment(LocalDeclarationStatement(
                     VariableDeclaration(IdentifierName("var"))
                         .WithVariables(SingletonSeparatedList(
-                            VariableDeclarator(varName).WithInitializer(EqualsValueClause(instantiateCall))))));
+                            VariableDeclarator(varName).WithInitializer(EqualsValueClause(instantiateCall))))), commentText));
             }
             else
             {
-                statements.Add(ExpressionStatement(
+                statements.Add(WithLeadingComment(ExpressionStatement(
                     AssignmentExpression(SyntaxKind.SimpleAssignmentExpression,
                         IdentifierName(varName),
-                        instantiateCall)));
+                        instantiateCall)), commentText));
             }
         }
         else
         {
             // Fallback - create GameObject
             var goName = $"{varName}Go";
-            statements.Add(LocalDeclarationStatement(
+            statements.Add(WithLeadingComment(LocalDeclarationStatement(
                 VariableDeclaration(IdentifierName("var"))
                     .WithVariables(SingletonSeparatedList(
                         VariableDeclarator(goName)
                             .WithInitializer(EqualsValueClause(
                                 ObjectCreationExpression(IdentifierName("GameObject"))
                                     .WithArgumentList(ArgumentList(SingletonSeparatedList(
-                                        Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(varName))))))))))));
+                                        Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(varName))))))))))), commentText));
 
             statements.Add(ExpressionStatement(
                 InvocationExpression(
@@ -773,7 +774,6 @@ public sealed class CodeGenerator
     private MethodDeclarationSyntax CreateSetupBindingsMethod(ViewDefinition definition)
     {
         var statements = new List<StatementSyntax>();
-        var hasBindings = false;
 
         foreach (var element in definition.NamedElements)
         {
@@ -782,7 +782,6 @@ public sealed class CodeGenerator
 
             foreach (var kvp in element.Bindings)
             {
-                hasBindings = true;
                 var binding = kvp.Value;
 
                 statements.Add(ExpressionStatement(
@@ -803,11 +802,6 @@ public sealed class CodeGenerator
             }
         }
 
-        if (!hasBindings)
-        {
-            statements.Add(CreateComment("No bindings defined"));
-        }
-
         return MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), "SetupBindings")
             .WithModifiers(TokenList(Token(SyntaxKind.ProtectedKeyword), Token(SyntaxKind.OverrideKeyword)))
             .WithBody(Block(statements));
@@ -816,7 +810,6 @@ public sealed class CodeGenerator
     private MethodDeclarationSyntax CreateSetupEventHandlersMethod(ViewDefinition definition)
     {
         var statements = new List<StatementSyntax>();
-        var hasEvents = false;
 
         foreach (var element in definition.NamedElements)
         {
@@ -825,7 +818,6 @@ public sealed class CodeGenerator
 
             foreach (var kvp in element.EventHandlers)
             {
-                hasEvents = true;
                 var eventName = kvp.Key;
                 var handlerName = kvp.Value;
                 var componentType = ResolveComponentType(element);
@@ -881,15 +873,10 @@ public sealed class CodeGenerator
                         break;
 
                     default:
-                        statements.Add(CreateComment($"TODO: Wire up {eventName} to {handlerName}"));
+                        // Unhandled event type - skip
                         break;
                 }
             }
-        }
-
-        if (!hasEvents)
-        {
-            statements.Add(CreateComment("No event handlers defined"));
         }
 
         return MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), "SetupEventHandlers")
@@ -1002,9 +989,14 @@ public sealed class CodeGenerator
         return element.TagName.EndsWith("Control") ? element.TagName : $"{element.TagName}Control";
     }
 
-    private static StatementSyntax CreateComment(string text)
+    private static SyntaxTriviaList CreateCommentTrivia(string text)
     {
-        return EmptyStatement().WithLeadingTrivia(TriviaList(Comment($"// {text}")));
+        return TriviaList(Comment($"// {text}"), CarriageReturnLineFeed);
+    }
+
+    private static StatementSyntax WithLeadingComment(StatementSyntax statement, string text)
+    {
+        return statement.WithLeadingTrivia(CreateCommentTrivia(text));
     }
 
     private static StatementSyntax CreateAssignment(string target, string property, ExpressionSyntax value)
