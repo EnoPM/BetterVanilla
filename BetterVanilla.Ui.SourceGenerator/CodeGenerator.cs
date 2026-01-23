@@ -15,6 +15,7 @@ public sealed class CodeGenerator
 {
     private readonly AliasConfig _aliasConfig;
     private int _anonymousCounter;
+    private ViewDefinition? _currentDefinition;
 
     private static readonly Dictionary<string, string> EnumProperties = new()
     {
@@ -46,9 +47,10 @@ public sealed class CodeGenerator
     public string Generate(ViewDefinition definition)
     {
         _anonymousCounter = 0;
+        _currentDefinition = definition;
 
         var compilationUnit = CompilationUnit()
-            .WithUsings(CreateUsings())
+            .WithUsings(CreateUsings(definition))
             .WithMembers(CreateNamespaceOrClass(definition))
             .WithLeadingTrivia(CreateHeaderTrivia())
             .NormalizeWhitespace();
@@ -71,9 +73,9 @@ public sealed class CodeGenerator
         );
     }
 
-    private static SyntaxList<UsingDirectiveSyntax> CreateUsings()
+    private static SyntaxList<UsingDirectiveSyntax> CreateUsings(ViewDefinition definition)
     {
-        var usings = new[]
+        var usings = new List<string>
         {
             "System",
             "System.Collections.Generic",
@@ -84,6 +86,12 @@ public sealed class CodeGenerator
             "BetterVanilla.Ui.Helpers",
             "UnityEngine"
         };
+
+        // Add localization namespace if used
+        if (definition.HasLocalization)
+        {
+            usings.Add("BetterVanilla.Localization");
+        }
 
         return List(usings.Select(u => UsingDirective(ParseName(u))));
     }
@@ -121,6 +129,13 @@ public sealed class CodeGenerator
 
         // Add SetupEventHandlers method
         members.Add(CreateSetupEventHandlersMethod(definition));
+
+        // Add localization methods if needed
+        if (definition.HasLocalization)
+        {
+            members.Add(CreateUpdateLocalizedTextsMethod(definition));
+            members.Add(CreateOnDestroyMethod(definition));
+        }
 
         // Add partial methods region
         members.AddRange(CreatePartialMethodsRegion(definition));
@@ -261,6 +276,24 @@ public sealed class CodeGenerator
                 MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
                     BaseExpression(),
                     IdentifierName("InitializeComponent")))));
+
+        // Setup localization if used
+        if (definition.HasLocalization)
+        {
+            // Subscribe to LocalizationManager.LanguageChanged event
+            statements.Add(WithLeadingComment(
+                ExpressionStatement(
+                    AssignmentExpression(SyntaxKind.AddAssignmentExpression,
+                        MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("LocalizationManager"),
+                            IdentifierName("LanguageChanged")),
+                        IdentifierName("UpdateLocalizedTexts"))),
+                "Setup localization"));
+
+            // Apply initial localized texts
+            statements.Add(ExpressionStatement(
+                InvocationExpression(IdentifierName("UpdateLocalizedTexts"))));
+        }
 
         return MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), "InitializeComponent")
             .WithModifiers(TokenList(Token(SyntaxKind.ProtectedKeyword), Token(SyntaxKind.OverrideKeyword)))
@@ -960,6 +993,73 @@ public sealed class CodeGenerator
         {
             CollectEventHandlers(child, methodSignatures);
         }
+    }
+
+    private MethodDeclarationSyntax CreateUpdateLocalizedTextsMethod(ViewDefinition definition)
+    {
+        var statements = new List<StatementSyntax>();
+        var locSource = definition.LocalizationSource!;
+
+        // Collect all elements with localization bindings
+        if (definition.RootElement != null)
+        {
+            CollectLocalizationStatements(definition.RootElement, statements, locSource);
+        }
+
+        return MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), "UpdateLocalizedTexts")
+            .WithModifiers(TokenList(Token(SyntaxKind.PrivateKeyword)))
+            .WithBody(Block(statements));
+    }
+
+    private static void CollectLocalizationStatements(ViewElement element, List<StatementSyntax> statements, string locSource)
+    {
+        if (!string.IsNullOrEmpty(element.Name) && element.LocalizationBindings.Count > 0)
+        {
+            foreach (var kvp in element.LocalizationBindings)
+            {
+                var propertyName = kvp.Key;
+                var locKey = kvp.Value;
+
+                // element.Property = LocalizationSource.Key;
+                statements.Add(ExpressionStatement(
+                    AssignmentExpression(SyntaxKind.SimpleAssignmentExpression,
+                        MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName(element.Name!),
+                            IdentifierName(propertyName)),
+                        MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName(locSource),
+                            IdentifierName(locKey)))));
+            }
+        }
+
+        foreach (var child in element.Children)
+        {
+            CollectLocalizationStatements(child, statements, locSource);
+        }
+    }
+
+    private MethodDeclarationSyntax CreateOnDestroyMethod(ViewDefinition definition)
+    {
+        var statements = new List<StatementSyntax>();
+
+        // Unsubscribe from LocalizationManager.LanguageChanged event
+        statements.Add(ExpressionStatement(
+            AssignmentExpression(SyntaxKind.SubtractAssignmentExpression,
+                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                    IdentifierName("LocalizationManager"),
+                    IdentifierName("LanguageChanged")),
+                IdentifierName("UpdateLocalizedTexts"))));
+
+        // Call base.OnDestroy()
+        statements.Add(ExpressionStatement(
+            InvocationExpression(
+                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                    BaseExpression(),
+                    IdentifierName("OnDestroy")))));
+
+        return MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), "OnDestroy")
+            .WithModifiers(TokenList(Token(SyntaxKind.ProtectedKeyword), Token(SyntaxKind.OverrideKeyword)))
+            .WithBody(Block(statements));
     }
 
     // Helper methods

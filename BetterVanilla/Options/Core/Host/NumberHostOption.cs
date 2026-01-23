@@ -15,7 +15,7 @@ public sealed class NumberHostOption : NumberSerializableOption, IHostOption<Flo
     public NumberHostOption(string key, string title, float defaultValue, float incrementValue, float minValue, float maxValue, string valuePrefix = "", string valueSuffix = "") : base(key, title, defaultValue, incrementValue, minValue, maxValue, valuePrefix, valueSuffix)
     {
         GameSetting = ScriptableObject.CreateInstance<FloatGameSetting>();
-        GameSetting.Type = OptionTypes.Float;
+        GameSetting.Type = global::OptionTypes.Float;
         GameSetting.hideFlags = HideFlags.DontSave;
         GameSetting.name = $"BetterVanillaCustomSetting_{key}";
         GameSetting.Title = StringNames.None;

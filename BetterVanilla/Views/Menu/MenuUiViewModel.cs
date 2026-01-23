@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using BetterVanilla.Core;
+﻿using System.Collections.Generic;
 using BetterVanilla.Localization;
 using BetterVanilla.Ui.Helpers;
 
@@ -16,38 +14,13 @@ public sealed class MenuUiViewModel : ViewModelBase
         set => SetProperty(ref field, value);
     } = false;
 
-    public string BecomeSponsorButtonText
-    {
-        get => field;
-        set => SetProperty(ref field, value);
-    } = string.Empty;
-
-    public string MenuName { get; } = ModData.Name;
     public string MenuVersion { get; } = $"v{ModData.Version}";
 
-    public IEnumerable<string> AvailableLanguages
-    {
-        get;
-    } = LocalizationManager.Instance.AvailableLanguages;
+    public IEnumerable<string> AvailableLanguages => LocalizationManager.AvailableLanguageNames;
 
     public int SelectedLanguage
     {
-        get;
-        set
-        {
-            LocalizationManager.Instance.SetLanguageByIndex(value);
-            SetProperty(ref field, value);
-        }
-    } = LocalizationManager.Instance.GetCurrentLanguageIndex();
-
-    private MenuUiViewModel()
-    {
-        ReloadLocalizedTexts();
-        LocalizationManager.Instance.LanguageChanged += ReloadLocalizedTexts;
-    }
-
-    private void ReloadLocalizedTexts()
-    {
-        BecomeSponsorButtonText = LocalizationManager.Instance[TranslationKey.Menu.BecomeSponsorButton];
+        get => LocalizationManager.CurrentLanguageIndex;
+        set => LocalizationManager.CurrentLanguage = LocalizationManager.AvailableLanguages[value];
     }
 }

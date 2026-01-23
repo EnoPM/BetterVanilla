@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:x="http://schemas.bettervanilla.options/2025/xaml"
+           targetNamespace="http://schemas.bettervanilla.options/2025/xaml"
+           elementFormDefault="qualified"
+           attributeFormDefault="qualified">
+
+    <xs:annotation>
+        <xs:documentation>
+            XAML-like attributes for BetterVanilla Options.
+            Provides x:Name and x:Class attributes for code generation.
+        </xs:documentation>
+    </xs:annotation>
+
+    <!-- x:Class attribute for the root OptionsHolder element -->
+    <xs:attribute name="Class" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>
+                Fully qualified class name for the generated options holder.
+                Example: "BetterVanilla.Options.GameOptions"
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <!-- x:Name attribute for option elements -->
+    <xs:attribute name="Name" type="x:IdentifierType">
+        <xs:annotation>
+            <xs:documentation>
+                Name of the option property in the generated class.
+                Must be a valid C# identifier.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <!-- C# identifier type -->
+    <xs:simpleType name="IdentifierType">
+        <xs:annotation>
+            <xs:documentation>A valid C# identifier (property name)</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Za-z_][A-Za-z0-9_]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

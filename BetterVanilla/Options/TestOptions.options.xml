@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OptionsHolder xmlns="http://schemas.bettervanilla.options/2025"
+               xmlns:x="http://schemas.bettervanilla.options/2025/xaml"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://schemas.bettervanilla.options/2025 ../../BetterVanilla.Options.Core/Schemas/options.xsd"
+               x:Class="BetterVanilla.Options.TestOptions">
+
+    <!-- Boolean options -->
+    <BoolOption x:Name="EnableDebugMode" Default="false" />
+    <BoolOption x:Name="ShowWatermark" Default="true" />
+
+    <!-- Integer options with min/max -->
+    <IntOption x:Name="MaxRetries" Default="3" Min="1" Max="10" />
+    <IntOption x:Name="CacheSize" Default="100" Min="10" Max="1000" />
+
+    <!-- Float options with min/max -->
+    <FloatOption x:Name="Volume" Default="0.8" Min="0" Max="1" />
+    <FloatOption x:Name="AnimationSpeed" Default="1.0" Min="0.1" Max="3.0" />
+
+    <!-- String options with max length -->
+    <StringOption x:Name="Username" Default="Player" MaxLength="32" />
+    <StringOption x:Name="ServerAddress" Default="localhost" />
+
+    <!-- Color options -->
+    <ColorOption x:Name="AccentColor" Default="#FF5722" />
+    <ColorOption x:Name="BackgroundColor" Default="#212121" />
+
+    <!-- Vector2 options -->
+    <Vector2Option x:Name="WindowPosition" Default="100,100" />
+    <Vector2Option x:Name="DefaultScale" Default="1,1" />
+
+</OptionsHolder>

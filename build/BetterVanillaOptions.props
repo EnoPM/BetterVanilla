@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <!-- Reference BetterVanilla.Options project -->
+    <ItemGroup>
+        <ProjectReference Include="$(MSBuildThisFileDirectory)..\BetterVanilla.Options.Core\BetterVanilla.Options.Core.csproj" />
+    </ItemGroup>
+
+    <!-- Reference the Source Generator -->
+    <ItemGroup>
+        <ProjectReference Include="$(MSBuildThisFileDirectory)..\BetterVanilla.Options.SourceGenerator\BetterVanilla.Options.SourceGenerator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <!-- Options XML files as AdditionalFiles for the source generator -->
+    <ItemGroup>
+        <AdditionalFiles Include="**\*.options.xml" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**" />
+    </ItemGroup>
+
+    <!-- Tell MSBuild/IDE that .options.xml files should trigger rebuild when modified -->
+    <ItemGroup>
+        <UpToDateCheckInput Include="**\*.options.xml" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**" />
+    </ItemGroup>
+
+    <!-- Track .options.xml files as None items for Rider/MSBuild change detection -->
+    <ItemGroup>
+        <None Include="**\*.options.xml" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**" Watch="true" />
+    </ItemGroup>
+
+    <!-- Disable fast up-to-date check to ensure source generator runs on .options.xml changes -->
+    <PropertyGroup>
+        <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+        <!-- Emit source generator output to disk for debugging -->
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+    </PropertyGroup>
+
+</Project>

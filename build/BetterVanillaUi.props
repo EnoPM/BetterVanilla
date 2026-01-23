@@ -18,4 +18,20 @@
         <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\BetterVanilla.Ui\ui-aliases.json" />
     </ItemGroup>
 
+    <!-- Tell MSBuild/IDE that .ui.xml files should trigger rebuild when modified -->
+    <ItemGroup>
+        <UpToDateCheckInput Include="**\*.ui.xml" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**" />
+        <UpToDateCheckInput Include="$(MSBuildThisFileDirectory)..\BetterVanilla.Ui\ui-aliases.json" />
+    </ItemGroup>
+
+    <!-- Track .ui.xml files as None items for Rider/MSBuild change detection -->
+    <ItemGroup>
+        <None Include="**\*.ui.xml" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**" Watch="true" />
+    </ItemGroup>
+
+    <!-- Disable fast up-to-date check to ensure source generator runs on .ui.xml changes -->
+    <PropertyGroup>
+        <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+    </PropertyGroup>
+
 </Project>

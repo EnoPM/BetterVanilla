@@ -68,6 +68,20 @@
     <xs:restriction base="xs:string"/>
   </xs:simpleType>
 
+  <xs:simpleType name="LocalizationExpression">
+    <xs:annotation>
+      <xs:documentation>
+        Localization expression. Examples:
+        - {Loc MenuTitle}
+        - {Loc SaveButton}
+        References a property in the LocalizationSource class.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\{Loc\s+\w+\}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="BindingMode">
     <xs:restriction base="xs:string">
       <xs:enumeration value="OneWay"/>
@@ -90,7 +104,7 @@
   </xs:simpleType>
 
   <xs:simpleType name="StringOrBinding">
-    <xs:union memberTypes="xs:string ui:BindingExpression"/>
+    <xs:union memberTypes="xs:string ui:BindingExpression ui:LocalizationExpression"/>
   </xs:simpleType>
 
   <xs:simpleType name="ChildAlignment">
@@ -584,6 +598,14 @@
         <xs:group ref="ui:ControlElements" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute ref="x:Class" use="required"/>
+      <xs:attribute name="LocalizationSource" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>
+            Name of the static localization class to use for {Loc Key} expressions.
+            Example: "MenuLocalization" refers to the generated MenuLocalization class.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
@@ -826,6 +848,16 @@
       <xs:attributeGroup ref="ui:BaseControlAttributes"/>
       <xs:attributeGroup ref="ui:TextControlAttributes"/>
       <xs:attributeGroup ref="ui:TextStyleAttributes"/>
+      <xs:attribute name="FitWidth" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>When true, the width automatically adjusts to fit the text content</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="FitHeight" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>When true, the height automatically adjusts to fit the text content</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <!-- Reference BetterVanilla.Localization project -->
+    <ItemGroup>
+        <ProjectReference Include="$(MSBuildThisFileDirectory)..\BetterVanilla.Localization\BetterVanilla.Localization.csproj" />
+    </ItemGroup>
+
+    <!-- Reference the Source Generator -->
+    <ItemGroup>
+        <ProjectReference Include="$(MSBuildThisFileDirectory)..\BetterVanilla.Localization.SourceGenerator\BetterVanilla.Localization.SourceGenerator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <!-- Localization XML files as AdditionalFiles for the source generator -->
+    <ItemGroup>
+        <AdditionalFiles Include="**\*.loc.xml" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**" />
+    </ItemGroup>
+
+    <!-- Tell MSBuild/IDE that .loc.xml files should trigger rebuild when modified -->
+    <ItemGroup>
+        <UpToDateCheckInput Include="**\*.loc.xml" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**" />
+    </ItemGroup>
+
+    <!-- Track .loc.xml files as None items for Rider/MSBuild change detection -->
+    <ItemGroup>
+        <None Include="**\*.loc.xml" Exclude="$(BaseIntermediateOutputPath)**;$(BaseOutputPath)**" Watch="true" />
+    </ItemGroup>
+
+    <!-- Disable fast up-to-date check to ensure source generator runs on .loc.xml changes -->
+    <PropertyGroup>
+        <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+        <!-- Emit source generator output to disk for debugging -->
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+    </PropertyGroup>
+
+</Project>

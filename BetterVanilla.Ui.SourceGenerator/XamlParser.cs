@@ -75,10 +75,17 @@ public sealed class XamlParser
             definition.TypeName = fileName;
         }
 
+        // Parse LocalizationSource attribute
+        var locSourceAttr = doc.DocumentElement.GetAttribute("LocalizationSource");
+        if (!string.IsNullOrEmpty(locSourceAttr))
+        {
+            definition.LocalizationSource = locSourceAttr;
+        }
+
         // Parse root element
         definition.RootElement = ParseElement(doc.DocumentElement);
 
-        // Collect all named elements
+        // Collect all named elements (including elements with localization bindings)
         CollectNamedElements(definition.RootElement, definition.NamedElements);
 
         return definition;
@@ -131,6 +138,17 @@ public sealed class XamlParser
                 if (binding != null)
                 {
                     element.Bindings[name] = binding;
+                }
+                continue;
+            }
+
+            // Check if it's a localization expression
+            if (IsLocalizationExpression(value))
+            {
+                var locKey = ParseLocalizationKey(value);
+                if (locKey != null)
+                {
+                    element.LocalizationBindings[name] = locKey;
                 }
                 continue;
             }
@@ -443,6 +461,24 @@ public sealed class XamlParser
                && trimmed.EndsWith("}");
     }
 
+    private static bool IsLocalizationExpression(string value)
+    {
+        var trimmed = value.Trim();
+        return trimmed.StartsWith("{Loc ", StringComparison.OrdinalIgnoreCase)
+               && trimmed.EndsWith("}");
+    }
+
+    private static string? ParseLocalizationKey(string expression)
+    {
+        var trimmed = expression.Trim();
+        if (!trimmed.StartsWith("{Loc ", StringComparison.OrdinalIgnoreCase))
+            return null;
+
+        // Extract key from {Loc Key}
+        var key = trimmed.Substring(5, trimmed.Length - 6).Trim();
+        return string.IsNullOrEmpty(key) ? null : key;
+    }
+
     private static BindingInfo? ParseBinding(string expression, string targetProperty)
     {
         var trimmed = expression.Trim();
@@ -542,8 +578,8 @@ public sealed class XamlParser
 
     private static void CollectNamedElements(ViewElement element, List<ViewElement> namedElements)
     {
-        // If element has no name but has bindings or event handlers, assign an auto-generated name
-        if (string.IsNullOrEmpty(element.Name) && (element.Bindings.Count > 0 || element.EventHandlers.Count > 0))
+        // If element has no name but has bindings, event handlers, or localization bindings, assign an auto-generated name
+        if (string.IsNullOrEmpty(element.Name) && (element.Bindings.Count > 0 || element.EventHandlers.Count > 0 || element.LocalizationBindings.Count > 0))
         {
             element.Name = $"_auto{element.TagName}{_autoNameCounter++}";
         }

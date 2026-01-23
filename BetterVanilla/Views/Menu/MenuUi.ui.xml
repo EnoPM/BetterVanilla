@@ -3,7 +3,8 @@
       xmlns:x="http://schemas.bettervanilla.ui/2025/xaml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://schemas.bettervanilla.ui/2025 ../../../BetterVanilla.Ui/Schemas/ui.xsd"
-      x:Class="BetterVanilla.Views.Menu.MenuUi">
+      x:Class="BetterVanilla.Views.Menu.MenuUi"
+      LocalizationSource="MenuLocalization">
     <Panel x:Name="root" Alias="Controls/Panel"
            Width="600"
            HorizontalAlignment="Left"
@@ -26,24 +27,26 @@
                                ChildForceExpandHeight="false"/>
             <Panel x:Name="titleContainer" FlexibleWidth="1" Height="40">
                 <Panel.LayoutGroup Orientation="Horizontal"
-                                   ChildControlWidth="false"
-                                   ChildControlHeight="false"/>
+                                   Spacing="10"
+                                   ChildControlWidth="true"
+                                   ChildControlHeight="false"
+                                   ChildForceExpandWidth="false"/>
+                <Panel.Image Color="#000" />
                 <TextBlock x:Name="nameText"
                            Alias="Controls/TextBlock"
-                           Text="{Binding MenuName, Mode=OneWay}"
-                           AutoSize="true"
-                           MinFontSize="15"
-                           MaxFontSize="40"
+                           Text="{Loc MenuTitle}"
+                           FontSize="32"
                            TextAlignment="MidlineLeft"
                            FontStyle="Bold"
+                           FitWidth="true"
+                           WordWrapping="false"
                            Height="40"/>
                 <TextBlock x:Name="versionText"
                            Alias="Controls/TextBlock"
                            Text="{Binding MenuVersion, Mode=OneWay}"
-                           AutoSize="true"
-                           MinFontSize="10"
-                           MaxFontSize="25"
-                           TextAlignment="BottomLeft"
+                           FontSize="22"
+                           TextAlignment="MidlineLeft"
+                           FitWidth="true"
                            Height="40"/>
             </Panel>
             <IconButton Alias="Controls/IconButton"
@@ -72,7 +75,7 @@
             <Dropdown x:Name="language"
                       Options="{Binding AvailableLanguages, Mode=OneWay}"
                       SelectedIndex="{Binding SelectedLanguage, Mode=TwoWay}"
-                      HorizontalAlignment="Stretch"/>
+                      Width="90%"/>
             <Image HorizontalAlignment="Stretch"
                    Margin="10"
                    Height="300"
@@ -86,24 +89,24 @@
                         ShadowDistance="2,-2"
                         ShadowColor="#000000F0"
                         Click="OnBecomeSponsorButtonClick"
-                        Text="{Binding BecomeSponsorButtonText, Mode=OneWay}">
+                        Text="{Loc BecomeSponsorButton}">
                     <Button.TextStyle AutoSize="true" TextMargin="20,0"/>
                 </Button>
             </Image>
             <Image Width="100%" Height="500" ImageType="Simple" PreserveAspect="true">
                 <Image.Source Url="https://live.staticflickr.com/3739/13679012225_4e419bfbdc_b.jpg"/>
             </Image>
-            <!-- Éléments supplémentaires pour tester le scroll -->
+            <!-- Éléments supplémentaires pour tester le scroll et la localisation -->
             <TextBlock IsVisible="{Binding ShouldDisplayAdditionalTexts, Mode=OneWay}" x:Name="testText1"
-                       Text="Test item 1" HorizontalAlignment="Stretch" Height="40"/>
+                       Text="{Loc SettingsTitle}" HorizontalAlignment="Stretch" Height="40"/>
             <TextBlock IsVisible="{Binding ShouldDisplayAdditionalTexts, Mode=OneWay}" x:Name="testText2"
-                       Text="Test item 2" HorizontalAlignment="Stretch" Height="40"/>
+                       Text="{Loc CosmeticsTitle}" HorizontalAlignment="Stretch" Height="40"/>
             <TextBlock IsVisible="{Binding ShouldDisplayAdditionalTexts, Mode=OneWay}" x:Name="testText3"
-                       Text="Test item 3" HorizontalAlignment="Stretch" Height="40"/>
+                       Text="{Loc WelcomeMessage}" HorizontalAlignment="Stretch" Height="40"/>
             <TextBlock IsVisible="{Binding ShouldDisplayAdditionalTexts, Mode=OneWay}" x:Name="testText4"
-                       Text="Test item 4" HorizontalAlignment="Stretch" Height="40"/>
+                       Text="{Loc LanguageLabel}" HorizontalAlignment="Stretch" Height="40"/>
             <TextBlock IsVisible="{Binding ShouldDisplayAdditionalTexts, Mode=OneWay}" x:Name="testText5"
-                       Text="Test item 5" HorizontalAlignment="Stretch" Height="40"/>
+                       Text="{Loc SaveButton}" HorizontalAlignment="Stretch" Height="40"/>
         </ScrollView>
     </Panel>
 </View>

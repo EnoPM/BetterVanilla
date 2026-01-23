@@ -17,6 +17,8 @@
         <IncludeInteropLibrairies>true</IncludeInteropLibrairies>
         <IncludeCoreLibrairies>true</IncludeCoreLibrairies>
         <BetterVanillaUiGenerator>true</BetterVanillaUiGenerator>
+        <BetterVanillaOptionsGenerator>true</BetterVanillaOptionsGenerator>
+        <BetterVanillaLocalizationGenerator>true</BetterVanillaLocalizationGenerator>
         <CopyToMods>$(AssemblyName)</CopyToMods>
     </PropertyGroup>
 

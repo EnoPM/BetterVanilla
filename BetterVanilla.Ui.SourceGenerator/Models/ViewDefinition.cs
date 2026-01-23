@@ -13,6 +13,17 @@ public sealed class ViewDefinition
     public ViewElement? RootElement { get; set; }
     public List<ViewElement> NamedElements { get; set; } = new();
     public string SourceFile { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The localization source class name (e.g., "MenuLocalization").
+    /// Set via LocalizationSource attribute on the View element.
+    /// </summary>
+    public string? LocalizationSource { get; set; }
+
+    /// <summary>
+    /// Whether this view uses localization.
+    /// </summary>
+    public bool HasLocalization => !string.IsNullOrEmpty(LocalizationSource);
 }
 
 /// <summary>
@@ -33,6 +44,17 @@ public sealed class ViewElement
     public LayoutGroupInfo? LayoutGroup { get; set; }
     public ImageInfo? Image { get; set; }
     public SourceInfo? Source { get; set; }
+
+    /// <summary>
+    /// Localization bindings. Key is the property name (e.g., "Text"), value is the localization key.
+    /// Parsed from {Loc Key} syntax.
+    /// </summary>
+    public Dictionary<string, string> LocalizationBindings { get; set; } = new();
+
+    /// <summary>
+    /// Whether this element has any localization bindings.
+    /// </summary>
+    public bool HasLocalizationBindings => LocalizationBindings.Count > 0;
 }
 
 public sealed class TextStyleInfo

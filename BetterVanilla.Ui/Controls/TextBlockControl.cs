@@ -26,6 +26,10 @@ public sealed class TextBlockControl : BaseControl, ITextStyleControl
                 _component.text.text = value;
             }
             _textProperty.Value = value;
+            if (_fitWidth || _fitHeight)
+            {
+                UpdateFitSize();
+            }
         }
     }
 
@@ -210,6 +214,68 @@ public sealed class TextBlockControl : BaseControl, ITextStyleControl
             {
                 _component.text.margin = value;
             }
+        }
+    }
+
+    #endregion
+
+    #region Content Size Fitting
+
+    private bool _fitWidth;
+    private bool _fitHeight;
+
+    /// <summary>
+    /// When true, the width automatically adjusts to fit the text content.
+    /// </summary>
+    public bool FitWidth
+    {
+        get => _fitWidth;
+        set
+        {
+            _fitWidth = value;
+            if (value && _component != null)
+            {
+                _component.text.enableWordWrapping = false;
+                UpdateFitSize();
+            }
+        }
+    }
+
+    /// <summary>
+    /// When true, the height automatically adjusts to fit the text content.
+    /// </summary>
+    public bool FitHeight
+    {
+        get => _fitHeight;
+        set
+        {
+            _fitHeight = value;
+            if (value)
+            {
+                UpdateFitSize();
+            }
+        }
+    }
+
+    private void UpdateFitSize()
+    {
+        if (_component == null) return;
+
+        var text = _component.text;
+        text.ForceMeshUpdate();
+
+        var preferredSize = text.GetPreferredValues();
+
+        if (_fitWidth)
+        {
+            var rt = RectTransform;
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, preferredSize.x);
+        }
+
+        if (_fitHeight)
+        {
+            var rt = RectTransform;
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, preferredSize.y);
         }
     }
 

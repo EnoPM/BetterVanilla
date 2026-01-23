@@ -15,7 +15,7 @@ public sealed class BoolHostOption : BoolSerializableOption, IHostOption<Checkbo
     public BoolHostOption(string key, string title, bool defaultValue) : base(key, title, defaultValue)
     {
         GameSetting = ScriptableObject.CreateInstance<CheckboxGameSetting>();
-        GameSetting.Type = OptionTypes.Checkbox;
+        GameSetting.Type = global::OptionTypes.Checkbox;
         GameSetting.hideFlags = HideFlags.DontSave;
         GameSetting.name = $"BetterVanillaCustomSetting_{key}";
         GameSetting.Title = StringNames.None;

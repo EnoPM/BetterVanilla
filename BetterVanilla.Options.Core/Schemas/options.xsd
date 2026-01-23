@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:options="http://schemas.bettervanilla.options/2025"
+           xmlns:x="http://schemas.bettervanilla.options/2025/xaml"
+           targetNamespace="http://schemas.bettervanilla.options/2025"
+           elementFormDefault="qualified">
+
+    <!-- Import XAML namespace for x:Name, x:Class -->
+    <xs:import namespace="http://schemas.bettervanilla.options/2025/xaml" schemaLocation="options-xaml.xsd"/>
+
+    <!-- Root element -->
+    <xs:element name="OptionsHolder">
+        <xs:annotation>
+            <xs:documentation>Root element for an options holder definition</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element ref="options:BoolOption"/>
+                    <xs:element ref="options:IntOption"/>
+                    <xs:element ref="options:FloatOption"/>
+                    <xs:element ref="options:StringOption"/>
+                    <xs:element ref="options:EnumOption"/>
+                    <xs:element ref="options:ColorOption"/>
+                    <xs:element ref="options:Vector2Option"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="Version" type="xs:positiveInteger" use="optional" default="1">
+                <xs:annotation>
+                    <xs:documentation>Version number for migration purposes</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:anyAttribute namespace="http://schemas.bettervanilla.options/2025/xaml" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- BoolOption -->
+    <xs:element name="BoolOption">
+        <xs:annotation>
+            <xs:documentation>A boolean option (true/false)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="Default" type="xs:boolean" use="optional" default="false">
+                <xs:annotation>
+                    <xs:documentation>Default value (true or false)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:anyAttribute namespace="http://schemas.bettervanilla.options/2025/xaml" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- IntOption -->
+    <xs:element name="IntOption">
+        <xs:annotation>
+            <xs:documentation>An integer option with optional min/max constraints</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="Default" type="xs:int" use="optional" default="0">
+                <xs:annotation>
+                    <xs:documentation>Default value</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="Min" type="xs:int" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Minimum allowed value (inclusive)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="Max" type="xs:int" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Maximum allowed value (inclusive)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:anyAttribute namespace="http://schemas.bettervanilla.options/2025/xaml" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- FloatOption -->
+    <xs:element name="FloatOption">
+        <xs:annotation>
+            <xs:documentation>A floating-point option with optional min/max constraints</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="Default" type="xs:float" use="optional" default="0">
+                <xs:annotation>
+                    <xs:documentation>Default value</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="Min" type="xs:float" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Minimum allowed value (inclusive)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="Max" type="xs:float" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Maximum allowed value (inclusive)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:anyAttribute namespace="http://schemas.bettervanilla.options/2025/xaml" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- StringOption -->
+    <xs:element name="StringOption">
+        <xs:annotation>
+            <xs:documentation>A string option with optional max length constraint</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="Default" type="xs:string" use="optional" default="">
+                <xs:annotation>
+                    <xs:documentation>Default value</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="MaxLength" type="xs:positiveInteger" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Maximum allowed string length</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:anyAttribute namespace="http://schemas.bettervanilla.options/2025/xaml" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- EnumOption -->
+    <xs:element name="EnumOption">
+        <xs:annotation>
+            <xs:documentation>An enumeration option</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="Type" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>Fully qualified enum type name (e.g., MyNamespace.MyEnum)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="Default" type="xs:string" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Default enum value name (e.g., Normal)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:anyAttribute namespace="http://schemas.bettervanilla.options/2025/xaml" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ColorOption -->
+    <xs:element name="ColorOption">
+        <xs:annotation>
+            <xs:documentation>A color option (UnityEngine.Color)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="Default" type="options:ColorType" use="optional" default="#FFFFFF">
+                <xs:annotation>
+                    <xs:documentation>Default color in hex format (#RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:anyAttribute namespace="http://schemas.bettervanilla.options/2025/xaml" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Vector2Option -->
+    <xs:element name="Vector2Option">
+        <xs:annotation>
+            <xs:documentation>A 2D vector option (UnityEngine.Vector2)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="Default" type="options:Vector2Type" use="optional" default="0,0">
+                <xs:annotation>
+                    <xs:documentation>Default value in "x,y" format</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:anyAttribute namespace="http://schemas.bettervanilla.options/2025/xaml" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Custom types -->
+    <xs:simpleType name="ColorType">
+        <xs:annotation>
+            <xs:documentation>Hex color format: #RGB, #RRGGBB, or #RRGGBBAA</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="#[0-9A-Fa-f]{3}|#[0-9A-Fa-f]{6}|#[0-9A-Fa-f]{8}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Vector2Type">
+        <xs:annotation>
+            <xs:documentation>Vector2 format: "x,y" (e.g., "100,200" or "1.5,-2.3")</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="-?[0-9]*\.?[0-9]+\s*,\s*-?[0-9]*\.?[0-9]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

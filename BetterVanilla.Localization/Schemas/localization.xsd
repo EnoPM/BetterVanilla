@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:loc="http://schemas.bettervanilla.localization/2025"
+           xmlns:x="http://schemas.bettervanilla.localization/2025/xaml"
+           targetNamespace="http://schemas.bettervanilla.localization/2025"
+           elementFormDefault="qualified">
+
+    <!-- Import XAML namespace for x:Name, x:Class -->
+    <xs:import namespace="http://schemas.bettervanilla.localization/2025/xaml" schemaLocation="localization-xaml.xsd"/>
+
+    <!-- Root element -->
+    <xs:element name="Localization">
+        <xs:annotation>
+            <xs:documentation>Root element for a localization definition</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="loc:Key" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="DefaultLanguage" type="xs:string" use="optional" default="En">
+                <xs:annotation>
+                    <xs:documentation>The default language code (e.g., En, Fr, De)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:anyAttribute namespace="http://schemas.bettervanilla.localization/2025/xaml" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Key element containing translations -->
+    <xs:element name="Key">
+        <xs:annotation>
+            <xs:documentation>A localization key with translations for multiple languages</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <!-- Common language codes -->
+                <xs:element ref="loc:En" minOccurs="0"/>
+                <xs:element ref="loc:Fr" minOccurs="0"/>
+                <xs:element ref="loc:De" minOccurs="0"/>
+                <xs:element ref="loc:Es" minOccurs="0"/>
+                <xs:element ref="loc:It" minOccurs="0"/>
+                <xs:element ref="loc:Pt" minOccurs="0"/>
+                <xs:element ref="loc:Ru" minOccurs="0"/>
+                <xs:element ref="loc:Ja" minOccurs="0"/>
+                <xs:element ref="loc:Ko" minOccurs="0"/>
+                <xs:element ref="loc:Zh" minOccurs="0"/>
+                <xs:element ref="loc:Nl" minOccurs="0"/>
+                <xs:element ref="loc:Pl" minOccurs="0"/>
+                <xs:element ref="loc:Tr" minOccurs="0"/>
+                <xs:element ref="loc:Ar" minOccurs="0"/>
+                <!-- Allow any other language codes -->
+                <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:anyAttribute namespace="http://schemas.bettervanilla.localization/2025/xaml" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Language elements -->
+    <xs:element name="En" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>English translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Fr" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>French translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="De" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>German translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Es" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Spanish translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="It" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Italian translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Pt" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Portuguese translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Ru" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Russian translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Ja" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Japanese translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Ko" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Korean translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Zh" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Chinese translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Nl" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Dutch translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Pl" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Polish translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Tr" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Turkish translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Ar" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Arabic translation</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+</xs:schema>
