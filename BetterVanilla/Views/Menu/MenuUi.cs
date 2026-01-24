@@ -6,7 +6,7 @@ namespace BetterVanilla.Views.Menu;
 
 public sealed partial class MenuUi : BaseView
 {
-    public MenuUiViewModel? ViewModel { get; private set; }
+    private MenuUiViewModel? ViewModel { get; set; }
 
     private void Start()
     {

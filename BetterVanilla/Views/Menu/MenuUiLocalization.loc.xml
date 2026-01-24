@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Localization xmlns="http://schemas.bettervanilla.localization/2025"
+              xmlns:x="http://schemas.bettervanilla.localization/2025/xaml"
+              x:Class="BetterVanilla.Views.Menu.MenuUiLocalization"
+              DefaultLanguage="En">
+    <Key x:Name="MenuTitle">
+        <En>BetterVanilla Menu</En>
+        <Fr>Menu BetterVanilla</Fr>
+    </Key>
+    <Key x:Name="LanguageLabel">
+        <En>Menu language:</En>
+        <Fr>Langue du menu :</Fr>
+    </Key>
+    <Key x:Name="BecomeSponsorButton">
+        <En>Become a sponsor</En>
+        <Fr>Devenir un sponsor</Fr>
+    </Key>
+</Localization>

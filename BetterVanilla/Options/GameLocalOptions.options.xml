@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OptionsHolder xmlns="http://schemas.bettervanilla.options/2025"
+               xmlns:x="http://schemas.bettervanilla.options/2025/xaml"
+               x:Class="BetterVanilla.Options.GameLocalOptions">
+    
+    <BoolOption x:Name="DisplayVentsInMap" Default="true" />
+    <BoolOption x:Name="DisplayRolesAndTasksAfterDeath" Default="true" />
+    <BoolOption x:Name="DisplayPlayersInMapAfterDeath" Default="true" />
+    <BoolOption x:Name="DisplayVotesAfterDeath" Default="true" />
+    <BoolOption x:Name="DisplayVoteColorsAfterDeath" Default="true" />
+    <BoolOption x:Name="AutoPlayAgain" Default="true" />
+    <BoolOption x:Name="AutoOpenDoors" Default="false" />
+    <BoolOption x:Name="HideMyPetAfterDeath" Default="true" />
+    <EnumOption x:Name="TeamPreference" Type="BetterVanilla.Core.Data.TeamPreferences" Default="Both" />
+    
+    
+</OptionsHolder>

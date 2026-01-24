@@ -29,5 +29,13 @@
     <ItemGroup>
       <ProjectReference Include="..\BetterVanilla.Cosmetics.Api\BetterVanilla.Cosmetics.Api.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <None Update="Options\UserOptions.options.xml">
+        <Watch>true</Watch>
+      </None>
+      <None Update="Options\GameLocalOptions.options.xml">
+        <Watch>true</Watch>
+      </None>
+    </ItemGroup>
 
 </Project>

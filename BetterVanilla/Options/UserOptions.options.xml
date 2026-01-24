@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OptionsHolder xmlns="http://schemas.bettervanilla.options/2025"
+               xmlns:x="http://schemas.bettervanilla.options/2025/xaml"
+               x:Class="BetterVanilla.Options.UserOptions">
+    
+    <EnumOption x:Name="Language" Type="BetterVanilla.Localization.Language" Default="En" />
+    <ColorOption x:Name="TaskStartColor" Default="#C22984" />
+    <ColorOption x:Name="TaskEndColor" Default="#56FFB0" />
+    <BoolOption x:Name="DisplayBetterVanillaVersion" Default="true" />
+</OptionsHolder>

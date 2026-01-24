@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using BetterVanilla.Ui.SourceGenerator.Models;
 using Microsoft.CodeAnalysis;
@@ -1182,10 +1183,10 @@ public sealed class CodeGenerator
         if (bool.TryParse(value, out var boolValue))
             return CreateBoolLiteral(boolValue);
 
-        if (int.TryParse(value, out var intValue))
+        if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
             return LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(intValue));
 
-        if (float.TryParse(value, out var floatValue))
+        if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var floatValue))
             return CreateFloatLiteral(floatValue);
 
         return LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(value));

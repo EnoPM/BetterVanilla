@@ -21,6 +21,10 @@ public sealed class MenuUiViewModel : ViewModelBase
     public int SelectedLanguage
     {
         get => LocalizationManager.CurrentLanguageIndex;
-        set => LocalizationManager.CurrentLanguage = LocalizationManager.AvailableLanguages[value];
+        set
+        {
+            Plugin.User.Options.Language.Value = LocalizationManager.CurrentLanguage = LocalizationManager.AvailableLanguages[value];
+            Plugin.User.Save();
+        }
     }
 }
