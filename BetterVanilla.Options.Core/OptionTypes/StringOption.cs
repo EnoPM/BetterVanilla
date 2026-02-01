@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace BetterVanilla.Options.Core.OptionTypes;
@@ -8,7 +9,8 @@ public sealed class StringOption : OptionBase
     private readonly int? _maxLength;
     private string _value;
 
-    public StringOption(string key, string defaultValue, int? maxLength = null) : base(key)
+    public StringOption(string key, Func<string> labelProvider, Func<string> descriptionProvider, string defaultValue, int? maxLength = null)
+        : base(key, labelProvider, descriptionProvider)
     {
         _defaultValue = defaultValue;
         _maxLength = maxLength;

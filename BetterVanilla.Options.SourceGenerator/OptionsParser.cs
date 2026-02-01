@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using BetterVanilla.Options.SourceGenerator.Models;
 
@@ -63,7 +65,22 @@ public sealed class OptionsParser
             definition.Version = version;
         }
 
+        // Parse LocalizationSource attribute
+        var localizationSourceAttr = doc.DocumentElement.GetAttribute("LocalizationSource");
+        if (!string.IsNullOrEmpty(localizationSourceAttr))
+        {
+            definition.LocalizationSource = localizationSourceAttr;
+        }
+
+        // Parse DefaultLanguage attribute
+        var defaultLanguageAttr = doc.DocumentElement.GetAttribute("DefaultLanguage");
+        if (!string.IsNullOrEmpty(defaultLanguageAttr))
+        {
+            definition.DefaultLanguage = defaultLanguageAttr;
+        }
+
         // Parse child elements (options)
+        var allLanguages = new HashSet<string>();
         foreach (XmlNode child in doc.DocumentElement.ChildNodes)
         {
             if (child is not XmlElement element) continue;
@@ -71,8 +88,18 @@ public sealed class OptionsParser
             if (option != null)
             {
                 definition.Options.Add(option);
+
+                // Collect all languages used
+                foreach (var lang in option.LabelTranslations.Keys)
+                    allLanguages.Add(lang);
+                foreach (var lang in option.DescriptionTranslations.Keys)
+                    allLanguages.Add(lang);
             }
         }
+
+        // Sort languages with default language first
+        definition.Languages.AddRange(
+            allLanguages.OrderBy(l => l != definition.DefaultLanguage).ThenBy(l => l));
 
         return definition;
     }
@@ -124,10 +151,45 @@ public sealed class OptionsParser
                 case "Type":
                     option.EnumType = value;
                     break;
+                case "Label":
+                    option.Label = value;
+                    break;
+            }
+        }
+
+        // Parse child elements (Label, Description)
+        foreach (XmlNode child in element.ChildNodes)
+        {
+            if (child is not XmlElement childElement) continue;
+
+            switch (childElement.LocalName)
+            {
+                case "Label":
+                    ParseTranslations(childElement, option.LabelTranslations);
+                    break;
+                case "Description":
+                    ParseTranslations(childElement, option.DescriptionTranslations);
+                    break;
             }
         }
 
         return option;
+    }
+
+    private static void ParseTranslations(XmlElement element, Dictionary<string, string> translations)
+    {
+        foreach (XmlNode child in element.ChildNodes)
+        {
+            if (child is not XmlElement langElement) continue;
+
+            var languageCode = langElement.LocalName;
+            var text = langElement.InnerText?.Trim() ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(text))
+            {
+                translations[languageCode] = text;
+            }
+        }
     }
 
     private static bool TryParseOptionType(string typeName, out OptionEntryType optionType)

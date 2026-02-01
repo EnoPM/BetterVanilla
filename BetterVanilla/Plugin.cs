@@ -1,13 +1,11 @@
-﻿using System.IO;
+﻿using System.Reflection;
 using BetterVanilla.Components;
 using BetterVanilla.Core;
-using BetterVanilla.Localization;
-using BetterVanilla.Options;
-using BetterVanilla.Options.Core;
+using BetterVanilla.Extensions;
 using BetterVanilla.Ui;
-using BetterVanilla.Views.MenuButtonOverlay;
 using EnoUnityLoader.Attributes;
 using EnoUnityLoader.Il2Cpp;
+using UnityEngine;
 
 namespace BetterVanilla;
 
@@ -15,17 +13,6 @@ namespace BetterVanilla;
 public sealed class Plugin : BasePlugin
 {
     public static Plugin Instance { get; private set; } = null!;
-
-    public static readonly OptionsManager<UserOptions> User;
-    public static readonly OptionsManager<GameLocalOptions> GameLocal;
-
-    static Plugin()
-    {
-        User = new OptionsManager<UserOptions>(Path.Combine(ModPaths.OptionsDirectory, "user.dat"));
-        LocalizationManager.CurrentLanguage = User.Options.Language.Value;
-        
-        GameLocal = new OptionsManager<GameLocalOptions>(Path.Combine(ModPaths.OptionsDirectory, "game_local.dat"));
-    }
 
     public Plugin()
     {
@@ -40,7 +27,19 @@ public sealed class Plugin : BasePlugin
         AddComponent<BetterVanillaManager>();
         AddComponent<ModUpdaterBehaviour>();
         AddComponent<PlayerShieldBehaviour>();
+        
+        var bundle = Assembly.GetExecutingAssembly()
+            .LoadAssetBundle("BetterVanilla.Assets.manager.bundle");
 
-        UiManager.Instance.CreateView<MenuButtonOverlayUi, MenuButtonOverlayUiViewModel>();
+        var parent = new GameObject($"{nameof(BetterVanilla)}_{nameof(UiManager)}")
+        {
+            hideFlags = HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset
+        };
+        
+        var manager = bundle.InstantiatePrefab<UiManager>("Assets/BetterVanilla/UiManager.prefab", parent.transform);
+
+        bundle.Unload(false);
+        
+        Ls.LogMessage($"UiManager loaded state: {manager != null}");
     }
 }

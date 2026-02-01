@@ -30,9 +30,76 @@
                     <xs:documentation>Version number for migration purposes</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="DefaultLanguage" type="xs:string" use="optional" default="En">
+                <xs:annotation>
+                    <xs:documentation>Default language code for inline translations (e.g., En, Fr)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:anyAttribute namespace="http://schemas.bettervanilla.options/2025/xaml" processContents="lax"/>
         </xs:complexType>
     </xs:element>
+
+    <!-- Translatable content type for Label and Description -->
+    <xs:complexType name="TranslatableContent">
+        <xs:annotation>
+            <xs:documentation>Content with translations for multiple languages</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="options:En" minOccurs="0"/>
+            <xs:element ref="options:Fr" minOccurs="0"/>
+            <xs:element ref="options:De" minOccurs="0"/>
+            <xs:element ref="options:Es" minOccurs="0"/>
+            <xs:element ref="options:It" minOccurs="0"/>
+            <xs:element ref="options:Pt" minOccurs="0"/>
+            <xs:element ref="options:Ru" minOccurs="0"/>
+            <xs:element ref="options:Ja" minOccurs="0"/>
+            <xs:element ref="options:Ko" minOccurs="0"/>
+            <xs:element ref="options:Zh" minOccurs="0"/>
+            <xs:element ref="options:Nl" minOccurs="0"/>
+            <xs:element ref="options:Pl" minOccurs="0"/>
+            <xs:element ref="options:Tr" minOccurs="0"/>
+            <xs:element ref="options:Ar" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Language elements -->
+    <xs:element name="En" type="xs:string"><xs:annotation><xs:documentation>English translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Fr" type="xs:string"><xs:annotation><xs:documentation>French translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="De" type="xs:string"><xs:annotation><xs:documentation>German translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Es" type="xs:string"><xs:annotation><xs:documentation>Spanish translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="It" type="xs:string"><xs:annotation><xs:documentation>Italian translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Pt" type="xs:string"><xs:annotation><xs:documentation>Portuguese translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Ru" type="xs:string"><xs:annotation><xs:documentation>Russian translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Ja" type="xs:string"><xs:annotation><xs:documentation>Japanese translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Ko" type="xs:string"><xs:annotation><xs:documentation>Korean translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Zh" type="xs:string"><xs:annotation><xs:documentation>Chinese translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Nl" type="xs:string"><xs:annotation><xs:documentation>Dutch translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Pl" type="xs:string"><xs:annotation><xs:documentation>Polish translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Tr" type="xs:string"><xs:annotation><xs:documentation>Turkish translation</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Ar" type="xs:string"><xs:annotation><xs:documentation>Arabic translation</xs:documentation></xs:annotation></xs:element>
+
+    <!-- Label element for translatable option labels -->
+    <xs:element name="Label" type="options:TranslatableContent">
+        <xs:annotation>
+            <xs:documentation>Translatable label for the option</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <!-- Description element for translatable option descriptions -->
+    <xs:element name="Description" type="options:TranslatableContent">
+        <xs:annotation>
+            <xs:documentation>Translatable description for the option</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <!-- Group for Label and Description child elements (both required) -->
+    <xs:group name="TranslatableElements">
+        <xs:sequence>
+            <xs:element ref="options:Label" minOccurs="1"/>
+            <xs:element ref="options:Description" minOccurs="1"/>
+        </xs:sequence>
+    </xs:group>
 
     <!-- BoolOption -->
     <xs:element name="BoolOption">
@@ -40,6 +107,7 @@
             <xs:documentation>A boolean option (true/false)</xs:documentation>
         </xs:annotation>
         <xs:complexType>
+            <xs:group ref="options:TranslatableElements"/>
             <xs:attribute name="Default" type="xs:boolean" use="optional" default="false">
                 <xs:annotation>
                     <xs:documentation>Default value (true or false)</xs:documentation>
@@ -55,6 +123,7 @@
             <xs:documentation>An integer option with optional min/max constraints</xs:documentation>
         </xs:annotation>
         <xs:complexType>
+            <xs:group ref="options:TranslatableElements"/>
             <xs:attribute name="Default" type="xs:int" use="optional" default="0">
                 <xs:annotation>
                     <xs:documentation>Default value</xs:documentation>
@@ -80,6 +149,7 @@
             <xs:documentation>A floating-point option with optional min/max constraints</xs:documentation>
         </xs:annotation>
         <xs:complexType>
+            <xs:group ref="options:TranslatableElements"/>
             <xs:attribute name="Default" type="xs:float" use="optional" default="0">
                 <xs:annotation>
                     <xs:documentation>Default value</xs:documentation>
@@ -105,6 +175,7 @@
             <xs:documentation>A string option with optional max length constraint</xs:documentation>
         </xs:annotation>
         <xs:complexType>
+            <xs:group ref="options:TranslatableElements"/>
             <xs:attribute name="Default" type="xs:string" use="optional" default="">
                 <xs:annotation>
                     <xs:documentation>Default value</xs:documentation>
@@ -125,6 +196,7 @@
             <xs:documentation>An enumeration option</xs:documentation>
         </xs:annotation>
         <xs:complexType>
+            <xs:group ref="options:TranslatableElements"/>
             <xs:attribute name="Type" type="xs:string" use="required">
                 <xs:annotation>
                     <xs:documentation>Fully qualified enum type name (e.g., MyNamespace.MyEnum)</xs:documentation>
@@ -145,6 +217,7 @@
             <xs:documentation>A color option (UnityEngine.Color)</xs:documentation>
         </xs:annotation>
         <xs:complexType>
+            <xs:group ref="options:TranslatableElements"/>
             <xs:attribute name="Default" type="options:ColorType" use="optional" default="#FFFFFF">
                 <xs:annotation>
                     <xs:documentation>Default color in hex format (#RGB, #RRGGBB, or #RRGGBBAA)</xs:documentation>
@@ -160,6 +233,7 @@
             <xs:documentation>A 2D vector option (UnityEngine.Vector2)</xs:documentation>
         </xs:annotation>
         <xs:complexType>
+            <xs:group ref="options:TranslatableElements"/>
             <xs:attribute name="Default" type="options:Vector2Type" use="optional" default="0,0">
                 <xs:annotation>
                     <xs:documentation>Default value in "x,y" format</xs:documentation>

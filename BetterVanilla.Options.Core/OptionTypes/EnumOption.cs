@@ -8,7 +8,8 @@ public sealed class EnumOption<TEnum> : OptionBase where TEnum : struct, Enum
     private readonly TEnum _defaultValue;
     private TEnum _value;
 
-    public EnumOption(string key, TEnum defaultValue) : base(key)
+    public EnumOption(string key, Func<string> labelProvider, Func<string> descriptionProvider, TEnum defaultValue)
+        : base(key, labelProvider, descriptionProvider)
     {
         _defaultValue = defaultValue;
         _value = defaultValue;

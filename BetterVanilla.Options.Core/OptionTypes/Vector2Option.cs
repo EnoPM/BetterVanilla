@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ public sealed class Vector2Option : OptionBase
     private readonly Vector2 _defaultValue;
     private Vector2 _value;
 
-    public Vector2Option(string key, Vector2 defaultValue) : base(key)
+    public Vector2Option(string key, Func<string> labelProvider, Func<string> descriptionProvider, Vector2 defaultValue)
+        : base(key, labelProvider, descriptionProvider)
     {
         _defaultValue = defaultValue;
         _value = defaultValue;

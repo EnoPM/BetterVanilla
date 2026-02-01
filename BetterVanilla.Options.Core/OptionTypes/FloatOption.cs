@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace BetterVanilla.Options.Core.OptionTypes;
@@ -9,7 +10,8 @@ public sealed class FloatOption : OptionBase
     private readonly float? _max;
     private float _value;
 
-    public FloatOption(string key, float defaultValue, float? min = null, float? max = null) : base(key)
+    public FloatOption(string key, Func<string> labelProvider, Func<string> descriptionProvider, float defaultValue, float? min = null, float? max = null)
+        : base(key, labelProvider, descriptionProvider)
     {
         _defaultValue = defaultValue;
         _min = min;

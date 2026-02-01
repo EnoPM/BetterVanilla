@@ -1,10 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <OptionsHolder xmlns="http://schemas.bettervanilla.options/2025"
                xmlns:x="http://schemas.bettervanilla.options/2025/xaml"
-               x:Class="BetterVanilla.Options.UserOptions">
-    
-    <EnumOption x:Name="Language" Type="BetterVanilla.Localization.Language" Default="En" />
-    <ColorOption x:Name="TaskStartColor" Default="#C22984" />
-    <ColorOption x:Name="TaskEndColor" Default="#56FFB0" />
-    <BoolOption x:Name="DisplayBetterVanillaVersion" Default="true" />
+               x:Class="BetterVanilla.Options.UserOptions"
+               DefaultLanguage="En">
+
+    <EnumOption x:Name="Language" Type="BetterVanilla.Localization.Language" Default="En">
+        <Label>
+            <En>Menu language</En>
+            <Fr>Langue du menu</Fr>
+        </Label>
+        <Description>
+            <En>The display language for the mod</En>
+            <Fr>La langue d'affichage du mod</Fr>
+        </Description>
+    </EnumOption>
+
+    <ColorOption x:Name="TaskStartColor" Default="#C22984">
+        <Label>
+            <En>Task start color</En>
+            <Fr>Couleur de début de tâche</Fr>
+        </Label>
+        <Description>
+            <En>The starting color used in the gradient for displaying completed tasks</En>
+            <Fr>La couleur de départ utilisée dans le dégradé pour l'affichage des tâches faites</Fr>
+        </Description>
+    </ColorOption>
+
+    <ColorOption x:Name="TaskEndColor" Default="#56FFB0">
+        <Label>
+            <En>Task end color</En>
+            <Fr>Couleur de fin de tâche</Fr>
+        </Label>
+        <Description>
+            <En>The final color used in the gradient for displaying completed tasks</En>
+            <Fr>La couleur d'arrivée utilisée dans le dégradé pour l'affichage des tâches faites</Fr>
+        </Description>
+    </ColorOption>
+
+    <BoolOption x:Name="DisplayBetterVanillaVersion" Default="true">
+        <Label>
+            <En>Display BetterVanilla version</En>
+            <Fr>Afficher la version BetterVanilla</Fr>
+        </Label>
+        <Description>
+            <En>Show the mod version on top of players</En>
+            <Fr>Afficher la version du mod au-dessus des joueurs</Fr>
+        </Description>
+    </BoolOption>
+
 </OptionsHolder>

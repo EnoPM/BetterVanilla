@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace BetterVanilla.Options.Core.OptionTypes;
@@ -7,7 +8,8 @@ public sealed class BoolOption : OptionBase
     private readonly bool _defaultValue;
     private bool _value;
 
-    public BoolOption(string key, bool defaultValue) : base(key)
+    public BoolOption(string key, Func<string> labelProvider, Func<string> descriptionProvider, bool defaultValue)
+        : base(key, labelProvider, descriptionProvider)
     {
         _defaultValue = defaultValue;
         _value = defaultValue;

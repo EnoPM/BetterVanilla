@@ -14,7 +14,7 @@ public sealed class OptionsCodeGenerator
     public string Generate(OptionsDefinition definition)
     {
         var compilationUnit = CompilationUnit()
-            .WithUsings(CreateUsings())
+            .WithUsings(CreateUsings(definition))
             .WithMembers(CreateNamespaceOrClass(definition))
             .WithLeadingTrivia(CreateHeaderTrivia())
             .NormalizeWhitespace();
@@ -37,17 +37,19 @@ public sealed class OptionsCodeGenerator
         );
     }
 
-    private static SyntaxList<UsingDirectiveSyntax> CreateUsings()
+    private static SyntaxList<UsingDirectiveSyntax> CreateUsings(OptionsDefinition definition)
     {
-        var usings = new[]
+        var usingsList = new List<string>
         {
+            "System",
             "System.Collections.Generic",
             "BetterVanilla.Options.Core",
             "BetterVanilla.Options.Core.OptionTypes",
+            "BetterVanilla.Localization",
             "UnityEngine"
         };
 
-        return List(usings.Select(u => UsingDirective(ParseName(u))));
+        return List(usingsList.Select(u => UsingDirective(ParseName(u))));
     }
 
     private SyntaxList<MemberDeclarationSyntax> CreateNamespaceOrClass(OptionsDefinition definition)
@@ -72,7 +74,7 @@ public sealed class OptionsCodeGenerator
         // Add option properties
         foreach (var option in definition.Options)
         {
-            members.Add(CreateOptionProperty(option));
+            members.Add(CreateOptionProperty(option, definition.DefaultLanguage));
         }
 
         // Add GetAllOptions method
@@ -85,10 +87,10 @@ public sealed class OptionsCodeGenerator
             .WithMembers(List(members));
     }
 
-    private static PropertyDeclarationSyntax CreateOptionProperty(OptionEntry option)
+    private static PropertyDeclarationSyntax CreateOptionProperty(OptionEntry option, string defaultLanguage)
     {
         var typeName = GetTypeName(option);
-        var initializer = CreateOptionInitializer(option);
+        var initializer = CreateOptionInitializer(option, defaultLanguage);
 
         return PropertyDeclaration(ParseTypeName(typeName), option.Name)
             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
@@ -116,12 +118,16 @@ public sealed class OptionsCodeGenerator
         };
     }
 
-    private static ExpressionSyntax CreateOptionInitializer(OptionEntry option)
+    private static ExpressionSyntax CreateOptionInitializer(OptionEntry option, string defaultLanguage)
     {
         var arguments = new List<ArgumentSyntax>
         {
             // Key argument
-            Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(option.Name)))
+            Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(option.Name))),
+            // Label provider lambda
+            Argument(CreateTranslationLambda(option.LabelTranslations, defaultLanguage)),
+            // Description provider lambda
+            Argument(CreateTranslationLambda(option.DescriptionTranslations, defaultLanguage))
         };
 
         switch (option.Type)
@@ -171,6 +177,81 @@ public sealed class OptionsCodeGenerator
 
         return ObjectCreationExpression(ParseTypeName(GetTypeName(option)))
             .WithArgumentList(ArgumentList(SeparatedList(arguments)));
+    }
+
+    private static ExpressionSyntax CreateTranslationLambda(Dictionary<string, string> translations, string defaultLanguage)
+    {
+        // Generate: () => LocalizationManager.CurrentLanguage switch { Language.Fr => "...", _ => "..." }
+        // Or if no translations: () => ""
+
+        if (translations.Count == 0)
+        {
+            // Return: () => ""
+            return ParenthesizedLambdaExpression()
+                .WithParameterList(ParameterList())
+                .WithExpressionBody(CreateStringLiteral(string.Empty));
+        }
+
+        // Get the default translation
+        string defaultTranslation;
+        if (translations.TryGetValue(defaultLanguage, out var defValue))
+        {
+            defaultTranslation = defValue;
+        }
+        else
+        {
+            defaultTranslation = translations.Values.FirstOrDefault() ?? string.Empty;
+        }
+
+        // If only one language (the default), just return a simple lambda
+        if (translations.Count == 1)
+        {
+            return ParenthesizedLambdaExpression()
+                .WithParameterList(ParameterList())
+                .WithExpressionBody(CreateStringLiteral(defaultTranslation));
+        }
+
+        // Build switch expression arms
+        var switchArms = new List<SwitchExpressionArmSyntax>();
+
+        // Use fully qualified name for Language enum to avoid conflicts with properties named "Language"
+        var languageEnumType = ParseName("BetterVanilla.Localization.Language");
+
+        foreach (var kvp in translations.OrderBy(x => x.Key))
+        {
+            var lang = kvp.Key;
+            var text = kvp.Value;
+            if (lang == defaultLanguage) continue;
+
+            var arm = SwitchExpressionArm(
+                ConstantPattern(
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        languageEnumType,
+                        IdentifierName(lang))),
+                CreateStringLiteral(text));
+
+            switchArms.Add(arm);
+        }
+
+        // Add default arm (discard pattern)
+        var defaultArm = SwitchExpressionArm(
+            DiscardPattern(),
+            CreateStringLiteral(defaultTranslation));
+        switchArms.Add(defaultArm);
+
+        // Create the switch expression with fully qualified LocalizationManager
+        var switchExpression = SwitchExpression(
+            MemberAccessExpression(
+                SyntaxKind.SimpleMemberAccessExpression,
+                ParseName("BetterVanilla.Localization.LocalizationManager"),
+                IdentifierName("CurrentLanguage")),
+            SeparatedList(switchArms));
+
+        // Return: () => switch expression
+        return ParenthesizedLambdaExpression()
+            .WithParameterList(ParameterList())
+            .WithExpressionBody(switchExpression);
     }
 
     private static LiteralExpressionSyntax CreateBoolLiteral(string? value)

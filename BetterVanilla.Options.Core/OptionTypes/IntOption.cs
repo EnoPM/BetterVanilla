@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace BetterVanilla.Options.Core.OptionTypes;
@@ -9,7 +10,8 @@ public sealed class IntOption : OptionBase
     private readonly int? _max;
     private int _value;
 
-    public IntOption(string key, int defaultValue, int? min = null, int? max = null) : base(key)
+    public IntOption(string key, Func<string> labelProvider, Func<string> descriptionProvider, int defaultValue, int? min = null, int? max = null)
+        : base(key, labelProvider, descriptionProvider)
     {
         _defaultValue = defaultValue;
         _min = min;

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace BetterVanilla.Options.Core;
 
-public abstract class OptionBase(string key)
+public abstract class OptionBase(string key, Func<string> labelProvider, Func<string> descriptionProvider)
 {
     public string Key { get; } = key;
 
@@ -14,4 +14,7 @@ public abstract class OptionBase(string key)
     public abstract void Write(BinaryWriter writer);
     public abstract void Read(BinaryReader reader);
     public abstract void Reset();
+
+    public string Label => labelProvider();
+    public string Description => descriptionProvider();
 }

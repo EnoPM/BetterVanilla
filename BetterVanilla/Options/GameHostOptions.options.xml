@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <OptionsHolder xmlns="http://schemas.bettervanilla.options/2025"
                xmlns:x="http://schemas.bettervanilla.options/2025/xaml"
-               x:Class="BetterVanilla.Options.GameLocalOptions"
+               x:Class="BetterVanilla.Options.GameHostOptions"
                DefaultLanguage="En">
 
     <BoolOption x:Name="DisplayVentsInMap" Default="true">
