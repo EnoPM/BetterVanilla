@@ -8,14 +8,20 @@ public sealed class FloatOption : OptionBase
     private readonly float _defaultValue;
     private readonly float? _min;
     private readonly float? _max;
+    private readonly float? _step;
+    private readonly string? _prefix;
+    private readonly string? _suffix;
     private float _value;
 
-    public FloatOption(string key, Func<string> labelProvider, Func<string> descriptionProvider, float defaultValue, float? min = null, float? max = null)
+    public FloatOption(string key, Func<string> labelProvider, Func<string> descriptionProvider, float defaultValue, float? min = null, float? max = null, float? step = null, string? prefix = null, string? suffix = null)
         : base(key, labelProvider, descriptionProvider)
     {
         _defaultValue = defaultValue;
         _min = min;
         _max = max;
+        _step = step;
+        _prefix = prefix;
+        _suffix = suffix;
         _value = Clamp(defaultValue);
     }
 
@@ -33,6 +39,9 @@ public sealed class FloatOption : OptionBase
 
     public float? Min => _min;
     public float? Max => _max;
+    public float? Step => _step;
+    public string? Prefix => _prefix;
+    public string? Suffix => _suffix;
 
     private float Clamp(float value)
     {

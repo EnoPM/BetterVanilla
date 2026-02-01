@@ -94,6 +94,11 @@ public sealed class OptionsParser
                     allLanguages.Add(lang);
                 foreach (var lang in option.DescriptionTranslations.Keys)
                     allLanguages.Add(lang);
+                foreach (var choice in option.EnumChoices)
+                {
+                    foreach (var lang in choice.LabelTranslations.Keys)
+                        allLanguages.Add(lang);
+                }
             }
         }
 
@@ -144,12 +149,18 @@ public sealed class OptionsParser
                 case "Max":
                     option.Max = value;
                     break;
+                case "Step":
+                    option.Step = value;
+                    break;
+                case "Prefix":
+                    option.Prefix = value;
+                    break;
+                case "Suffix":
+                    option.Suffix = value;
+                    break;
                 case "MaxLength":
                     if (int.TryParse(value, out var maxLength))
                         option.MaxLength = maxLength;
-                    break;
-                case "Type":
-                    option.EnumType = value;
                     break;
                 case "Label":
                     option.Label = value;
@@ -157,7 +168,7 @@ public sealed class OptionsParser
             }
         }
 
-        // Parse child elements (Label, Description)
+        // Parse child elements (Label, Description, Option)
         foreach (XmlNode child in element.ChildNodes)
         {
             if (child is not XmlElement childElement) continue;
@@ -170,10 +181,28 @@ public sealed class OptionsParser
                 case "Description":
                     ParseTranslations(childElement, option.DescriptionTranslations);
                     break;
+                case "Option":
+                    var choice = ParseEnumChoice(childElement);
+                    if (choice != null)
+                    {
+                        option.EnumChoices.Add(choice);
+                    }
+                    break;
             }
         }
 
         return option;
+    }
+
+    private static EnumChoiceEntry? ParseEnumChoice(XmlElement element)
+    {
+        var valueAttr = element.GetAttribute("Value");
+        if (string.IsNullOrEmpty(valueAttr))
+            return null;
+
+        var choice = new EnumChoiceEntry { Value = valueAttr };
+        ParseTranslations(element, choice.LabelTranslations);
+        return choice;
     }
 
     private static void ParseTranslations(XmlElement element, Dictionary<string, string> translations)

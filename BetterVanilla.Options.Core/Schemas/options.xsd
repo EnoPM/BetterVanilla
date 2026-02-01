@@ -146,7 +146,7 @@
     <!-- FloatOption -->
     <xs:element name="FloatOption">
         <xs:annotation>
-            <xs:documentation>A floating-point option with optional min/max constraints</xs:documentation>
+            <xs:documentation>A floating-point option with optional min/max/step constraints</xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:group ref="options:TranslatableElements"/>
@@ -163,6 +163,21 @@
             <xs:attribute name="Max" type="xs:float" use="optional">
                 <xs:annotation>
                     <xs:documentation>Maximum allowed value (inclusive)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="Step" type="xs:float" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Step increment for UI controls (e.g., sliders)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="Prefix" type="xs:string" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Prefix text displayed before the value (e.g., "$")</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="Suffix" type="xs:string" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Suffix text displayed after the value (e.g., "%", "px")</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:anyAttribute namespace="http://schemas.bettervanilla.options/2025/xaml" processContents="lax"/>
@@ -193,21 +208,51 @@
     <!-- EnumOption -->
     <xs:element name="EnumOption">
         <xs:annotation>
-            <xs:documentation>An enumeration option</xs:documentation>
+            <xs:documentation>An option with a list of predefined choices</xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:group ref="options:TranslatableElements"/>
-            <xs:attribute name="Type" type="xs:string" use="required">
-                <xs:annotation>
-                    <xs:documentation>Fully qualified enum type name (e.g., MyNamespace.MyEnum)</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
+            <xs:sequence>
+                <xs:element ref="options:Label" minOccurs="1"/>
+                <xs:element ref="options:Description" minOccurs="1"/>
+                <xs:element ref="options:Option" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
             <xs:attribute name="Default" type="xs:string" use="optional">
                 <xs:annotation>
-                    <xs:documentation>Default enum value name (e.g., Normal)</xs:documentation>
+                    <xs:documentation>Default value (must match one of the Option Value attributes)</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:anyAttribute namespace="http://schemas.bettervanilla.options/2025/xaml" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Option element for EnumOption choices -->
+    <xs:element name="Option">
+        <xs:annotation>
+            <xs:documentation>A choice in an EnumOption with translatable label</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="options:En" minOccurs="0"/>
+                <xs:element ref="options:Fr" minOccurs="0"/>
+                <xs:element ref="options:De" minOccurs="0"/>
+                <xs:element ref="options:Es" minOccurs="0"/>
+                <xs:element ref="options:It" minOccurs="0"/>
+                <xs:element ref="options:Pt" minOccurs="0"/>
+                <xs:element ref="options:Ru" minOccurs="0"/>
+                <xs:element ref="options:Ja" minOccurs="0"/>
+                <xs:element ref="options:Ko" minOccurs="0"/>
+                <xs:element ref="options:Zh" minOccurs="0"/>
+                <xs:element ref="options:Nl" minOccurs="0"/>
+                <xs:element ref="options:Pl" minOccurs="0"/>
+                <xs:element ref="options:Tr" minOccurs="0"/>
+                <xs:element ref="options:Ar" minOccurs="0"/>
+                <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="Value" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>The unique identifier for this choice</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 

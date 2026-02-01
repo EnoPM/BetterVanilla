@@ -4,7 +4,7 @@
                x:Class="BetterVanilla.Options.UserOptions"
                DefaultLanguage="En">
 
-    <EnumOption x:Name="Language" Type="BetterVanilla.Localization.Language" Default="En">
+    <EnumOption x:Name="Language" Default="En">
         <Label>
             <En>Menu language</En>
             <Fr>Langue du menu</Fr>
@@ -13,6 +13,14 @@
             <En>The display language for the mod</En>
             <Fr>La langue d'affichage du mod</Fr>
         </Description>
+        <Option Value="En">
+            <En>English</En>
+            <Fr>English</Fr>
+        </Option>
+        <Option Value="Fr">
+            <En>Français</En>
+            <Fr>Français</Fr>
+        </Option>
     </EnumOption>
 
     <ColorOption x:Name="TaskStartColor" Default="#C22984">

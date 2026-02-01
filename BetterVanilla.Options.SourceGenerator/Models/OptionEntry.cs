@@ -2,6 +2,15 @@ using System.Collections.Generic;
 
 namespace BetterVanilla.Options.SourceGenerator.Models;
 
+/// <summary>
+/// Represents a choice in an EnumOption with its translatable label.
+/// </summary>
+public sealed class EnumChoiceEntry
+{
+    public string Value { get; set; } = string.Empty;
+    public Dictionary<string, string> LabelTranslations { get; } = new();
+}
+
 public sealed class OptionEntry
 {
     public string Name { get; set; } = string.Empty;
@@ -9,8 +18,15 @@ public sealed class OptionEntry
     public string? Default { get; set; }
     public string? Min { get; set; }
     public string? Max { get; set; }
+    public string? Step { get; set; }
+    public string? Prefix { get; set; }
+    public string? Suffix { get; set; }
     public int? MaxLength { get; set; }
-    public string? EnumType { get; set; }
+
+    /// <summary>
+    /// The choices for EnumOption.
+    /// </summary>
+    public List<EnumChoiceEntry> EnumChoices { get; } = new();
 
     /// <summary>
     /// The localization key for the option label (legacy attribute mode).

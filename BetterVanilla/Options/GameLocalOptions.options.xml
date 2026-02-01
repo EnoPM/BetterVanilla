@@ -92,7 +92,7 @@
         </Description>
     </BoolOption>
 
-    <EnumOption x:Name="TeamPreference" Type="BetterVanilla.Core.Data.TeamPreferences" Default="Both">
+    <EnumOption x:Name="TeamPreference" Default="Both">
         <Label>
             <En>Team Preference</En>
             <Fr>Préférence d'équipe</Fr>
@@ -101,6 +101,18 @@
             <En>Your preferred team when playing</En>
             <Fr>Votre équipe préférée en jeu</Fr>
         </Description>
+        <Option Value="Crewmate">
+            <En>Crewmate</En>
+            <Fr>Équipier</Fr>
+        </Option>
+        <Option Value="Impostor">
+            <En>Impostor</En>
+            <Fr>Imposteur</Fr>
+        </Option>
+        <Option Value="Both">
+            <En>Both</En>
+            <Fr>Les deux</Fr>
+        </Option>
     </EnumOption>
 
 </OptionsHolder>

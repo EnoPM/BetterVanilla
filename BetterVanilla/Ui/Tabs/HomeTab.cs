@@ -22,6 +22,7 @@ public sealed class HomeTab : TabBase
     {
         ModOptions.User.AddToTab(this, ModOptions.User.Options.TaskStartColor);
         ModOptions.User.AddToTab(this, ModOptions.User.Options.TaskEndColor);
+        ModOptions.GameLocal.AddToTab(this, ModOptions.GameLocal.Options.TeamPreference);
     }
 
     protected override void SetupTranslation()

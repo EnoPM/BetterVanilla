@@ -49,7 +49,7 @@
     </IntOption>
 
     <!-- Float options with min/max -->
-    <FloatOption x:Name="Volume" Default="0.8" Min="0" Max="1">
+    <FloatOption x:Name="Volume" Default="0.8" Min="0" Max="1" Step="0.05" Suffix="%">
         <Label>
             <En>Volume</En>
             <Fr>Volume</Fr>

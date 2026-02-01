@@ -111,7 +111,7 @@ public sealed class OptionsCodeGenerator
             OptionEntryType.Int => $"{ns}.IntOption",
             OptionEntryType.Float => $"{ns}.FloatOption",
             OptionEntryType.String => $"{ns}.StringOption",
-            OptionEntryType.Enum => $"{ns}.EnumOption<{option.EnumType}>",
+            OptionEntryType.Enum => $"{ns}.EnumOption",
             OptionEntryType.Color => $"{ns}.ColorOption",
             OptionEntryType.Vector2 => $"{ns}.Vector2Option",
             _ => "BetterVanilla.Options.Core.OptionBase"
@@ -148,12 +148,35 @@ public sealed class OptionsCodeGenerator
 
             case OptionEntryType.Float:
                 arguments.Add(Argument(CreateFloatLiteral(option.Default)));
-                if (!string.IsNullOrEmpty(option.Min))
+                // Handle min, max, step, prefix, suffix - need to pass nulls for missing intermediate values
+                var hasMin = !string.IsNullOrEmpty(option.Min);
+                var hasMax = !string.IsNullOrEmpty(option.Max);
+                var hasStep = !string.IsNullOrEmpty(option.Step);
+                var hasPrefix = !string.IsNullOrEmpty(option.Prefix);
+                var hasSuffix = !string.IsNullOrEmpty(option.Suffix);
+
+                if (hasMin)
                     arguments.Add(Argument(CreateFloatLiteral(option.Min)));
-                else if (!string.IsNullOrEmpty(option.Max))
+                else if (hasMax || hasStep || hasPrefix || hasSuffix)
                     arguments.Add(Argument(LiteralExpression(SyntaxKind.NullLiteralExpression)));
-                if (!string.IsNullOrEmpty(option.Max))
+
+                if (hasMax)
                     arguments.Add(Argument(CreateFloatLiteral(option.Max)));
+                else if (hasStep || hasPrefix || hasSuffix)
+                    arguments.Add(Argument(LiteralExpression(SyntaxKind.NullLiteralExpression)));
+
+                if (hasStep)
+                    arguments.Add(Argument(CreateFloatLiteral(option.Step)));
+                else if (hasPrefix || hasSuffix)
+                    arguments.Add(Argument(LiteralExpression(SyntaxKind.NullLiteralExpression)));
+
+                if (hasPrefix)
+                    arguments.Add(Argument(CreateStringLiteral(option.Prefix!)));
+                else if (hasSuffix)
+                    arguments.Add(Argument(LiteralExpression(SyntaxKind.NullLiteralExpression)));
+
+                if (hasSuffix)
+                    arguments.Add(Argument(CreateStringLiteral(option.Suffix!)));
                 break;
 
             case OptionEntryType.String:
@@ -163,7 +186,10 @@ public sealed class OptionsCodeGenerator
                 break;
 
             case OptionEntryType.Enum:
-                arguments.Add(Argument(CreateEnumValue(option.EnumType!, option.Default)));
+                // Create array of EnumChoice: new[] { new EnumChoice("value", () => "label"), ... }
+                arguments.Add(Argument(CreateEnumChoicesArray(option.EnumChoices, defaultLanguage)));
+                // Default value as string
+                arguments.Add(Argument(CreateStringLiteral(option.Default ?? option.EnumChoices.FirstOrDefault()?.Value ?? "")));
                 break;
 
             case OptionEntryType.Color:
@@ -279,17 +305,30 @@ public sealed class OptionsCodeGenerator
         return LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(value));
     }
 
-    private static ExpressionSyntax CreateEnumValue(string enumType, string? value)
+    private static ExpressionSyntax CreateEnumChoicesArray(List<EnumChoiceEntry> choices, string defaultLanguage)
     {
-        if (string.IsNullOrEmpty(value))
+        // Generate: new[] { new EnumChoice("Value1", () => "Label1"), new EnumChoice("Value2", () => "Label2") }
+        var choiceExpressions = new List<ExpressionSyntax>();
+
+        foreach (var choice in choices)
         {
-            return DefaultExpression(ParseTypeName(enumType));
+            // new EnumChoice("value", () => label)
+            var choiceCreation = ObjectCreationExpression(
+                    ParseTypeName("BetterVanilla.Options.Core.OptionTypes.EnumChoice"))
+                .WithArgumentList(ArgumentList(SeparatedList(new[]
+                {
+                    Argument(CreateStringLiteral(choice.Value)),
+                    Argument(CreateTranslationLambda(choice.LabelTranslations, defaultLanguage))
+                })));
+
+            choiceExpressions.Add(choiceCreation);
         }
 
-        return MemberAccessExpression(
-            SyntaxKind.SimpleMemberAccessExpression,
-            IdentifierName(enumType),
-            IdentifierName(value!));
+        // new[] { ... }
+        return ImplicitArrayCreationExpression(
+            InitializerExpression(
+                SyntaxKind.ArrayInitializerExpression,
+                SeparatedList(choiceExpressions)));
     }
 
     private static ExpressionSyntax CreateColorValue(string? value)

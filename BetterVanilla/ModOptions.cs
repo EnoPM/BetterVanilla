@@ -15,8 +15,11 @@ public static class ModOptions
     static ModOptions()
     {
         User = new OptionsManager<UserOptions>(Path.Combine(ModPaths.OptionsDirectory, "user.dat"));
-        LocalizationManager.CurrentLanguage = User.Options.Language.Value;
-        
+        if (System.Enum.TryParse<Language>(User.Options.Language.Value, out var lang))
+        {
+            LocalizationManager.CurrentLanguage = lang;
+        }
+
         GameLocal = new OptionsManager<GameLocalOptions>(Path.Combine(ModPaths.OptionsDirectory, "game_local.dat"));
         GameHost = new OptionsManager<GameHostOptions>(Path.Combine(ModPaths.OptionsDirectory, "game_host.dat"));
     }

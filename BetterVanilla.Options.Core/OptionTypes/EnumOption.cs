@@ -1,53 +1,106 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace BetterVanilla.Options.Core.OptionTypes;
 
-public sealed class EnumOption<TEnum> : OptionBase where TEnum : struct, Enum
+/// <summary>
+/// Represents a single choice in an EnumOption.
+/// </summary>
+public sealed class EnumChoice
 {
-    private readonly TEnum _defaultValue;
-    private TEnum _value;
+    public string Value { get; }
+    public Func<string> LabelProvider { get; }
 
-    public EnumOption(string key, Func<string> labelProvider, Func<string> descriptionProvider, TEnum defaultValue)
-        : base(key, labelProvider, descriptionProvider)
+    public EnumChoice(string value, Func<string> labelProvider)
     {
-        _defaultValue = defaultValue;
-        _value = defaultValue;
+        Value = value;
+        LabelProvider = labelProvider;
     }
 
-    public TEnum Value
+    public string Label => LabelProvider();
+}
+
+/// <summary>
+/// An option that allows selecting from a list of predefined choices.
+/// </summary>
+public sealed class EnumOption : OptionBase
+{
+    private readonly List<EnumChoice> _choices;
+    private readonly int _defaultIndex;
+    private int _selectedIndex;
+
+    public EnumOption(string key, Func<string> labelProvider, Func<string> descriptionProvider, IEnumerable<EnumChoice> choices, string defaultValue)
+        : base(key, labelProvider, descriptionProvider)
     {
-        get => _value;
+        _choices = choices.ToList();
+        _defaultIndex = _choices.FindIndex(c => c.Value == defaultValue);
+        if (_defaultIndex < 0) _defaultIndex = 0;
+        _selectedIndex = _defaultIndex;
+    }
+
+    /// <summary>
+    /// The list of available choices.
+    /// </summary>
+    public IReadOnlyList<EnumChoice> Choices => _choices;
+
+    /// <summary>
+    /// The currently selected index.
+    /// </summary>
+    public int SelectedIndex
+    {
+        get => _selectedIndex;
         set
         {
-            if (_value.Equals(value)) return;
-            _value = value;
+            var clamped = Math.Clamp(value, 0, _choices.Count - 1);
+            if (_selectedIndex == clamped) return;
+            _selectedIndex = clamped;
             OnValueChanged();
         }
     }
 
+    /// <summary>
+    /// The currently selected value (string identifier).
+    /// </summary>
+    public string Value
+    {
+        get => _choices[_selectedIndex].Value;
+        set
+        {
+            var index = _choices.FindIndex(c => c.Value == value);
+            if (index >= 0) SelectedIndex = index;
+        }
+    }
+
+    /// <summary>
+    /// The label of the currently selected choice.
+    /// </summary>
+    public string SelectedLabel => _choices[_selectedIndex].Label;
+
     public override void Write(BinaryWriter writer)
     {
-        writer.Write(Convert.ToInt32(_value));
+        writer.Write(_selectedIndex);
     }
 
     public override void Read(BinaryReader reader)
     {
-        var intValue = reader.ReadInt32();
-        if (Enum.IsDefined(typeof(TEnum), intValue))
+        var index = reader.ReadInt32();
+        if (index >= 0 && index < _choices.Count)
         {
-            _value = (TEnum)Enum.ToObject(typeof(TEnum), intValue);
+            _selectedIndex = index;
         }
         else
         {
-            _value = _defaultValue;
+            _selectedIndex = _defaultIndex;
         }
     }
 
     public override void Reset()
     {
-        Value = _defaultValue;
+        SelectedIndex = _defaultIndex;
     }
 
-    public static implicit operator TEnum(EnumOption<TEnum> option) => option.Value;
+    public static implicit operator string(EnumOption option) => option.Value;
+    public static implicit operator int(EnumOption option) => option.SelectedIndex;
 }

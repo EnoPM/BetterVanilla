@@ -9,18 +9,52 @@ namespace BetterVanilla.Core.Extensions;
 
 public static class OptionsManagerExtensions
 {
+    private static UiManager Manager => UiManager.Instance ?? throw new InvalidOperationException($"{nameof(UiManager)} is not initialized.");
+
     extension<TOptionsHolder>(OptionsManager<TOptionsHolder> optionsManager) where TOptionsHolder : OptionsHolderBase, new()
     {
         public ColorPicker AddToTab(TabBase tab, ColorOption option)
         {
-            if (UiManager.Instance == null)
-            {
-                throw new InvalidOperationException($"{nameof(UiManager)} is not initialized.");
-            }
-            var component = Object.Instantiate(UiManager.Instance.colorPickerPrefab, tab.container);
+            var component = Object.Instantiate(Manager.colorPickerPrefab, tab.container);
             component.Option = option;
             component.ValueUpdated += optionsManager.Save;
-            
+
+            return component;
+        }
+
+        public NumberField AddToTab(TabBase tab, FloatOption option)
+        {
+            var component = Object.Instantiate(Manager.numberFieldPrefab, tab.container);
+            component.Option = option;
+            component.ValueUpdated += optionsManager.Save;
+
+            return component;
+        }
+
+        public TextField AddToTab(TabBase tab, Options.Core.OptionTypes.StringOption option)
+        {
+            var component = Object.Instantiate(Manager.textFieldPrefab, tab.container);
+            component.Option = option;
+            component.ValueUpdated += optionsManager.Save;
+
+            return component;
+        }
+
+        public ToggleField AddToTab(TabBase tab, BoolOption option)
+        {
+            var component = Object.Instantiate(Manager.toggleFieldPrefab, tab.container);
+            component.Option = option;
+            component.ValueUpdated += optionsManager.Save;
+
+            return component;
+        }
+
+        public DropdownField AddToTab(TabBase tab, EnumOption option)
+        {
+            var component = Object.Instantiate(Manager.dropdownFieldPrefab, tab.container);
+            component.Option = option;
+            component.ValueUpdated += optionsManager.Save;
+
             return component;
         }
     }
