@@ -1,4 +1,6 @@
-﻿using BetterVanilla.Ui.Base;
+﻿using BetterVanilla.Core;
+using BetterVanilla.Core.Extensions;
+using BetterVanilla.Ui.Base;
 using BetterVanilla.Ui.Tabs;
 using TMPro;
 
@@ -13,6 +15,8 @@ public sealed class ModMenu : LocalizationBehaviourBase
     public SponsorTab sponsorTab = null!;
     public UserTab userTab = null!;
     public CosmeticsTab cosmeticsTab = null!;
+
+    private TabBase[] AllTabs => [homeTab, hostTab, sponsorTab, userTab, cosmeticsTab];
 
     private void Awake()
     {
@@ -32,8 +36,7 @@ public sealed class ModMenu : LocalizationBehaviourBase
 
     private void SelectTab(TabBase selectedTab)
     {
-        TabBase[] tabs = [homeTab, hostTab, sponsorTab, userTab, cosmeticsTab];
-        foreach (var tab in tabs)
+        foreach (var tab in AllTabs)
         {
             if (tab == selectedTab)
             {
@@ -49,5 +52,25 @@ public sealed class ModMenu : LocalizationBehaviourBase
     protected override void SetupTranslation()
     {
         titleText.SetText(UiLocalization.MenuTitle);
+        if (homeTab.IsHeaderActive)
+        {
+            homeTab.header.title.SetText(UiLocalization.HomeTabTitle);
+        }
+        if (hostTab.IsHeaderActive)
+        {
+            hostTab.header.title.SetText(UiLocalization.HostTabTitle);
+        }
+        if (sponsorTab.IsHeaderActive)
+        {
+            sponsorTab.header.title.SetText(UiLocalization.SponsorTabTitle);
+        }
+        if (userTab.IsHeaderActive)
+        {
+            userTab.header.title.SetText(UiLocalization.GameTabTitle);
+        }
+        if (cosmeticsTab.IsHeaderActive)
+        {
+            cosmeticsTab.header.title.SetText(UiLocalization.OutfitsTabTitle);
+        }
     }
 }

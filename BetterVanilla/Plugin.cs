@@ -12,13 +12,6 @@ namespace BetterVanilla;
 [ModInfos(ModData.Guid, ModData.Name, ModData.Version), ModProcess("Among Us")]
 public sealed class Plugin : BasePlugin
 {
-    public static Plugin Instance { get; private set; } = null!;
-
-    public Plugin()
-    {
-        Instance = this;
-    }
-
     public override void Load()
     {
         Ls.SetLogSource(Log);
@@ -36,10 +29,7 @@ public sealed class Plugin : BasePlugin
             hideFlags = HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset
         };
         
-        var manager = bundle.InstantiatePrefab<UiManager>("Assets/BetterVanilla/UiManager.prefab", parent.transform);
-
+        bundle.InstantiatePrefab<UiManager>("Assets/BetterVanilla/UiManager.prefab", parent.transform);
         bundle.Unload(false);
-        
-        Ls.LogMessage($"UiManager loaded state: {manager != null}");
     }
 }

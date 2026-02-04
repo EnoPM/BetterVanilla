@@ -48,7 +48,6 @@ public sealed class UiManager : MonoBehaviour
             _ => throw new InvalidOperationException($"Localization index {index} is not supported")
         };
         ModOptions.User.Options.Language.Value = LocalizationManager.CurrentLanguage.ToString();
-        ModOptions.User.Save();
     }
 
     private void OnDestroy()

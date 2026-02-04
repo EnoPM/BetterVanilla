@@ -13,16 +13,13 @@ public sealed class HomeTab : TabBase
     public TextMeshProUGUI becomeSponsorButtonText = null!;
     public TMP_Dropdown localizationDropdown = null!;
 
-    private void Awake()
-    {
-        localizationDropdown.SetValueWithoutNotify(LocalizationManager.CurrentLanguageIndex);
-    }
-
     private void Start()
     {
-        ModOptions.User.AddToTab(this, ModOptions.User.Options.TaskStartColor);
-        ModOptions.User.AddToTab(this, ModOptions.User.Options.TaskEndColor);
-        ModOptions.GameLocal.AddToTab(this, ModOptions.GameLocal.Options.TeamPreference);
+        localizationDropdown.SetValueWithoutNotify(LocalizationManager.CurrentLanguageIndex);
+
+        this.AddOption(ModOptions.User.Options.TaskStartColor);
+        this.AddOption(ModOptions.User.Options.TaskEndColor);
+        this.AddOption(ModOptions.GameLocal.Options.TeamPreference);
     }
 
     protected override void SetupTranslation()

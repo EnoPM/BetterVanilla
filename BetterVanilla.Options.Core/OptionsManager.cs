@@ -1,21 +1,33 @@
-﻿namespace BetterVanilla.Options.Core;
+﻿using System;
+
+namespace BetterVanilla.Options.Core;
 
 public sealed class OptionsManager<TOptionsHolder> where TOptionsHolder : OptionsHolderBase, new()
 {
     private string FilePath { get; }
+    private OptionDebouncer Debouncer { get; }
 
     public TOptionsHolder Options { get; }
 
-    public OptionsManager(string filePath)
+    public OptionsManager(string filePath, double saveDelay = 3)
     {
         FilePath = filePath;
         Options = new TOptionsHolder();
+        Debouncer = new OptionDebouncer(TimeSpan.FromSeconds(saveDelay));
 
         OptionsSerializer.LoadFromFile(Options, FilePath);
+
+        Debouncer.Debounced += Save;
+        
+        foreach (var option in Options.GetAllOptions())
+        {
+            option.ValueChanged += Debouncer.Trigger;
+        }
     }
 
-    public void Save()
+    private void Save()
     {
         OptionsSerializer.SaveToFile(Options, FilePath);
+        System.Console.WriteLine($"Options saved to {FilePath}");
     }
 }

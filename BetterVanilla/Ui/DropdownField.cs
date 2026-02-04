@@ -1,5 +1,4 @@
 ﻿using System;
-using BetterVanilla.Core;
 using BetterVanilla.Options.Core.OptionTypes;
 using BetterVanilla.Ui.Base;
 using TMPro;

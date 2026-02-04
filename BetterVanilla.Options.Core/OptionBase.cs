@@ -5,11 +5,17 @@ namespace BetterVanilla.Options.Core;
 
 public abstract class OptionBase(string key, Func<string> labelProvider, Func<string> descriptionProvider)
 {
+    public OptionDebouncer Debouncer { get; } = new(TimeSpan.FromSeconds(3.0));
+    
     public string Key { get; } = key;
 
     public event Action? ValueChanged;
 
-    protected void OnValueChanged() => ValueChanged?.Invoke();
+    protected void OnValueChanged()
+    {
+        ValueChanged?.Invoke();
+        Debouncer.Trigger();
+    }
 
     public abstract void Write(BinaryWriter writer);
     public abstract void Read(BinaryReader reader);

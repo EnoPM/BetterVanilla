@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using BetterVanilla.Core;
 using BetterVanilla.Localization;
 using BetterVanilla.Options;
@@ -15,7 +16,7 @@ public static class ModOptions
     static ModOptions()
     {
         User = new OptionsManager<UserOptions>(Path.Combine(ModPaths.OptionsDirectory, "user.dat"));
-        if (System.Enum.TryParse<Language>(User.Options.Language.Value, out var lang))
+        if (Enum.TryParse<Language>(User.Options.Language.Value, out var lang))
         {
             LocalizationManager.CurrentLanguage = lang;
         }

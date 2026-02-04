@@ -19,20 +19,24 @@
         <En>Become a sponsor</En>
         <Fr>Devenir un sponsor</Fr>
     </Key>
-    <Key x:Name="TaskStartColorLabel">
-        <En>Color when no task is done</En>
-        <Fr>Couleur lorsque aucune tâche n'est faite</Fr>
+    <Key x:Name="HomeTabTitle">
+        <En>Home</En>
+        <Fr>Accueil</Fr>
     </Key>
-    <Key x:Name="TaskStartColorInfos">
-        <En>The starting color used in the gradient for displaying completed tasks</En>
-        <Fr>La couleur de départ utilisée dans le gradient pour l'affichage des tâches faites</Fr>
+    <Key x:Name="HostTabTitle">
+        <En>Host</En>
+        <Fr>Hôte</Fr>
     </Key>
-    <Key x:Name="TaskEndColorLabel">
-        <En>Color when all tasks have been completed</En>
-        <Fr>Couleur lorsque toutes les tâches ont été faites</Fr>
+    <Key x:Name="SponsorTabTitle">
+        <En>Sponsor</En>
+        <Fr>Sponsor</Fr>
     </Key>
-    <Key x:Name="TaskEndColorInfos">
-        <En>The final color used in the gradient for displaying completed tasks</En>
-        <Fr>La couleur d'arrivée utilisée dans le gradient pour l'affichage des tâches faites</Fr>
+    <Key x:Name="GameTabTitle">
+        <En>Game</En>
+        <Fr>Jeu</Fr>
+    </Key>
+    <Key x:Name="OutfitsTabTitle">
+        <En>Outfits</En>
+        <Fr>Tenues</Fr>
     </Key>
 </Localization>

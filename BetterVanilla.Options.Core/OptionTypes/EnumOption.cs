@@ -54,7 +54,11 @@ public sealed class EnumOption : OptionBase
         set
         {
             var clamped = Math.Clamp(value, 0, _choices.Count - 1);
-            if (_selectedIndex == clamped) return;
+            if (_selectedIndex == clamped)
+            {
+                System.Console.WriteLine($"Selected index is clamped ({clamped})");
+                return;
+            }
             _selectedIndex = clamped;
             OnValueChanged();
         }
@@ -69,7 +73,8 @@ public sealed class EnumOption : OptionBase
         set
         {
             var index = _choices.FindIndex(c => c.Value == value);
-            if (index >= 0) SelectedIndex = index;
+            if (index < 0) return;
+            SelectedIndex = index;
         }
     }
 
