@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using AmongUs.Data;
 using BetterVanilla.Core;
+using BetterVanilla.Options;
 using BetterVanilla.Ui.Base;
 using EnoUnityLoader.Il2Cpp.Utils;
 using UnityEngine;
@@ -29,12 +30,24 @@ public sealed class CosmeticsTab : TabBase
         {
             yield return new WaitForEndOfFrame();
         }
+
+        outfit.SetColorId(DataManager.Player.Customization.Color);
+        outfit.SetVisorColor(SponsorOptions.Default.VisorColor.Value);
         
         var hatId = DataManager.Player.Customization.Hat;
         outfit.SetHat(hatId);
         
         var visorId = DataManager.Player.Customization.Visor;
         outfit.SetVisor(visorId);
+        
+        var skinId = DataManager.Player.Customization.Skin;
+        outfit.SetSkin(skinId);
+        
+        var petId = DataManager.Player.Customization.Pet;
+        outfit.SetPet(petId);
+
+        var nameplateId = DataManager.Player.Customization.NamePlate;
+        outfit.SetNameplate(nameplateId);
     }
 
     private void Update()
