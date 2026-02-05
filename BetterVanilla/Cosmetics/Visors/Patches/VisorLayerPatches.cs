@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BetterVanilla.Core.Extensions;
+using HarmonyLib;
 using UnityEngine;
 
 namespace BetterVanilla.Cosmetics.Visors.Patches;
@@ -13,9 +14,7 @@ internal static class VisorLayerPatches
         {
             return true;
         }
-        if (__instance.visorData != null &&
-            CosmeticsManager.Visors.TryGetViewData(__instance.visorData.ProductId, out _) &&
-            (data == null || !CosmeticsManager.Visors.IsCustomCosmetic(data.ProductId)))
+        if (__instance.visorData != null && __instance.visorData.IsCustomCosmetic && (data == null || !data.IsCustomCosmetic))
         {
             __instance.Image.sprite = null;
         }
@@ -23,7 +22,7 @@ internal static class VisorLayerPatches
         __instance.visorData = data;
         __instance.SetMaterialColor(color);
 
-        if (data != null && CosmeticsManager.Visors.IsCustomCosmetic(data.ProductId))
+        if (data != null && data.IsCustomCosmetic)
         {
             __instance.PopulateFromViewData();
             return false;

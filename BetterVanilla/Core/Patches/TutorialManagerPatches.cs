@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using BetterVanilla.Core.Extensions;
@@ -9,6 +10,8 @@ using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using UnityEngine;
 using ILogger = Hazel.ILogger;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace BetterVanilla.Core.Patches;
 
@@ -28,12 +31,21 @@ internal static class TutorialManagerPatches
 
     private static IEnumerator CoRunTutorial(this TutorialManager tutorialManager)
     {
-        while (ShipStatus.Instance == null) yield return null;
+        while (ShipStatus.Instance == null)
+        {
+            yield return null;
+        }
 
         ShipStatus.Instance.Timer = 15f;
 
-        while (PlayerControl.LocalPlayer == null) yield return null;
-        while (GameManager.Instance == null) yield return null;
+        while (PlayerControl.LocalPlayer == null)
+        {
+            yield return null;
+        }
+        while (GameManager.Instance == null)
+        {
+            yield return null;
+        }
 
         if (DiscordManager.InstanceExists)
         {
@@ -58,18 +70,39 @@ internal static class TutorialManagerPatches
             AmongUsClient.Instance.Spawn(data);
             AmongUsClient.Instance.Spawn(player);
             player.isDummy = true;
-            player.transform.position = ShipStatus.Instance.DummyLocations[i].position;
+            player.transform.position = ShipStatus.Instance.DummyLocations[i]?.position ?? Vector3.zero;
             player.GetComponent<DummyBehaviour>().enabled = true;
             player.NetTransform.enabled = false;
             player.SetDummyCosmetics(i);
             data.SetDummyTasks();
         }
+
+        switch (AmongUsClient.Instance.TutorialMapId)
+        {
+            case 0:
+            case 3:
+                Object.Instantiate(tutorialManager.skeldDetectiveLocationsPrefab);
+                break;
+            case 1:
+                Object.Instantiate(tutorialManager.miraDetectiveLocationsPrefab);
+                break;
+            case 2:
+                Object.Instantiate(tutorialManager.polusDetectiveLocationsPrefab);
+                break;
+            case 4:
+                Object.Instantiate(tutorialManager.airshipDetectiveLocationsPrefab);
+                break;
+            case 5:
+                Object.Instantiate(tutorialManager.fungleDetectiveLocationsPrefab);
+                break;
+        }
+
         yield return ShipStatus.Instance.CosmeticsCache.PopulateFromPlayers();
         ShipStatus.Instance.Begin();
         GameManager.Instance.StartGame();
         ShipStatus.Instance.StartSFX();
-        
-        Ls.LogInfo($"Started Freeplay Game in {(MapNames) AmongUsClient.Instance.TutorialMapId}");
+
+        Ls.LogInfo($"Started Freeplay Game in {(MapNames)AmongUsClient.Instance.TutorialMapId}");
     }
 
     private static void SetDummyCosmetics(this PlayerControl player, int i)
@@ -92,6 +125,6 @@ internal static class TutorialManagerPatches
 
     private static void SetDummyTasks(this NetworkedPlayerInfo data)
     {
-        data.RpcSetTasks(new Il2CppStructArray<byte>(0));
+        data.RpcSetTasks(Array.Empty<byte>());
     }
 }
