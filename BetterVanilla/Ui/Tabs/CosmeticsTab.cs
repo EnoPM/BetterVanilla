@@ -29,12 +29,12 @@ public sealed class CosmeticsTab : TabBase
         {
             yield return new WaitForEndOfFrame();
         }
-
-        outfit.visor.enabled = false;
         
         var hatId = DataManager.Player.Customization.Hat;
-        
         outfit.SetHat(hatId);
+        
+        var visorId = DataManager.Player.Customization.Visor;
+        outfit.SetVisor(visorId);
     }
 
     private void Update()
