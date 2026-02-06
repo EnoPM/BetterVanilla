@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text.Json;
 using BetterVanilla.BetterModMenu;
 using BetterVanilla.Core;
 using BetterVanilla.Core.Data;
@@ -69,6 +70,13 @@ public sealed class BetterVanillaManager : MonoBehaviour
         }
 
         this.StartCoroutine(CoStart());
+        this.StartCoroutine(CoLoadFeaturesConfig());
+    }
+
+    private IEnumerator CoLoadFeaturesConfig()
+    {
+        yield return FeaturesManager.CoLoad();
+        Ls.LogMessage($"[JSON] {JsonSerializer.Serialize(FeaturesManager.Instance)}");
     }
 
     private IEnumerator CoStart()

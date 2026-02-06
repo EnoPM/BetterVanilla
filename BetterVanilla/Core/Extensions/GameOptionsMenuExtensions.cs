@@ -1,8 +1,10 @@
-﻿using AmongUs.GameOptions;
+﻿using System;
+using AmongUs.GameOptions;
 using BetterVanilla.Extensions;
 using BetterVanilla.Options;
 using BetterVanilla.Options.Core.Host;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace BetterVanilla.Core.Extensions;
 
@@ -115,6 +117,14 @@ public static class GameOptionsMenuExtensions
             case OptionTypes.Int:
                 UpdateIntSettingConstraints(gameSetting.As<IntGameSetting>());
                 break;
+            case OptionTypes.Number:
+            case OptionTypes.Checkbox:
+            case OptionTypes.MultipleChoice:
+            case OptionTypes.String:
+            case OptionTypes.Player:
+            case OptionTypes.Map:
+            default:
+                break;
         }
     }
 
@@ -131,6 +141,32 @@ public static class GameOptionsMenuExtensions
             case FloatOptionNames.PlayerSpeedMod:
                 gameSetting.ValidRange = new FloatRange(0.1f, 3f);
                 gameSetting.Increment = 0.05f;
+                break;
+            case FloatOptionNames.Invalid:
+            case FloatOptionNames.CrewmateTimeInVent:
+            case FloatOptionNames.FinalEscapeTime:
+            case FloatOptionNames.EscapeTime:
+            case FloatOptionNames.SeekerFinalSpeed:
+            case FloatOptionNames.MaxPingTime:
+            case FloatOptionNames.CrewmateFlashlightSize:
+            case FloatOptionNames.ImpostorFlashlightSize:
+            case FloatOptionNames.ShapeshifterCooldown:
+            case FloatOptionNames.ShapeshifterDuration:
+            case FloatOptionNames.ProtectionDurationSeconds:
+            case FloatOptionNames.GuardianAngelCooldown:
+            case FloatOptionNames.ScientistCooldown:
+            case FloatOptionNames.ScientistBatteryCharge:
+            case FloatOptionNames.EngineerCooldown:
+            case FloatOptionNames.EngineerInVentMaxTime:
+            case FloatOptionNames.PhantomCooldown:
+            case FloatOptionNames.PhantomDuration:
+            case FloatOptionNames.TrackerCooldown:
+            case FloatOptionNames.TrackerDuration:
+            case FloatOptionNames.TrackerDelay:
+            case FloatOptionNames.NoisemakerAlertDuration:
+            case FloatOptionNames.ViperDissolveTime:
+            case FloatOptionNames.DetectiveSuspectLimit:
+            default:
                 break;
         }
     }
@@ -155,6 +191,21 @@ public static class GameOptionsMenuExtensions
                 break;
             case Int32OptionNames.NumShortTasks:
                 gameSetting.ValidRange = new IntRange(0, 23);
+                break;
+            case Int32OptionNames.Invalid:
+            case Int32OptionNames.NumImpostors:
+            case Int32OptionNames.KillDistance:
+            case Int32OptionNames.NumEmergencyMeetings:
+            case Int32OptionNames.MaxImpostors:
+            case Int32OptionNames.MinPlayers:
+            case Int32OptionNames.MaxPlayers:
+            case Int32OptionNames.TaskBarMode:
+            case Int32OptionNames.Tag:
+            case Int32OptionNames.CrewmatesRemainingForVitals:
+            case Int32OptionNames.CrewmateVentUses:
+            case Int32OptionNames.ImpostorPlayerID:
+            case Int32OptionNames.RulePreset:
+            default:
                 break;
         }
     }
