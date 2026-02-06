@@ -4,9 +4,12 @@ namespace BetterVanilla.Core.Extensions;
 
 public static class OptionBehaviourExtensions
 {
-    public static bool CustomUpdateValue(this OptionBehaviour optionBehaviour)
+    extension(OptionBehaviour optionBehaviour)
     {
-        var customOption = HostOptions.Default.FindOptionByBehaviour(optionBehaviour);
-        return customOption == null;
+        public bool CustomUpdateValue()
+        {
+            var customOption = HostOptions.Default.FindOptionByBehaviour(optionBehaviour);
+            return customOption == null;
+        }
     }
 }

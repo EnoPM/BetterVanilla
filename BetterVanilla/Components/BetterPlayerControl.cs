@@ -9,6 +9,7 @@ using BetterVanilla.Core.Extensions;
 using BetterVanilla.Core.Helpers;
 using BetterVanilla.Core.Rpc;
 using BetterVanilla.Cosmetics;
+using BetterVanilla.Extensions;
 using BetterVanilla.Options;
 using BetterVanilla.Options.Core.Serialization;
 using EnoUnityLoader.Il2Cpp.Utils;

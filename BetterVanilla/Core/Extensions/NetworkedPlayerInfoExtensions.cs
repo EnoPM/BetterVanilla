@@ -7,36 +7,43 @@ namespace BetterVanilla.Core.Extensions;
 
 public static class NetworkedPlayerInfoExtensions
 {
-    public static void RegisterFriendCode(this NetworkedPlayerInfo playerInfo)
+    extension(NetworkedPlayerInfo playerInfo)
     {
-        playerInfo.StartCoroutine(playerInfo.CoSetFriendCode());
-    }
-    
-    private static IEnumerator CoSetFriendCode(this NetworkedPlayerInfo playerInfo)
-    {
-        var timeout = 30f;
-        while (playerInfo.Object == null && timeout > 0f)
+        public void RegisterFriendCode()
         {
-            yield return new WaitForSeconds(1f);
-            timeout -= 1f;
+            playerInfo.StartCoroutine(playerInfo.CoSetFriendCode());
         }
-        if (playerInfo.Object == null)
+
+        private IEnumerator CoSetFriendCode()
         {
-            Ls.LogWarning($"No PlayerControl found for {playerInfo.PlayerName}");
-            yield break;
+            var timeout = 30f;
+            while (playerInfo.Object == null && timeout > 0f)
+            {
+                yield return new WaitForSeconds(1f);
+                timeout -= 1f;
+            }
+
+            if (playerInfo.Object == null)
+            {
+                Ls.LogWarning($"No PlayerControl found for {playerInfo.PlayerName}");
+                yield break;
+            }
+
+            timeout = 30f;
+            while (playerInfo.Object.gameObject.GetComponent<BetterPlayerControl>() == null && timeout > 0f)
+            {
+                yield return new WaitForSeconds(1f);
+                timeout -= 1f;
+            }
+
+            var control = playerInfo.Object.gameObject.GetComponent<BetterPlayerControl>();
+            if (control == null)
+            {
+                Ls.LogWarning($"No BetterPlayerControl found for {playerInfo.PlayerName}");
+                yield break;
+            }
+
+            control.SetFriendCode(playerInfo.FriendCode);
         }
-        timeout = 30f;
-        while (playerInfo.Object.gameObject.GetComponent<BetterPlayerControl>() == null && timeout > 0f)
-        {
-            yield return new WaitForSeconds(1f);
-            timeout -= 1f;
-        }
-        var control = playerInfo.Object.gameObject.GetComponent<BetterPlayerControl>();
-        if (control == null)
-        {
-            Ls.LogWarning($"No BetterPlayerControl found for {playerInfo.PlayerName}");
-            yield break;
-        }
-        control.SetFriendCode(playerInfo.FriendCode);
     }
 }

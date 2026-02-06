@@ -15,6 +15,6 @@ internal static class MapBehaviourPatches
     [HarmonyPrefix, HarmonyPatch(nameof(MapBehaviour.Show))]
     private static void ShowPrefix(MapBehaviour __instance, MapOptions opts)
     {
-        __instance.BetterShow(opts);
+        MapBehaviour.BetterShow(opts);
     }
 }

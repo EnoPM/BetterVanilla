@@ -5,16 +5,19 @@ namespace BetterVanilla.Core.Extensions;
 
 public static class MessageWriterExtensions
 {
-    public static void SendImmediately(this MessageWriter writer)
+    extension(MessageWriter writer)
     {
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-    }
-    
-    public static void Write(this MessageWriter writer, Color color)
-    {
-        writer.Write(color.r);
-        writer.Write(color.g);
-        writer.Write(color.b);
-        writer.Write(color.a);
+        public void SendImmediately()
+        {
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+        }
+
+        public void Write(Color color)
+        {
+            writer.Write(color.r);
+            writer.Write(color.g);
+            writer.Write(color.b);
+            writer.Write(color.a);
+        }
     }
 }

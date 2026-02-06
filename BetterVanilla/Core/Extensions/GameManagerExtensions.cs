@@ -5,18 +5,21 @@ namespace BetterVanilla.Core.Extensions;
 
 public static class GameManagerExtensions
 {
-    public static List<RulesCategory> GetAllCategories(this GameManager gameManager)
+    extension(GameManager gameManager)
     {
-        var results = new List<RulesCategory>
+        public List<RulesCategory> GetAllCategories()
         {
-            HostOptions.Default.MenuCategory
-        };
+            var results = new List<RulesCategory>
+            {
+                HostOptions.Default.MenuCategory
+            };
 
-        foreach (var category in gameManager.GameSettingsList.AllCategories)
-        {
-            results.Add(category);
+            foreach (var category in gameManager.GameSettingsList.AllCategories)
+            {
+                results.Add(category);
+            }
+
+            return results;
         }
-
-        return results;
     }
 }

@@ -6,45 +6,48 @@ namespace BetterVanilla.Core.Extensions;
 
 public static class TransformExtensions
 {
-    public static void SaveChildrenPathsTo(this Transform transform, string filePath)
+    extension(Transform transform)
     {
-        var data = transform.GetAllChildrenPaths();
-        File.WriteAllText(filePath, string.Join('\n', data));
-    }
-    
-    public static string[] GetAllChildrenPaths(this Transform transform)
-    {
-        var results = new List<string>();
-        CollectChildrenPaths(transform, "", results);
-        return results.ToArray();
-    }
-    
-    public static T? FindByPath<T>(this Transform transform, string path) where T : Component
-    {
-        var foundTransform = transform.FindByPath(path);
-        return foundTransform?.GetComponent<T>();
-    }
-
-    public static Transform? FindByPath(this Transform transform, string path)
-    {
-        if (string.IsNullOrEmpty(path))
+        public void SaveChildrenPathsTo(string filePath)
         {
-            return null;
+            var data = transform.GetAllChildrenPaths();
+            File.WriteAllText(filePath, string.Join('\n', data));
         }
 
-        var parts = path.Split('/');
-        var current = transform;
-
-        foreach (var part in parts)
+        public string[] GetAllChildrenPaths()
         {
-            current = current.Find(part);
-            if (current == null)
+            var results = new List<string>();
+            CollectChildrenPaths(transform, "", results);
+            return results.ToArray();
+        }
+
+        public T? FindByPath<T>(string path) where T : Component
+        {
+            var foundTransform = transform.FindByPath(path);
+            return foundTransform?.GetComponent<T>();
+        }
+
+        public Transform? FindByPath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
             {
                 return null;
             }
-        }
 
-        return current;
+            var parts = path.Split('/');
+            var current = transform;
+
+            foreach (var part in parts)
+            {
+                current = current.Find(part);
+                if (current == null)
+                {
+                    return null;
+                }
+            }
+
+            return current;
+        }
     }
 
     private static void CollectChildrenPaths(Transform parent, string currentPath, List<string> results)

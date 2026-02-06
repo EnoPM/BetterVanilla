@@ -5,13 +5,16 @@ namespace BetterVanilla.Core.Extensions;
 
 public static class MessageReaderExtensions
 {
-    public static Color ReadColor(this MessageReader reader)
+    extension(MessageReader reader)
     {
-        var r = reader.ReadSingle();
-        var g = reader.ReadSingle();
-        var b = reader.ReadSingle();
-        var a = reader.ReadSingle();
-        var color = new Color(r, g, b, a);
-        return color;
+        public Color ReadColor()
+        {
+            var r = reader.ReadSingle();
+            var g = reader.ReadSingle();
+            var b = reader.ReadSingle();
+            var a = reader.ReadSingle();
+            var color = new Color(r, g, b, a);
+            return color;
+        }
     }
 }
