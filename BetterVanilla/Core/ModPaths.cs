@@ -12,6 +12,7 @@ public static class ModPaths
     public static string FeatureCodeFile { get; }
     public static string OptionsDirectory { get; }
     public static string SavedOutfitsFile { get; }
+    public static string SavedOutfitsFile2 { get; }
     public static string PlayerDataFile { get; }
     public static string BepInExVersionsDirectory { get; }
     public static string CosmeticsDirectory { get; }
@@ -71,6 +72,7 @@ public static class ModPaths
         FeatureCodeFile = Path.Combine(ModDataDirectory, "LocalFeatureCodes");
         OptionsDirectory = Path.Combine(ModDataDirectory, "Options");
         SavedOutfitsFile = Path.Combine(ModDataDirectory, "SavedOutfits");
+        SavedOutfitsFile2 = Path.Combine(ModDataDirectory, "outfits.dat");
         PlayerDataFile = Path.Combine(ModDataDirectory, "PlayerData");
         BepInExVersionsDirectory = Path.Combine(Paths.GameRootPath, "BetterVanilla", "BepInExVersions");
         CosmeticsDirectory = Path.Combine(ModDataDirectory, "Cosmetics");

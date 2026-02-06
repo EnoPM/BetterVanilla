@@ -39,4 +39,12 @@
         <En>Outfits</En>
         <Fr>Tenues</Fr>
     </Key>
+    <Key x:Name="SaveCurrentOutfitButton">
+        <En>Save equipped outfit</En>
+        <Fr>Sauvegarder la tenue équipée</Fr>
+    </Key>
+    <Key x:Name="ApplyOutfitButton">
+        <En>Equip the outfit</En>
+        <Fr>Équiper la tenue</Fr>
+    </Key>
 </Localization>
