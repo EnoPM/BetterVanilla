@@ -22,6 +22,12 @@ public sealed class TextField : OptionBase
         }
     }
 
+    protected override void SetInteractable(bool isInteractable)
+    {
+        base.SetInteractable(isInteractable);
+        input.interactable = isInteractable;
+    }
+
     public void OnValueChanged(string value)
     {
         Option?.Value = value;

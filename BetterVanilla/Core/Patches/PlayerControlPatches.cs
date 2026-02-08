@@ -27,7 +27,7 @@ internal static class PlayerControlPatches
     {
         Ls.LogWarning($"PlayerControl.Awake patch");
         if (__instance.notRealPlayer) return;
-        GameEventManager.TriggerPlayerJoined(__instance);
+        GameEventManager.Instance.RaisePlayerJoined(__instance);
     }
 
     [HarmonyPrefix, HarmonyPatch(nameof(PlayerControl.Start))]
@@ -40,7 +40,7 @@ internal static class PlayerControlPatches
     [HarmonyPostfix, HarmonyPatch(nameof(PlayerControl.StartMeeting))]
     private static void StartMeetingPostfix(PlayerControl __instance)
     {
-        GameEventManager.TriggerMeetingStarted();
+        GameEventManager.Instance.RaiseMeetingStarted();
     }
 
     [HarmonyPrefix, HarmonyPatch(nameof(PlayerControl.CheckMurder))]

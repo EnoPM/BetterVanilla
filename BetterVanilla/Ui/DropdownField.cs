@@ -45,6 +45,12 @@ public sealed class DropdownField : OptionBase
         dropdown.SetValueWithoutNotify(selectedIndex);
     }
 
+    protected override void SetInteractable(bool isInteractable)
+    {
+        base.SetInteractable(isInteractable);
+        dropdown.interactable = isInteractable;
+    }
+
     protected override void SetupTranslation()
     {
         base.SetupTranslation();

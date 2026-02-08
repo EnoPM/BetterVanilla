@@ -1,4 +1,5 @@
-﻿using BetterVanilla.Core.Data;
+﻿using BetterVanilla.Components;
+using BetterVanilla.Core.Data;
 using BetterVanilla.Core.Helpers;
 using HarmonyLib;
 
@@ -10,13 +11,13 @@ internal static class ShipStatusPatches
     [HarmonyPostfix, HarmonyPatch(nameof(ShipStatus.Start))]
     private static void StartPostfix(ShipStatus __instance)
     {
-        GameEventManager.TriggerGameStarted();
+        GameEventManager.Instance.RaiseGameStarted();
     }
 
     [HarmonyPrefix, HarmonyPatch(nameof(ShipStatus.OnDestroy))]
     private static void OnDestroyPrefix(ShipStatus __instance)
     {
-        GameEventManager.TriggerGameEnded();
+        GameEventManager.Instance.RaiseGameEnded();
     }
 
     [HarmonyPrefix, HarmonyPatch(nameof(ShipStatus.Begin))]

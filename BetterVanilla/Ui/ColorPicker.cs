@@ -210,4 +210,11 @@ public sealed class ColorPicker : OptionBase
 
         UpdateCursors();
     }
+
+    protected override void SetInteractable(bool isInteractable)
+    {
+        base.SetInteractable(isInteractable);
+        hueBar.raycastTarget = isInteractable;
+        svSquare.raycastTarget = isInteractable;
+    }
 }

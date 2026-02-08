@@ -52,7 +52,7 @@ public sealed class BetterVanillaManager : MonoBehaviour
 
         betterGame.Unload(false);
 
-        GameEventManager.PlayerJoined += OnPlayerJoined;
+        GameEventManager.Instance.PlayerJoined += OnPlayerJoined;
 
         Ls.LogInfo($"Plugin {ModData.Name} v{ModData.Version} is loaded!");
     }

@@ -1,5 +1,4 @@
 using System;
-using BetterVanilla.Core;
 using BetterVanilla.Options.Core.OptionTypes;
 using BetterVanilla.Ui.Base;
 using TMPro;
@@ -48,6 +47,13 @@ public sealed class NumberField : OptionBase
             Option.Value = Mathf.Clamp(value, Option.Min ?? float.MinValue, Option.Max ?? float.MaxValue);
         }
         valueText.SetText($"{Option.Prefix}{Option.Value}{Option.Suffix}");
+    }
+
+    protected override void SetInteractable(bool isInteractable)
+    {
+        base.SetInteractable(isInteractable);
+        plusButton.interactable = isInteractable;
+        minusButton.interactable = isInteractable;
     }
 
     public void SetValue(float value)

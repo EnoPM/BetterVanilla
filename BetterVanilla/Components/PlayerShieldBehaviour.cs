@@ -79,14 +79,14 @@ public sealed class PlayerShieldBehaviour : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        GameEventManager.GameReallyStarted += OnGameStarted;
-        GameEventManager.GameEnded += OnGameEnded;
+        GameEventManager.Instance.GameReallyStarted += OnGameStarted;
+        GameEventManager.Instance.GameEnded += OnGameEnded;
     }
 
     private void OnDestroy()
     {
-        GameEventManager.GameReallyStarted -= OnGameStarted;
-        GameEventManager.GameEnded -= OnGameEnded;
+        GameEventManager.Instance.GameReallyStarted -= OnGameStarted;
+        GameEventManager.Instance.GameEnded -= OnGameEnded;
     }
 
     private void Update()

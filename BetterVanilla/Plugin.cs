@@ -16,6 +16,7 @@ public sealed class Plugin : BasePlugin
     {
         Ls.SetLogSource(Log);
         AddComponent<UnityThreadDispatcher>();
+        AddComponent<GameEventManager>();
         AddComponent<FeatureCodeBehaviour>();
         AddComponent<BetterVanillaManager>();
         AddComponent<ModUpdaterBehaviour>();

@@ -15,6 +15,6 @@ internal static class HudManagerPatches
     [HarmonyPostfix, HarmonyPatch(nameof(HudManager.OnGameStart))]
     private static void OnGameStartPostfix()
     {
-        GameEventManager.TriggerGameReallyStarted();
+        GameEventManager.Instance.RaiseGameReallyStarted();
     }
 }

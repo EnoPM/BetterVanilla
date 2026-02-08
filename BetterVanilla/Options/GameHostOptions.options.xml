@@ -22,7 +22,7 @@
         </Label>
         <Description>
             <En>Allow BetterVanilla players to select a team preference to increase their chances of being on that team</En>
-            <Fr>AAutoriser les joueurs BetterVanilla à sélectionner une préférence d'équipe afin d'augmenter leurs chances d'être de cette équipe</Fr>
+            <Fr>Autoriser les joueurs BetterVanilla à sélectionner une préférence d'équipe afin d'augmenter leurs chances d'être de cette équipe</Fr>
         </Description>
     </BoolOption>
     

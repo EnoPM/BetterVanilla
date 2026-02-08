@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using BetterVanilla.Components;
 using UnityEngine;
 
 namespace BetterVanilla.Core.Extensions;
@@ -48,7 +49,7 @@ public static class PlayerPhysicsExtensions
                 playerPhysics.inputHandler.enabled = false;
             }
 
-            GameEventManager.TriggerPlayerReady(playerPhysics.myPlayer);
+            GameEventManager.Instance.RaisePlayerReady(playerPhysics.myPlayer);
         }
     }
 }

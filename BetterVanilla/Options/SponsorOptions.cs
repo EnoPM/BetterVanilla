@@ -1,7 +1,6 @@
 ﻿using System;
 using BetterVanilla.Components;
 using BetterVanilla.Core;
-using BetterVanilla.Core.Extensions;
 using BetterVanilla.Options.Core.Local;
 using BetterVanilla.Options.Core.Serialization;
 using UnityEngine;

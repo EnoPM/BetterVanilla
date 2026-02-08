@@ -17,7 +17,7 @@ public static class MapBehaviourExtensions
 
     static MapBehaviourExtensions()
     {
-        GameEventManager.GameStarted += Clear;
+        GameEventManager.Instance.GameStarted += Clear;
     }
 
     private static void Clear()

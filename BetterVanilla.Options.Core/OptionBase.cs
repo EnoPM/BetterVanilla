@@ -9,7 +9,31 @@ public abstract class OptionBase(string key, Func<string> labelProvider, Func<st
     
     public string Key { get; } = key;
 
+    public bool IsEnabled
+    {
+        get;
+        set
+        {
+            if (field == value) return;
+            field = value;
+            EnabledChanged?.Invoke();
+        }
+    } = true;
+
+    public bool IsVisible
+    {
+        get;
+        set
+        {
+            if (field == value) return;
+            field = value;
+            VisibleChanged?.Invoke();
+        }
+    } = true;
+
     public event Action? ValueChanged;
+    public event Action? EnabledChanged;
+    public event Action? VisibleChanged;
 
     protected void OnValueChanged()
     {

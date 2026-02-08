@@ -54,12 +54,12 @@ public sealed class FloatOption : OptionBase
 
     public override void Write(BinaryWriter writer)
     {
-        writer.Write(_value);
+        writer.Write(Value);
     }
 
     public override void Read(BinaryReader reader)
     {
-        _value = Clamp(reader.ReadSingle());
+        Value = Clamp(reader.ReadSingle());
     }
 
     public override void Reset()

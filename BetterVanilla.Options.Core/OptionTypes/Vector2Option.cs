@@ -29,15 +29,15 @@ public sealed class Vector2Option : OptionBase
 
     public override void Write(BinaryWriter writer)
     {
-        writer.Write(_value.x);
-        writer.Write(_value.y);
+        writer.Write(Value.x);
+        writer.Write(Value.y);
     }
 
     public override void Read(BinaryReader reader)
     {
         var x = reader.ReadSingle();
         var y = reader.ReadSingle();
-        _value = new Vector2(x, y);
+        Value = new Vector2(x, y);
     }
 
     public override void Reset()

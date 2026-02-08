@@ -22,7 +22,13 @@ public sealed class ToggleField : OptionBase
             toggle.SetIsOnWithoutNotify(field.Value);
         }
     }
-    
+
+    protected override void SetInteractable(bool isInteractable)
+    {
+        base.SetInteractable(isInteractable);
+        toggle.interactable = isInteractable;
+    }
+
     public void OnValueChanged(bool value)
     {
         Option?.Value = value;

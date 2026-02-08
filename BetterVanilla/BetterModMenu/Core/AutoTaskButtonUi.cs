@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Linq;
+using BetterVanilla.Components;
 using BetterVanilla.Core;
 using BetterVanilla.Core.Extensions;
 using BetterVanilla.Extensions;
@@ -27,7 +28,7 @@ public sealed class AutoTaskButtonUi : MonoBehaviour
 
     private void Awake()
     {
-        GameEventManager.GameStarted += Reset;
+        GameEventManager.Instance.GameStarted += Reset;
     }
 
     public void OnAutoTaskButtonClicked()

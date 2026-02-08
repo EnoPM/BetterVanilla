@@ -28,12 +28,12 @@ public sealed class BoolOption : OptionBase
 
     public override void Write(BinaryWriter writer)
     {
-        writer.Write(_value);
+        writer.Write(Value);
     }
 
     public override void Read(BinaryReader reader)
     {
-        _value = reader.ReadBoolean();
+        Value = reader.ReadBoolean();
     }
 
     public override void Reset()

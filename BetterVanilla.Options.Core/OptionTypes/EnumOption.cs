@@ -85,7 +85,7 @@ public sealed class EnumOption : OptionBase
 
     public override void Write(BinaryWriter writer)
     {
-        writer.Write(_selectedIndex);
+        writer.Write(SelectedIndex);
     }
 
     public override void Read(BinaryReader reader)
@@ -93,11 +93,11 @@ public sealed class EnumOption : OptionBase
         var index = reader.ReadInt32();
         if (index >= 0 && index < _choices.Count)
         {
-            _selectedIndex = index;
+            SelectedIndex = index;
         }
         else
         {
-            _selectedIndex = _defaultIndex;
+            SelectedIndex = _defaultIndex;
         }
     }
 

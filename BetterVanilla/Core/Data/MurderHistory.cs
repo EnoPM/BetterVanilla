@@ -30,7 +30,7 @@ public sealed class MurderHistory
     static MurderHistory()
     {
         CurrentGame = [];
-        GameEventManager.GameStarted += OnGameStarted;
+        GameEventManager.Instance.GameStarted += OnGameStarted;
     }
     
     public DateTime CreatedAt { get; }

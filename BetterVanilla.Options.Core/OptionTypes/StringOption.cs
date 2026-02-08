@@ -34,18 +34,18 @@ public sealed class StringOption : OptionBase
     private string Truncate(string value)
     {
         if (_maxLength.HasValue && value.Length > _maxLength.Value)
-            return value.Substring(0, _maxLength.Value);
+            return value[.._maxLength.Value];
         return value;
     }
 
     public override void Write(BinaryWriter writer)
     {
-        writer.Write(_value);
+        writer.Write(Value);
     }
 
     public override void Read(BinaryReader reader)
     {
-        _value = Truncate(reader.ReadString());
+        Value = Truncate(reader.ReadString());
     }
 
     public override void Reset()

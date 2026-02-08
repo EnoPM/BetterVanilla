@@ -29,10 +29,10 @@ public sealed class ColorOption : OptionBase
 
     public override void Write(BinaryWriter writer)
     {
-        writer.Write(_value.r);
-        writer.Write(_value.g);
-        writer.Write(_value.b);
-        writer.Write(_value.a);
+        writer.Write(Value.r);
+        writer.Write(Value.g);
+        writer.Write(Value.b);
+        writer.Write(Value.a);
     }
 
     public override void Read(BinaryReader reader)
@@ -41,7 +41,7 @@ public sealed class ColorOption : OptionBase
         var g = reader.ReadSingle();
         var b = reader.ReadSingle();
         var a = reader.ReadSingle();
-        _value = new Color(r, g, b, a);
+        Value = new Color(r, g, b, a);
     }
 
     public override void Reset()

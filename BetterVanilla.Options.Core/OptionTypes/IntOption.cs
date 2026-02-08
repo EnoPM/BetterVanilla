@@ -45,12 +45,12 @@ public sealed class IntOption : OptionBase
 
     public override void Write(BinaryWriter writer)
     {
-        writer.Write(_value);
+        writer.Write(Value);
     }
 
     public override void Read(BinaryReader reader)
     {
-        _value = Clamp(reader.ReadInt32());
+        Value = Clamp(reader.ReadInt32());
     }
 
     public override void Reset()
