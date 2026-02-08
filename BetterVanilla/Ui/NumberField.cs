@@ -30,22 +30,23 @@ public sealed class NumberField : OptionBase
 
     public void OnPlusButtonClicked()
     {
-        Ls.LogMessage("Plus Button clicked");
         if (Option == null) return;
         SetValue(Option.Value + (Option.Step ?? 1f));
     }
 
     public void OnMinusButtonClicked()
     {
-        Ls.LogMessage("Minus Button clicked");
         if (Option == null) return;
         SetValue(Option.Value - (Option.Step ?? 1f));
     }
 
     public void SetValueWithoutNotify(float value)
     {
-        if (Option == null || Mathf.Approximately(value, Option.Value)) return;
-        Option.Value = Mathf.Clamp(value, Option.Min ?? float.MinValue, Option.Max ?? float.MaxValue);
+        if (Option == null) return;
+        if (!Mathf.Approximately(value, Option.Value))
+        {
+            Option.Value = Mathf.Clamp(value, Option.Min ?? float.MinValue, Option.Max ?? float.MaxValue);
+        }
         valueText.SetText($"{Option.Prefix}{Option.Value}{Option.Suffix}");
     }
 

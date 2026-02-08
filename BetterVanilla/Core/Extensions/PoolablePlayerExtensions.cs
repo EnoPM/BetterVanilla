@@ -14,7 +14,7 @@ public static class PoolablePlayerExtensions
             player.cosmetics.currentBodySprite.BodySprite.SetVisorColor(color);
         
             var hat = player.cosmetics.hat;
-            if (CosmeticsManager.Hats.TryGetViewData(hat.Hat.ProductId, out var viewData) && viewData.MatchPlayerColor)
+            if (CosmeticsManager.Instance.Hats.TryGetViewData(hat.Hat.ProductId, out var viewData) && viewData.MatchPlayerColor)
             {
                 hat.FrontLayer.SetVisorColor(color);
             }

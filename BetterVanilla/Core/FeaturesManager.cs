@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using BetterVanilla.Components;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -12,7 +13,12 @@ public sealed class FeaturesManager
 
     public static IEnumerator CoLoad()
     {
-        var readFileTask = File.ReadAllTextAsync(@"C:\projects\BetterVanilla2\features.yml");
+        yield return CoLoadFromFile(@"D:\Projects\EnoUnityLoader.BetterVanilla\features.yml");
+    }
+
+    private static IEnumerator CoLoadFromFile(string filePath)
+    {
+        var readFileTask = File.ReadAllTextAsync(filePath);
         while (!readFileTask.IsCompleted)
         {
             yield return null;
@@ -31,8 +37,22 @@ public sealed class FeaturesManager
     [YamlMember(Alias = "private_cosmetics")]
     public Dictionary<string, List<string>> PrivateCosmetics { get; set; } = new();
 
-    [YamlMember(Alias = "cosmetics_bundles")]
+    [YamlMember(Alias = "cosmetic_bundles")]
     public List<CosmeticBundle> CosmeticBundles { get; set; } = [];
+
+    public bool IsCosmeticUnlocked(string productId)
+    {
+        var friendCode = EOSManager.InstanceExists && !string.IsNullOrEmpty(EOSManager.Instance.FriendCode) ? EOSManager.Instance.FriendCode : null;
+        if (Sponsors.Cosmetics.Contains(productId))
+        {
+            return friendCode != null && Sponsors.Players.Contains(friendCode);
+        }
+        if (PrivateCosmetics.TryGetValue(productId, out var allowedPlayers))
+        {
+            return friendCode != null && allowedPlayers.Contains(friendCode);
+        }
+        return true;
+    }
 
     public sealed class SponsorsConfig
     {

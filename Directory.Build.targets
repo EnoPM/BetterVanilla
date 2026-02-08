@@ -12,7 +12,6 @@
 
     <Import Project="$(MSBuildThisFileDirectory)build\GenerateModData.targets" Condition="'$(AssemblyGuid)' != '' AND '$(AssemblyName)' != '' AND '$(Version)' != ''"/>
     <Import Project="$(MSBuildThisFileDirectory)build\CopyToGameFiles.targets" Condition="'$(CopyToMods)' != ''" />
-    <Import Project="$(MSBuildThisFileDirectory)build\BetterVanillaUi.props" Condition="'$(BetterVanillaUiGenerator)' == 'true'"/>
     <Import Project="$(MSBuildThisFileDirectory)build\BetterVanillaOptions.props" Condition="'$(BetterVanillaOptionsGenerator)' == 'true'"/>
     <Import Project="$(MSBuildThisFileDirectory)build\BetterVanillaLocalization.props" Condition="'$(BetterVanillaLocalizationGenerator)' == 'true'"/>
 

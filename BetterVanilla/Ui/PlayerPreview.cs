@@ -1,5 +1,5 @@
 ﻿using System;
-using BetterVanilla.Core.Extensions;
+using BetterVanilla.Cosmetics.Core.Extensions;
 using Innersloth.Assets;
 using UnityEngine;
 using UnityEngine.UI;

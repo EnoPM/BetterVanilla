@@ -3,116 +3,137 @@
                xmlns:x="http://schemas.bettervanilla.options/2025/xaml"
                x:Class="BetterVanilla.Options.GameHostOptions"
                DefaultLanguage="En">
-
-    <BoolOption x:Name="DisplayVentsInMap" Default="true">
+    
+    <BoolOption x:Name="AllowDeadVoteDisplay" Default="true">
         <Label>
-            <En>Display Vents in Map</En>
-            <Fr>Afficher les bouches d'aération sur la carte</Fr>
+            <En>Allow real-time vote display</En>
+            <Fr>Autoriser l'affichage des votes en temps réel</Fr>
         </Label>
         <Description>
-            <En>Show vent locations on the map</En>
-            <Fr>Afficher les emplacements des bouches d'aération sur la carte</Fr>
+            <En>Allow dead players to see real-time votes during meetings</En>
+            <Fr>Autoriser les joueurs morts à voir les votes en temps réel durant les meetings</Fr>
+        </Description>
+    </BoolOption>
+    
+    <BoolOption x:Name="AllowTeamPreference" Default="true">
+        <Label>
+            <En>Allow team preferences</En>
+            <Fr>Autoriser les préférences d'équipe</Fr>
+        </Label>
+        <Description>
+            <En>Allow BetterVanilla players to select a team preference to increase their chances of being on that team</En>
+            <Fr>AAutoriser les joueurs BetterVanilla à sélectionner une préférence d'équipe afin d'augmenter leurs chances d'être de cette équipe</Fr>
+        </Description>
+    </BoolOption>
+    
+    <BoolOption x:Name="HideDeadPlayerPets" Default="true">
+        <Label>
+            <En>Hide dead player pets</En>
+            <Fr>Masquer les animaux des joueurs morts</Fr>
+        </Label>
+        <Description>
+            <En>Hide the pets of dead players when an emergency meeting starts</En>
+            <Fr>Masquer les animaux des joueurs morts lorsqu'une réunion d'urgence démarre</Fr>
+        </Description>
+    </BoolOption>
+    
+    <FloatOption x:Name="PolusReactorCountdown" Default="60" Min="15" Max="300" Step="1" Suffix="s">
+        <Label>
+            <En>Reactor countdown</En>
+            <Fr>Durée du sabotage des réacteurs</Fr>
+        </Label>
+        <Description>
+            <En>Modify the duration of reactor sabotage on the Polus map</En>
+            <Fr>Modifier la durée du sabotage des réacteurs sur la map Polus</Fr>
+        </Description>
+    </FloatOption>
+    
+    <BoolOption x:Name="ProtectFirstKilledPlayer" Default="false">
+        <Label>
+            <En>Protect first killed player</En>
+            <Fr>Protéger le premier joueur tué</Fr>
+        </Label>
+        <Description>
+            <En>Protect the first player killed in the next game (for a defined period)</En>
+            <Fr>Protéger le premier joueur tué dans la prochaine partie (pour une durée définie)</Fr>
+        </Description>
+    </BoolOption>
+    
+    <FloatOption x:Name="ProtectionDuration" Default="60" Min="15" Max="300" Step="1" Suffix="s">
+        <Label>
+            <En>Protection duration</En>
+            <Fr>Durée de la protection</Fr>
+        </Label>
+        <Description>
+            <En>Change the duration of protection for the first player killed</En>
+            <Fr>Modifier la durée de la protection du premier joueur tué</Fr>
+        </Description>
+    </FloatOption>
+    
+    <BoolOption x:Name="DefineCommonTasksAsNonCommon" Default="false">
+        <Label>
+            <En>Common tasks as non-common</En>
+            <Fr>Désactiver les tâches communes</Fr>
+        </Label>
+        <Description>
+            <En>Modify common tasks to make them short tasks and long tasks</En>
+            <Fr>Modifier les tâches communes pour en faire des tâches courtes et des tâches longues</Fr>
+        </Description>
+    </BoolOption>
+    
+    <BoolOption x:Name="BetterPolus" Default="false">
+        <Label>
+            <En>Enable the Better Polus version of the map</En>
+            <Fr>Activer la version Better Polus de la map</Fr>
+        </Label>
+        <Description>
+            <En>All players in the game must be playing with BetterVanilla for this option to be available.</En>
+            <Fr>Tous les joueurs de la partie doivent jouer avec BetterVanilla pour que cette option soit disponible</Fr>
+        </Description>
+    </BoolOption>
+    
+    <BoolOption x:Name="RandomizeFixWiringTaskOrder" Default="false">
+        <Label>
+            <En>Randomize fix wiring task order</En>
+            <Fr>Rendre l'ordre de la tâche des fils aléatoire</Fr>
+        </Label>
+        <Description>
+            <En>All players in the game must be playing with BetterVanilla for this option to be available.</En>
+            <Fr>Tous les joueurs de la partie doivent jouer avec BetterVanilla pour que cette option soit disponible</Fr>
         </Description>
     </BoolOption>
 
-    <BoolOption x:Name="DisplayRolesAndTasksAfterDeath" Default="true">
+    <BoolOption x:Name="RandomizeUploadTaskLocation" Default="false">
         <Label>
-            <En>Display Roles After Death</En>
-            <Fr>Afficher les rôles après la mort</Fr>
+            <En>Randomize upload task location</En>
+            <Fr>Rendre la position de la tâche du téléversement aléatoire</Fr>
         </Label>
         <Description>
-            <En>Show player roles and tasks after you die</En>
-            <Fr>Afficher les rôles et tâches des joueurs après votre mort</Fr>
+            <En>All players in the game must be playing with BetterVanilla for this option to be available.</En>
+            <Fr>Tous les joueurs de la partie doivent jouer avec BetterVanilla pour que cette option soit disponible</Fr>
         </Description>
     </BoolOption>
 
-    <BoolOption x:Name="DisplayPlayersInMapAfterDeath" Default="true">
+    <BoolOption x:Name="RandomizePlayerOrderInMeetings" Default="false">
         <Label>
-            <En>Display Players in Map After Death</En>
-            <Fr>Afficher les joueurs sur la carte après la mort</Fr>
+            <En>Randomize player order in meetings</En>
+            <Fr>Rendre la position des joueurs dans une réunion d'urgence aléatoire</Fr>
         </Label>
         <Description>
-            <En>Show player positions on the map after you die</En>
-            <Fr>Afficher les positions des joueurs sur la carte après votre mort</Fr>
+            <En>All players in the game must be playing with BetterVanilla for this option to be available.</En>
+            <Fr>Tous les joueurs de la partie doivent jouer avec BetterVanilla pour que cette option soit disponible</Fr>
         </Description>
     </BoolOption>
 
-    <BoolOption x:Name="DisplayVotesAfterDeath" Default="true">
+    <BoolOption x:Name="AnonymizePlayersOnCamerasDuringLights" Default="false">
         <Label>
-            <En>Display Votes After Death</En>
-            <Fr>Afficher les votes après la mort</Fr>
+            <En>Anonymize players during cameras when lights are off</En>
+            <Fr>Anonymiser les joueurs sur les caméras lorsque les lumières sont éteintes</Fr>
         </Label>
         <Description>
-            <En>Show voting results after you die</En>
-            <Fr>Afficher les résultats des votes après votre mort</Fr>
+            <En>All players in the game must be playing with BetterVanilla for this option to be available.</En>
+            <Fr>Tous les joueurs de la partie doivent jouer avec BetterVanilla pour que cette option soit disponible</Fr>
         </Description>
     </BoolOption>
-
-    <BoolOption x:Name="DisplayVoteColorsAfterDeath" Default="true">
-        <Label>
-            <En>Display Vote Colors After Death</En>
-            <Fr>Afficher les couleurs des votes après la mort</Fr>
-        </Label>
-        <Description>
-            <En>Show who voted for whom after you die</En>
-            <Fr>Afficher qui a voté pour qui après votre mort</Fr>
-        </Description>
-    </BoolOption>
-
-    <BoolOption x:Name="AutoPlayAgain" Default="true">
-        <Label>
-            <En>Auto Play Again</En>
-            <Fr>Rejouer automatiquement</Fr>
-        </Label>
-        <Description>
-            <En>Automatically queue for the next game</En>
-            <Fr>Se mettre automatiquement en file pour la prochaine partie</Fr>
-        </Description>
-    </BoolOption>
-
-    <BoolOption x:Name="AutoOpenDoors" Default="false">
-        <Label>
-            <En>Auto Open Doors</En>
-            <Fr>Ouvrir les portes automatiquement</Fr>
-        </Label>
-        <Description>
-            <En>Automatically open doors when approaching</En>
-            <Fr>Ouvrir automatiquement les portes en approchant</Fr>
-        </Description>
-    </BoolOption>
-
-    <BoolOption x:Name="HideMyPetAfterDeath" Default="true">
-        <Label>
-            <En>Hide My Pet After Death</En>
-            <Fr>Cacher mon animal après la mort</Fr>
-        </Label>
-        <Description>
-            <En>Hide your pet when you die</En>
-            <Fr>Cacher votre animal quand vous mourez</Fr>
-        </Description>
-    </BoolOption>
-
-    <EnumOption x:Name="TeamPreference" Default="Both">
-        <Label>
-            <En>Team Preference</En>
-            <Fr>Préférence d'équipe</Fr>
-        </Label>
-        <Description>
-            <En>Your preferred team when playing</En>
-            <Fr>Votre équipe préférée en jeu</Fr>
-        </Description>
-        <Option Value="Crewmate">
-            <En>Crewmate</En>
-            <Fr>Équipier</Fr>
-        </Option>
-        <Option Value="Impostor">
-            <En>Impostor</En>
-            <Fr>Imposteur</Fr>
-        </Option>
-        <Option Value="Both">
-            <En>Both</En>
-            <Fr>Les deux</Fr>
-        </Option>
-    </EnumOption>
 
 </OptionsHolder>

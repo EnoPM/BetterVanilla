@@ -6,7 +6,6 @@ using BetterVanilla.Core;
 using BetterVanilla.Core.Helpers;
 using BetterVanilla.Cosmetics;
 using BetterVanilla.Cosmetics.Api.Core.Bundle;
-using BetterVanilla.Cosmetics.Core.Data;
 using UnityEngine;
 
 namespace BetterVanilla.Components;
@@ -18,22 +17,22 @@ public class CosmeticsLoader : MonoBehaviour
     public IEnumerator CoLoadCosmetics()
     {
         Ls.LogInfo($"Waiting for cosmetics bundle versions");
-        
-        while (FeatureCodeBehaviour.Instance == null || FeatureCodeBehaviour.Instance.Registry == null)
+
+        while (FeaturesManager.Instance == null)
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
         
         Ls.LogInfo($"Cosmetics bundle versions loaded");
 
-        foreach (var version in FeatureCodeBehaviour.Instance.Registry.CosmeticsBundleVersions)
+        foreach (var version in FeaturesManager.Instance.CosmeticBundles)
         {
             Ls.LogInfo($"Loading cosmetics bundle version: {version.Hash}");
             yield return CoLoadBundle(version);
             yield return new WaitForEndOfFrame();
         }
 
-        var hashes = FeatureCodeBehaviour.Instance.Registry.CosmeticsBundleVersions
+        var hashes = FeaturesManager.Instance.CosmeticBundles
             .Select(x => x.Hash)
             .ToList();
 
@@ -51,7 +50,7 @@ public class CosmeticsLoader : MonoBehaviour
             try
             {
                 var bundle = CosmeticBundle.FromFile(filePath);
-                CosmeticsManager.RegisterBundle(bundle);
+                CosmeticsManager.Instance.RegisterBundle(bundle);
             }
             catch (Exception ex)
             {
@@ -59,10 +58,10 @@ public class CosmeticsLoader : MonoBehaviour
             }
         }
 
-        CosmeticsManager.ProcessUnregisteredCosmetics();
+        CosmeticsManager.Instance.ProcessUnregisteredCosmetics();
     }
 
-    private static IEnumerator CoLoadBundle(CosmeticsBundleVersion version)
+    private static IEnumerator CoLoadBundle(FeaturesManager.CosmeticBundle version)
     {
         var bundleFilePath = Path.Combine(ModPaths.CosmeticsBundlesDirectory, version.Hash);
 
@@ -84,7 +83,7 @@ public class CosmeticsLoader : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         Ls.LogInfo($"Registering cosmetics bundle {version.Hash}");
-        CosmeticsManager.RegisterBundle(bundle);
+        CosmeticsManager.Instance.RegisterBundle(bundle);
     }
 
     private void Update()

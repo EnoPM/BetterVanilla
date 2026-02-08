@@ -12,7 +12,7 @@ internal static class PlayerPurchasesDataPatches
     {
         if (bundleKey == "BetterVanilla")
         {
-            __result = CosmeticsManager.IsUnlocked(itemKey);
+            __result = FeaturesManager.Instance != null && FeaturesManager.Instance.IsCosmeticUnlocked(itemKey);
             return;
         }
         

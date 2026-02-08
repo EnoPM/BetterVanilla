@@ -48,11 +48,11 @@
     <BoolOption x:Name="DisplayBetterVanillaVersion" Default="true">
         <Label>
             <En>Display BetterVanilla version</En>
-            <Fr>Afficher la version BetterVanilla</Fr>
+            <Fr>Afficher la version de BetterVanilla</Fr>
         </Label>
         <Description>
-            <En>Show the mod version on top of players</En>
-            <Fr>Afficher la version du mod au-dessus des joueurs</Fr>
+            <En>Show BetterVanilla version on top of players (only in the lobby and when you are dead)</En>
+            <Fr>Afficher la version de BetterVanilla au-dessus des joueurs (uniquement dans le lobby et lorsque vous êtes mort)</Fr>
         </Description>
     </BoolOption>
 

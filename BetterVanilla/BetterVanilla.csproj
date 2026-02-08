@@ -27,6 +27,7 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\BetterVanilla.Cosmetics.Api\BetterVanilla.Cosmetics.Api.csproj" />
+      <ProjectReference Include="..\BetterVanilla.Cosmetics\BetterVanilla.Cosmetics.csproj" />
       <ProjectReference Include="..\BetterVanilla.Extensions\BetterVanilla.Extensions.csproj" />
     </ItemGroup>
     <ItemGroup>

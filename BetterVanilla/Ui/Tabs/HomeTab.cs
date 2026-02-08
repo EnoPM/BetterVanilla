@@ -19,7 +19,7 @@ public sealed class HomeTab : TabBase
 
         this.AddOption(ModOptions.User.Options.TaskStartColor);
         this.AddOption(ModOptions.User.Options.TaskEndColor);
-        this.AddOption(ModOptions.GameLocal.Options.TeamPreference);
+        this.AddOption(ModOptions.User.Options.DisplayBetterVanillaVersion);
     }
 
     protected override void SetupTranslation()

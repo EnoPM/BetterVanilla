@@ -233,7 +233,7 @@ public class BetterPlayerControl : MonoBehaviour
     public void RefreshHatColor()
     {
         if (Player.cosmetics == null || !Player.cosmetics.initialized || Player.cosmetics.hat == null || Player.cosmetics.hat.Hat == null) return;
-        if (CosmeticsManager.Hats.TryGetViewData(Player.cosmetics.hat.Hat.ProductId, out var viewData) && viewData.MatchPlayerColor)
+        if (CosmeticsManager.Instance.Hats.TryGetViewData(Player.cosmetics.hat.Hat.ProductId, out var viewData) && viewData.MatchPlayerColor)
         {
             Player.cosmetics.hat.FrontLayer.SetVisorColor(GetVisorColor());
         }

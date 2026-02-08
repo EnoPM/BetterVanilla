@@ -10,7 +10,6 @@
     
     <IncludeInteropLibrairies>false</IncludeInteropLibrairies>
     <IncludeCoreLibrairies>false</IncludeCoreLibrairies>
-    <BetterVanillaUiGenerator>false</BetterVanillaUiGenerator>
     <BetterVanillaOptionsGenerator>false</BetterVanillaOptionsGenerator>
     <BetterVanillaLocalizationGenerator>false</BetterVanillaLocalizationGenerator>
   </PropertyGroup>

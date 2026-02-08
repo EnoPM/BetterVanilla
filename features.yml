@@ -45,7 +45,7 @@ sponsors:
     - "bv_hat_Angry_Cloud"
     - "bv_visor_Fishies"
 features:
-  display_modded_cosmetics:
+  cosmetic_designers:
     - "seriesgone#6069"
     - "taxsnub#6686"
     - "nearbycat#5646"
@@ -69,15 +69,15 @@ features:
   disable_am_impostor_check:
     - "seriesgone#6069"
 private_cosmetics:
-  "hammersolo#8201":
-    - "bv_hat_Sportswear"
-  "seriesgone#6069":
-    - "bv_hat_Bee_Hat"
-    - "bv_hat_Beee_Hat"
-  "nearbycat#5646":
-    - "bv_hat_Bee_Hat"
-    - "bv_hat_Beee_Hat"
-cosmetics_bundles:
+  "bv_hat_Sportswear":
+    - "hammersolo#8201"
+  "bv_hat_Bee_Hat":
+    - "seriesgone#6069"
+    - "nearbycat#5646"
+  "bv_hat_Beee_Hat":
+    - "seriesgone#6069"
+    - "nearbycat#5646"
+cosmetic_bundles:
   - hash: "3d8086c9-71f8-4c05-9262-1ff2f193667e"
     download_url: "https://github.com/EnoPM/EnoPM.BetterVanilla/releases/download/v1.3.8/Cosmetics.bundle"
   - hash: "26592b3c-a764-4084-9e9c-e7dadbe4ca91"

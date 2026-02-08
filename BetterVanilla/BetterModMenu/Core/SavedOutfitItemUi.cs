@@ -93,7 +93,7 @@ public sealed class SavedOutfitItemUi : MonoBehaviour
 
     private static IEnumerator CoLoadHat(Image image, HatData hat)
     {
-        if (CosmeticsManager.Hats.TryGetCosmetic(hat.ProductId, out var cosmetic))
+        if (CosmeticsManager.Instance.Hats.TryGetCosmetic(hat.ProductId, out var cosmetic))
         {
             image.sprite = cosmetic.PreviewResource;
             yield break;
@@ -103,7 +103,7 @@ public sealed class SavedOutfitItemUi : MonoBehaviour
     
     private static IEnumerator CoLoadVisor(Image image, VisorData visor)
     {
-        if (CosmeticsManager.Visors.TryGetCosmetic(visor.ProductId, out var cosmetic))
+        if (CosmeticsManager.Instance.Visors.TryGetCosmetic(visor.ProductId, out var cosmetic))
         {
             image.sprite = cosmetic.PreviewResource;
             yield break;
