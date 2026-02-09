@@ -1,11 +1,15 @@
 ﻿using BetterVanilla.Core.Extensions;
 using BetterVanilla.Ui.Base;
+using BetterVanilla.Ui.Tasks;
+using TMPro;
 
 namespace BetterVanilla.Ui.Tabs;
 
 public sealed class HostTab : TabBase
 {
-
+    public TextMeshProUGUI manageTaskAssignationButtonText = null!;
+    public TaskAssignation taskAssignation = null!;
+    
     private void Start()
     {
         this.AddOption(ModOptions.GameHost.Options.AllowDeadVoteDisplay);
@@ -22,8 +26,13 @@ public sealed class HostTab : TabBase
         this.AddOption(ModOptions.GameHost.Options.AnonymizePlayersOnCamerasDuringLights);
     }
 
+    public void OnManagedTaskAssignmentButtonClicked()
+    {
+        taskAssignation.gameObject.SetActive(true);
+    }
+
     protected override void SetupTranslation()
     {
-
+        manageTaskAssignationButtonText.SetText(UiLocalization.TaskAssignationButton);
     }
 }

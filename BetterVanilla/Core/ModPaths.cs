@@ -18,6 +18,7 @@ public static class ModPaths
     public static string CosmeticsDirectory { get; }
     public static string CosmeticsBundlesDirectory { get; }
     public static string CosmeticsLocalBundlesDirectory { get; }
+    public static string TaskAssignationOverridesFile { get; }
 
     static ModPaths()
     {
@@ -78,6 +79,7 @@ public static class ModPaths
         CosmeticsDirectory = Path.Combine(ModDataDirectory, "Cosmetics");
         CosmeticsBundlesDirectory = Path.Combine(CosmeticsDirectory, "Bundles");
         CosmeticsLocalBundlesDirectory = Path.Combine(CosmeticsDirectory, "LocalBundles");
+        TaskAssignationOverridesFile = Path.Combine(ModDataDirectory, "task_assignation_overrides.dat");
         
         CreateDirectory(CosmeticsDirectory);
         CreateDirectory(CosmeticsBundlesDirectory);

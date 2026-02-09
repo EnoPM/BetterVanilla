@@ -1,12 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
+using BetterVanilla.Components;
 using BetterVanilla.Extensions;
 
 namespace BetterVanilla.Core.Data;
 
 public sealed class MapTasks
 {
+    static MapTasks()
+    {
+        GameEventManager.Instance.SelectedMapChanged += OnSelectedMapChanged;
+    }
+
+    private static void OnSelectedMapChanged()
+    {
+        Current?.RefreshOptions();
+    }
+    
     private static List<MapTasks> AllMapTasks { get; } = [];
     
     public static MapTasks TheSkeld { get; } = new(0)
@@ -240,13 +251,12 @@ public sealed class MapTasks
     {
         get
         {
-            if (GameOptionsManager.Instance == null) return null;
-            var options = GameOptionsManager.Instance.CurrentGameOptions;
-            if (options == null) return null;
-            var result = AllMapTasks.FirstOrDefault(x => x.MapId == options.MapId);
+            var mapId = (byte?)GameEventManager.Instance.SelectedMap;
+            if (mapId == null) return null;
+            var result = AllMapTasks.FirstOrDefault(x => x.MapId == mapId);
             if (result == null)
             {
-                Ls.LogMessage($"No map tasks found for {options.MapId}");
+                Ls.LogMessage($"No map tasks found for {mapId}");
             }
             return result;
         }

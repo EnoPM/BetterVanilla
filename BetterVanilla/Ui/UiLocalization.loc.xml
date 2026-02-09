@@ -47,4 +47,32 @@
         <En>Equip the outfit</En>
         <Fr>Équiper la tenue</Fr>
     </Key>
+    <Key x:Name="TaskAssignationButton">
+        <En>Modify task assignments</En>
+        <Fr>Modifier l'assignation des tâches</Fr>
+    </Key>
+    <Key x:Name="TaskAssignationTitle">
+        <En>Customize task assignment</En>
+        <Fr>Personnaliser l'assignation des tâches</Fr>
+    </Key>
+    <Key x:Name="PlayerLabel">
+        <En>Player</En>
+        <Fr>Joueur</Fr>
+    </Key>
+    <Key x:Name="SaveTaskAssignationButton">
+        <En>Save</En>
+        <Fr>Sauvegarder</Fr>
+    </Key>
+    <Key x:Name="CommonTasks">
+        <En>Common tasks</En>
+        <Fr>Tâches communes</Fr>
+    </Key>
+    <Key x:Name="ShortTasks">
+        <En>Short tasks</En>
+        <Fr>Tâches courtes</Fr>
+    </Key>
+    <Key x:Name="LongTasks">
+        <En>Long tasks</En>
+        <Fr>Tâches longues</Fr>
+    </Key>
 </Localization>

@@ -13,7 +13,7 @@ public sealed class FeaturesManager
 
     public static IEnumerator CoLoad()
     {
-        yield return CoLoadFromFile(@"D:\Projects\EnoUnityLoader.BetterVanilla\features.yml");
+        yield return CoLoadFromFile(@"C:\projects\BetterVanilla2\features.yml");
     }
 
     private static IEnumerator CoLoadFromFile(string filePath)

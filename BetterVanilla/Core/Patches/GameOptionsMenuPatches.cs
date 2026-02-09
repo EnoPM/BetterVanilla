@@ -1,7 +1,6 @@
 ﻿using BetterVanilla.Core.Data;
 using BetterVanilla.Core.Extensions;
 using BetterVanilla.Options;
-using BetterVanilla.Options.Core;
 using HarmonyLib;
 
 namespace BetterVanilla.Core.Patches;
