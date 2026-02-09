@@ -38,6 +38,26 @@ public static class RequestUtils
         }
         onResult.Invoke(requestTask.Result);
     }
+    
+    public static IEnumerator CoGetString(string url, Action<string> onResult, Action<Exception>? onException = null)
+    {
+        var requestTask = GetStringAsync(url);
+        while (!requestTask.IsCompleted)
+        {
+            if (requestTask.Exception != null)
+            {
+                onException?.Invoke(requestTask.Exception);
+                yield break;
+            }
+            yield return null;
+        }
+        if (requestTask.Result == null)
+        {
+            onException?.Invoke(new Exception($"Unable to get result: {url}"));
+            yield break;
+        }
+        onResult.Invoke(requestTask.Result);
+    }
 
     public static async Task<T?> GetAsync<T>(string url, JsonSerializerOptions? options = null) where T : class
     {
@@ -47,6 +67,14 @@ public static class RequestUtils
 
         await using var stream = await response.Content.ReadAsStreamAsync();
         return await JsonSerializer.DeserializeAsync<T>(stream, options);
+    }
+    
+    public static async Task<string?> GetStringAsync(string url)
+    {
+        using var response = await UserClient.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadAsStringAsync();
     }
 
     public static IEnumerator CoDownloadFile(string url, string destinationPath, IProgress<float>? progress = null)

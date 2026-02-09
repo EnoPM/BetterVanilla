@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using BetterVanilla.Components;
+using BetterVanilla.Core.Helpers;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -9,11 +10,27 @@ namespace BetterVanilla.Core;
 
 public sealed class FeaturesManager
 {
+    private const string GithubFileUrl = "https://raw.githubusercontent.com/EnoPM/BetterVanilla/refs/heads/main/features.yml";
     public static FeaturesManager? Instance { get; private set; }
 
-    public static IEnumerator CoLoad()
+    public static IEnumerator CoLoad(bool fromFile = false)
     {
-        yield return CoLoadFromFile(@"C:\projects\BetterVanilla2\features.yml");
+        if (fromFile)
+        {
+            yield return CoLoadFromFile(@"C:\projects\BetterVanilla2\features.yml");
+        }
+        else
+        {
+            yield return CoLoadFromUrl(GithubFileUrl);
+        }
+    }
+
+    private static IEnumerator CoLoadFromUrl(string url)
+    {
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
+            .Build();
+        yield return RequestUtils.CoGetString(url, x => Instance = deserializer.Deserialize<FeaturesManager>(x));
     }
 
     private static IEnumerator CoLoadFromFile(string filePath)
