@@ -31,7 +31,7 @@ public sealed class StringOption : OptionBase
 
     public int? MaxLength => _maxLength;
 
-    private string Truncate(string value)
+    public string Truncate(string value)
     {
         if (_maxLength.HasValue && value.Length > _maxLength.Value)
             return value[.._maxLength.Value];

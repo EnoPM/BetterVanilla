@@ -50,14 +50,20 @@ public sealed class Vector2Option : OptionBase
     public static Vector2 ParseVector2(string value)
     {
         if (string.IsNullOrEmpty(value))
+        {
             return Vector2.zero;
+        }
 
         var parts = value.Split(',');
         if (parts.Length != 2)
+        {
             return Vector2.zero;
+        }
 
         if (float.TryParse(parts[0].Trim(), out var x) && float.TryParse(parts[1].Trim(), out var y))
+        {
             return new Vector2(x, y);
+        }
 
         return Vector2.zero;
     }

@@ -44,6 +44,8 @@ public sealed class EnumOption : OptionBase
     /// The list of available choices.
     /// </summary>
     public IReadOnlyList<EnumChoice> Choices => _choices;
+    
+    public int DefaultIndex => _defaultIndex;
 
     /// <summary>
     /// The currently selected index.

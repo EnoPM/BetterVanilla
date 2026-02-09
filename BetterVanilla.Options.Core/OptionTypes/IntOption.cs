@@ -34,7 +34,7 @@ public sealed class IntOption : OptionBase
     public int? Min => _min;
     public int? Max => _max;
 
-    private int Clamp(int value)
+    public int Clamp(int value)
     {
         if (_min.HasValue && value < _min.Value)
             return _min.Value;

@@ -43,7 +43,7 @@ public sealed class FloatOption : OptionBase
     public string? Prefix => _prefix;
     public string? Suffix => _suffix;
 
-    private float Clamp(float value)
+    public float Clamp(float value)
     {
         if (_min.HasValue && value < _min.Value)
             return _min.Value;

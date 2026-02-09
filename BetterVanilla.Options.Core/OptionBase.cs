@@ -31,6 +31,8 @@ public abstract class OptionBase(string key, Func<string> labelProvider, Func<st
         }
     } = true;
 
+    public bool IsEnabledAndVisible => IsEnabled && IsVisible;
+
     public event Action? ValueChanged;
     public event Action? EnabledChanged;
     public event Action? VisibleChanged;
