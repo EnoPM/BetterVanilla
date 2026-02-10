@@ -75,4 +75,20 @@
         <En>Long tasks</En>
         <Fr>Tâches longues</Fr>
     </Key>
+    <Key x:Name="TasksCategoryTitle">
+        <En>Tasks</En>
+        <Fr>Tâches</Fr>
+    </Key>
+    <Key x:Name="MapCategoryTitle">
+        <En>Map</En>
+        <Fr>Carte</Fr>
+    </Key>
+    <Key x:Name="PlayersCategoryTitle">
+        <En>Players</En>
+        <Fr>Joueurs</Fr>
+    </Key>
+    <Key x:Name="MeetingsCategoryTitle">
+        <En>Emergency Meetings</En>
+        <Fr>Réunions d'urgence</Fr>
+    </Key>
 </Localization>

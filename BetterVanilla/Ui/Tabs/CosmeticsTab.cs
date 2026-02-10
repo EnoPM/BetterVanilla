@@ -59,6 +59,7 @@ public sealed class CosmeticsTab : TabBase
 
     protected override void SetupTranslation()
     {
+        base.SetupTranslation();
         saveCurrentOutfitButtonText.SetText(UiLocalization.SaveCurrentOutfitButton);
     }
 }

@@ -7,6 +7,6 @@ public sealed class UserTab : TabBase
 
     protected override void SetupTranslation()
     {
-        
+        base.SetupTranslation();
     }
 }

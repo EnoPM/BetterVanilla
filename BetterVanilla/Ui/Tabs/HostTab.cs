@@ -12,18 +12,26 @@ public sealed class HostTab : TabBase
     
     private void Start()
     {
-        this.AddOption(ModOptions.GameHost.Options.AllowDeadVoteDisplay);
+        this.AddCategoryTitle(() => UiLocalization.PlayersCategoryTitle);
         this.AddOption(ModOptions.GameHost.Options.AllowTeamPreference);
-        this.AddOption(ModOptions.GameHost.Options.HideDeadPlayerPets);
-        this.AddOption(ModOptions.GameHost.Options.PolusReactorCountdown);
+        this.AddOption(ModOptions.GameHost.Options.AllowDeadVoteDisplay);
         this.AddOption(ModOptions.GameHost.Options.ProtectFirstKilledPlayer);
         this.AddOption(ModOptions.GameHost.Options.ProtectionDuration);
+        
+
+        this.AddCategoryTitle(() => UiLocalization.TasksCategoryTitle);
         this.AddOption(ModOptions.GameHost.Options.DefineCommonTasksAsNonCommon);
-        this.AddOption(ModOptions.GameHost.Options.BetterPolus);
         this.AddOption(ModOptions.GameHost.Options.RandomizeFixWiringTaskOrder);
         this.AddOption(ModOptions.GameHost.Options.RandomizeUploadTaskLocation);
-        this.AddOption(ModOptions.GameHost.Options.RandomizePlayerOrderInMeetings);
+        
+        this.AddCategoryTitle(() => UiLocalization.MapCategoryTitle);
+        this.AddOption(ModOptions.GameHost.Options.HideDeadPlayerPets);
+        this.AddOption(ModOptions.GameHost.Options.BetterPolus);
+        this.AddOption(ModOptions.GameHost.Options.PolusReactorCountdown);
         this.AddOption(ModOptions.GameHost.Options.AnonymizePlayersOnCamerasDuringLights);
+        
+        this.AddCategoryTitle(() => UiLocalization.MeetingsCategoryTitle);
+        this.AddOption(ModOptions.GameHost.Options.RandomizePlayerOrderInMeetings);
     }
 
     public void OnManagedTaskAssignmentButtonClicked()
@@ -33,6 +41,7 @@ public sealed class HostTab : TabBase
 
     protected override void SetupTranslation()
     {
+        base.SetupTranslation();
         manageTaskAssignationButtonText.SetText(UiLocalization.TaskAssignationButton);
     }
 }

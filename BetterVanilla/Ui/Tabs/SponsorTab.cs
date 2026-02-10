@@ -7,6 +7,6 @@ public sealed class SponsorTab : TabBase
 
     protected override void SetupTranslation()
     {
-        
+        base.SetupTranslation();
     }
 }

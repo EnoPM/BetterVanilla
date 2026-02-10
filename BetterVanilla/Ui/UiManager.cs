@@ -1,6 +1,7 @@
 ﻿using System;
 using BetterVanilla.Core;
 using BetterVanilla.Localization;
+using TMPro;
 using UnityEngine;
 
 namespace BetterVanilla.Ui;
@@ -17,6 +18,7 @@ public sealed class UiManager : MonoBehaviour
     public DropdownField dropdownFieldPrefab = null!;
     public NumberField numberFieldPrefab = null!;
     public ToggleField toggleFieldPrefab = null!;
+    public TextMeshProUGUI categoryTitlePrefab = null!;
     
     private readonly UiInteractionBlocker _blocker = new();
 

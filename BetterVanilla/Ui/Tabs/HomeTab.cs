@@ -24,6 +24,7 @@ public sealed class HomeTab : TabBase
 
     protected override void SetupTranslation()
     {
+        base.SetupTranslation();
         languageDropdownLabel.SetText(ModOptions.User.Options.Language.Label);
         becomeSponsorText.SetText(UiLocalization.BecomeSponsorText);
         becomeSponsorButtonText.SetText(UiLocalization.BecomeSponsorButton);

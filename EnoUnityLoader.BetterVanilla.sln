@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterVanilla.Localization.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterVanilla.Cosmetics", "BetterVanilla.Cosmetics\BetterVanilla.Cosmetics.csproj", "{7F98708C-14D6-45A8-87F0-1BF149F9D391}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{EE2727D0-3450-4B9D-8AB3-2706BD173C44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
