@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using BetterVanilla.Components;
 using BetterVanilla.Extensions;
 
 namespace BetterVanilla.Core.Data;
@@ -10,7 +10,7 @@ public sealed class MapTasks
 {
     static MapTasks()
     {
-        GameEventManager.Instance.SelectedMapChanged += OnSelectedMapChanged;
+        ModOptions.VanillaHost.Options.Map.ValueChanged += OnSelectedMapChanged;
     }
 
     private static void OnSelectedMapChanged()
@@ -251,7 +251,9 @@ public sealed class MapTasks
     {
         get
         {
-            var mapId = (byte?)GameEventManager.Instance.SelectedMap;
+            MapNames? selectedMap = Enum.TryParse<MapNames>(ModOptions.VanillaHost.Options.Map.Value, out var mapName) ? mapName : null;
+            var mapId = (byte?)selectedMap;
+            
             if (mapId == null) return null;
             var result = AllMapTasks.FirstOrDefault(x => x.MapId == mapId);
             if (result == null)

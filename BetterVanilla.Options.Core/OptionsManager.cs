@@ -2,7 +2,7 @@
 
 namespace BetterVanilla.Options.Core;
 
-public sealed class OptionsManager<TOptionsHolder> where TOptionsHolder : OptionsHolderBase, new()
+public class OptionsManager<TOptionsHolder> where TOptionsHolder : OptionsHolderBase, new()
 {
     private string FilePath { get; }
     private OptionDebouncer Debouncer { get; }

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OptionsHolder xmlns="http://schemas.bettervanilla.options/2025"
+               xmlns:x="http://schemas.bettervanilla.options/2025/xaml"
+               x:Class="BetterVanilla.Options.VanillaHostOptions"
+               DefaultLanguage="En">
+    
+    <EnumOption x:Name="Map" Default="Skeld">
+        <Label>
+            <En>Map</En>
+            <Fr>Carte</Fr>
+        </Label>
+        <Description>
+            <En>The map on which the game will be played</En>
+            <Fr>La carte sur laquelle sera jouée la partie</Fr>
+        </Description>
+        <Option Value="Skeld">
+            <En>The Skeld</En>
+        </Option>
+        <Option Value="MiraHQ">
+            <En>Mira HQ</En>
+        </Option>
+        <Option Value="Polus">
+            <En>Polus</En>
+        </Option>
+        <Option Value="Airship">
+            <En>The Airship</En>
+        </Option>
+        <Option Value="Fungle">
+            <En>The Fungle</En>
+        </Option>
+    </EnumOption>
+    
+    <FloatOption x:Name="ImpostorsCount" Default="1" Min="1" Max="3" Step="1">
+        <Label>
+            <En>Number of imposters</En>
+            <Fr>Nombre d'imposteurs</Fr>
+        </Label>
+        <Description>
+            <En>The maximum number of imposters that can be in the game (this number may be automatically reduced depending on the number of players)</En>
+            <Fr>Le nombre maximal d'imposteurs pouvant être présents dans la partie (ce nombre peut être automatiquement réduit en fonction du nombre de joueurs)</Fr>
+        </Description>
+    </FloatOption>
+    
+    <FloatOption x:Name="KillCooldown" Default="30" Min="10" Max="60" Step="0.5" Suffix="s">
+        <Label>
+            <En>Cooldown to kill</En>
+            <Fr>Temps de recharge après élimination</Fr>
+        </Label>
+        <Description>
+            <En>The recovery time of impostors after a kill</En>
+            <Fr>Le temps de récupération des imposteurs après avoir fait une élimination</Fr>
+        </Description>
+    </FloatOption>
+
+    <FloatOption x:Name="ImpostorVision" Default="1.25" Min="0.1" Max="3" Step="0.1" Suffix="x">
+        <Label>
+            <En>Impostor vision</En>
+            <Fr>Champ de vision des imposteurs</Fr>
+        </Label>
+        <Description>
+            <En>The radius of vision of impostors (unchanged when the lights are off)</En>
+            <Fr>Le rayon de vision des imposteurs (non modifié lorsque les lumières sont éteintes)</Fr>
+        </Description>
+    </FloatOption>
+    
+    <EnumOption x:Name="KillDistance" Default="Short">
+        <Label>
+            <En>Kill distance</En>
+            <Fr>Distance d'élimination</Fr>
+        </Label>
+        <Description>
+            <En>Distance at which impostors can eliminate a player</En>
+            <Fr>Distance à laquelle les imposteurs peuvent éliminer un joueur</Fr>
+        </Description>
+        <Option Value="Short">
+            <En>Short</En>
+            <Fr>Courte</Fr>
+        </Option>
+        <Option Value="Medium">
+            <En>Medium</En>
+            <Fr>Moyenne</Fr>
+        </Option>
+        <Option Value="Long">
+            <En>Long</En>
+            <Fr>Longue</Fr>
+        </Option>
+    </EnumOption>
+
+    <FloatOption x:Name="PlayerSpeed" Default="1" Min="0.1" Max="3" Step="0.05" Suffix="x">
+        <Label>
+            <En>Player speed</En>
+            <Fr>Vitesse de déplacement</Fr>
+        </Label>
+        <Description>
+            <En>Player movement speed on the map</En>
+            <Fr>Vitesse de déplacement des joueurs sur la carte</Fr>
+        </Description>
+    </FloatOption>
+
+    <FloatOption x:Name="CrewmateVision" Default="0.5" Min="0.1" Max="3" Step="0.1" Suffix="x">
+        <Label>
+            <En>Crewmate vision</En>
+            <Fr>Champ de vision des crewmates</Fr>
+        </Label>
+        <Description>
+            <En>The radius of vision of crewmates (reduced when the lights are off)</En>
+            <Fr>Le rayon de vision des crewmates (diminué lorsque les lumières sont éteintes)</Fr>
+        </Description>
+    </FloatOption>
+    
+    <FloatOption x:Name="NumberOfMeetingsPerPlayer" Default="1" Min="0" Max="9" Step="1">
+        <Label>
+            <En>Number of meetings per player</En>
+            <Fr>Nombre de réunion par joueur</Fr>
+        </Label>
+        <Description>
+            <En>Number of emergency meetings a player can trigger in the game by pressing the button</En>
+            <Fr>Nombre de réunions d'urgence qu'un joueur peut déclencher dans la partie en appuyant sur le bouton</Fr>
+        </Description>
+    </FloatOption>
+
+    <FloatOption x:Name="EmergencyMeetingCooldown" Default="15" Min="0" Max="120" Step="1" Suffix="s">
+        <Label>
+            <En>Emergency meeting cooldown</En>
+            <Fr>Délai de disponibilité des réunions d'urgence</Fr>
+        </Label>
+        <Description>
+            <En>Time during which an emergency meeting cannot be triggered by pressing the button</En>
+            <Fr>Délai pendant lequel une réunion d'urgence ne peut pas être déclenchée en appuyant sur le bouton</Fr>
+        </Description>
+    </FloatOption>
+    
+    <FloatOption x:Name="MeetingDiscussionTime" Default="0" Min="0" Max="120" Step="1">
+        <Label>
+            <En>Discussion time</En>
+            <Fr>Temps de discussion</Fr>
+        </Label>
+        <Description>
+            <En>Period during which players cannot vote at an emergency meeting</En>
+            <Fr>Période pendant laquelle les joueurs ne peuvent pas voter lors d'une réunion d'urgence</Fr>
+        </Description>
+    </FloatOption>
+
+    <FloatOption x:Name="MeetingVotingTime" Default="0" Min="0" Max="300" Step="1">
+        <Label>
+            <En>Voting time</En>
+            <Fr>Temps de vote</Fr>
+        </Label>
+        <Description>
+            <En>Period during which players can vote at an emergency meeting</En>
+            <Fr>Période durant laquelle les joueurs peuvent voter lors d'une réunion d'urgence</Fr>
+        </Description>
+    </FloatOption>
+    
+    <BoolOption x:Name="AnonymousVotes" Default="true">
+        <Label>
+            <En>Anonymous votes</En>
+            <Fr>Votes anonymes</Fr>
+        </Label>
+        <Description>
+            <En>Do not display the color of the players who voted at the end of the voting</En>
+            <Fr>Ne pas afficher la couleur des joueurs ayant voté à la fin du vote</Fr>
+        </Description>
+    </BoolOption>
+
+    <BoolOption x:Name="ConfirmEject" Default="false">
+        <Label>
+            <En>Confirm eject</En>
+            <Fr>Confirmation d'éjection</Fr>
+        </Label>
+        <Description>
+            <En>Reveal the team of a player who is eliminated by vote</En>
+            <Fr>Révélez l'équipe d'un joueur éliminé par les votes</Fr>
+        </Description>
+    </BoolOption>
+    
+    <EnumOption x:Name="TaskBarUpdates" Default="Meetings">
+        <Label>
+            <En>Task bar updates</En>
+            <Fr>Mise à jour de la barre des tâches</Fr>
+        </Label>
+        <Description>
+            <En>Specify when the taskbar updates</En>
+            <Fr>Spécifier quand la barre des tâches se met à jour</Fr>
+        </Description>
+        <Option Value="Always">
+            <En>Always</En>
+            <Fr>Toujours</Fr>
+        </Option>
+        <Option Value="Meetings">
+            <En>Emergency meetings</En>
+            <Fr>Réunions d'urgence</Fr>
+        </Option>
+        <Option Value="Never">
+            <En>Never</En>
+            <Fr>Jamais</Fr>
+        </Option>
+    </EnumOption>
+    
+    <FloatOption x:Name="CommonTasks" Default="1" Min="0" Max="99" Step="1">
+        <Label>
+            <En>Common tasks</En>
+            <Fr>Tâche communes</Fr>
+        </Label>
+        <Description>
+            <En>The number of common tasks a crewmate must perform</En>
+            <Fr>Le nombre de tâches communes qu'un crewmate doit réaliser</Fr>
+        </Description>
+    </FloatOption>
+
+    <FloatOption x:Name="LongTasks" Default="1" Min="0" Max="99" Step="1">
+        <Label>
+            <En>Long tasks</En>
+            <Fr>Tâche longues</Fr>
+        </Label>
+        <Description>
+            <En>The number of long tasks a crewmate must perform</En>
+            <Fr>Le nombre de tâches longues qu'un crewmate doit réaliser</Fr>
+        </Description>
+    </FloatOption>
+
+    <FloatOption x:Name="ShortTasks" Default="1" Min="0" Max="99" Step="1">
+        <Label>
+            <En>Short tasks</En>
+            <Fr>Tâche courtes</Fr>
+        </Label>
+        <Description>
+            <En>The number of short tasks a crewmate must perform</En>
+            <Fr>Le nombre de tâches courtes qu'un crewmate doit réaliser</Fr>
+        </Description>
+    </FloatOption>
+
+    <BoolOption x:Name="VisualTasks" Default="false">
+        <Label>
+            <En>Visual tasks</En>
+            <Fr>Effets visuels des tâches</Fr>
+        </Label>
+        <Description>
+            <En>Display the visual effects of tasks to all players</En>
+            <Fr>Afficher les effets visuels des tâches à tous les joueurs</Fr>
+        </Description>
+    </BoolOption>
+
+</OptionsHolder>

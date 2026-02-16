@@ -26,20 +26,11 @@
         <EmbeddedResource Include="Assets\**"/>
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\BetterVanilla.Core\BetterVanilla.Core.csproj" />
       <ProjectReference Include="..\BetterVanilla.Cosmetics.Api\BetterVanilla.Cosmetics.Api.csproj" />
       <ProjectReference Include="..\BetterVanilla.Cosmetics\BetterVanilla.Cosmetics.csproj" />
       <ProjectReference Include="..\BetterVanilla.Extensions\BetterVanilla.Extensions.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Update="Options\UserOptions.options.xml">
-        <Watch>true</Watch>
-      </None>
-      <None Update="Options\GameLocalOptions.options.xml">
-        <Watch>true</Watch>
-      </None>
-      <None Update="Options\GameHostOptions.options.xml">
-        <Watch>true</Watch>
-      </None>
+      <ProjectReference Include="..\BetterVanilla.Options\BetterVanilla.Options.csproj" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="YamlDotNet" Version="16.3.0" />

@@ -1,13 +1,12 @@
 ﻿using System;
-using BetterVanilla.Core;
 using UnityEngine;
 
-namespace BetterVanilla.Components;
+namespace BetterVanilla.Core;
 
 public sealed class GameEventManager : MonoBehaviour
 {
     public static GameEventManager Instance { get; private set; } = null!;
-    
+
     public event Action? HostChanged;
     public event Action<PlayerControl>? PlayerJoined;
     public event Action<PlayerControl>? PlayerReady;
@@ -15,7 +14,6 @@ public sealed class GameEventManager : MonoBehaviour
     public event Action? GameEnded;
     public event Action? MeetingStarted;
     public event Action? GameReallyStarted;
-    public event Action? SelectedMapChanged;
     public event Action? ModdedLobbyChanged;
 
     private void Awake()
@@ -33,19 +31,8 @@ public sealed class GameEventManager : MonoBehaviour
             RaiseHostChanged();
         }
     }
-    
-    public bool IsGameStarted { get; private set; }
 
-    public MapNames? SelectedMap
-    {
-        get;
-        private set
-        {
-            if (field == value) return;
-            field = value;
-            RaiseSelectedMapChanged();
-        }
-    }
+    public bool IsGameStarted { get; private set; }
 
     public bool IsModdedLobby
     {
@@ -61,27 +48,24 @@ public sealed class GameEventManager : MonoBehaviour
     private void Update()
     {
         var amongUsClient = AmongUsClient.Instance;
-        
+
         AmHost = amongUsClient && AmongUsClient.Instance.AmHost;
-        SelectedMap = (MapNames?)GameOptionsManager.Instance?.currentGameOptions?.MapId;
-        IsModdedLobby = LocalConditions.IsAllPlayersUsingBetterVanilla();
     }
-    
-    private void RaiseHostChanged() => HostChanged?.Invoke();
-    internal void RaisePlayerJoined(PlayerControl player) => PlayerJoined?.Invoke(player);
-    internal void RaisePlayerReady(PlayerControl player) => PlayerReady?.Invoke(player);
-    internal void RaiseGameStarted()
+
+    public void RaiseHostChanged() => HostChanged?.Invoke();
+    public void RaisePlayerJoined(PlayerControl player) => PlayerJoined?.Invoke(player);
+    public void RaisePlayerReady(PlayerControl player) => PlayerReady?.Invoke(player);
+    public void RaiseGameStarted()
     {
         IsGameStarted = true;
         GameStarted?.Invoke();
     }
-    internal void RaiseMeetingStarted() => MeetingStarted?.Invoke();
-    internal void RaiseGameEnded()
+    public void RaiseMeetingStarted() => MeetingStarted?.Invoke();
+    public void RaiseGameEnded()
     {
         IsGameStarted = false;
         GameEnded?.Invoke();
     }
-    internal void RaiseGameReallyStarted() => GameReallyStarted?.Invoke();
-    private void RaiseSelectedMapChanged() => SelectedMapChanged?.Invoke();
+    public void RaiseGameReallyStarted() => GameReallyStarted?.Invoke();
     private void RaiseModdedLobbyChanged() => ModdedLobbyChanged?.Invoke();
 }

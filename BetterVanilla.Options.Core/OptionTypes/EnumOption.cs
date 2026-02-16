@@ -11,7 +11,7 @@ namespace BetterVanilla.Options.Core.OptionTypes;
 public sealed class EnumChoice
 {
     public string Value { get; }
-    public Func<string> LabelProvider { get; }
+    private Func<string> LabelProvider { get; }
 
     public EnumChoice(string value, Func<string> labelProvider)
     {
@@ -44,7 +44,7 @@ public sealed class EnumOption : OptionBase
     /// The list of available choices.
     /// </summary>
     public IReadOnlyList<EnumChoice> Choices => _choices;
-    
+
     public int DefaultIndex => _defaultIndex;
 
     /// <summary>
@@ -107,6 +107,12 @@ public sealed class EnumOption : OptionBase
     {
         SelectedIndex = _defaultIndex;
     }
+
+    public TEnum ValueAs<TEnum>(TEnum defaultValue = default)
+        where TEnum : struct, Enum =>
+        Enum.TryParse<TEnum>(Value, true, out var enumValue)
+            ? enumValue
+            : defaultValue;
 
     public static implicit operator string(EnumOption option) => option.Value;
     public static implicit operator int(EnumOption option) => option.SelectedIndex;

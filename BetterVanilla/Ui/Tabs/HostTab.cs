@@ -1,4 +1,5 @@
-﻿using BetterVanilla.Core.Extensions;
+﻿using BetterVanilla.Core;
+using BetterVanilla.Core.Extensions;
 using BetterVanilla.Ui.Base;
 using BetterVanilla.Ui.Tasks;
 using TMPro;

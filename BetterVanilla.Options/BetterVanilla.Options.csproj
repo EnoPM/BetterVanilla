@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IncludeInteropLibrairies>true</IncludeInteropLibrairies>
+        <IncludeCoreLibrairies>true</IncludeCoreLibrairies>
+        <BetterVanillaOptionsGenerator>true</BetterVanillaOptionsGenerator>
+        <CopyToMods>BetterVanilla</CopyToMods>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Update="GameHostOptions.options.xml">
+        <Watch>true</Watch>
+      </None>
+      <None Update="GameLocalOptions.options.xml">
+        <Watch>true</Watch>
+      </None>
+      <None Update="UserOptions.options.xml">
+        <Watch>true</Watch>
+      </None>
+      <None Update="VanillaHostOptions.options.xml">
+        <Watch>true</Watch>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BetterVanilla.Localization\BetterVanilla.Localization.csproj" />
+    </ItemGroup>
+
+</Project>

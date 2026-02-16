@@ -30,7 +30,7 @@ public static class TabBaseExtensions
             return component;
         }
 
-        public TextField AddOption(Options.Core.OptionTypes.StringOption option)
+        public TextField AddOption(BetterVanilla.Options.Core.OptionTypes.StringOption option)
         {
             var component = UnityEngine.Object.Instantiate(Manager.textFieldPrefab, tab.container);
             component.Option = option;
