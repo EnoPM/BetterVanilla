@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterVanilla.Core", "Bette
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterVanilla.Options", "BetterVanilla.Options\BetterVanilla.Options.csproj", "{6AF9B3F5-EAB8-45CB-8AB6-5161AABEC8BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterVanilla.PlayerTasks", "BetterVanilla.PlayerTasks\BetterVanilla.PlayerTasks.csproj", "{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -156,6 +158,18 @@ Global
 		{6AF9B3F5-EAB8-45CB-8AB6-5161AABEC8BC}.Release|x64.Build.0 = Release|Any CPU
 		{6AF9B3F5-EAB8-45CB-8AB6-5161AABEC8BC}.Release|x86.ActiveCfg = Release|Any CPU
 		{6AF9B3F5-EAB8-45CB-8AB6-5161AABEC8BC}.Release|x86.Build.0 = Release|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Debug|x64.Build.0 = Debug|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Debug|x86.Build.0 = Debug|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Release|x64.ActiveCfg = Release|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Release|x64.Build.0 = Release|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Release|x86.ActiveCfg = Release|Any CPU
+		{97414AFA-EEC9-41E7-B0D9-2DD8126844EA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -184,14 +184,14 @@ public sealed class CustomTasksAssignation
     private List<NormalPlayerTask> GetCommonTasks()
     {
         var tasks = CurrentShipStatus.CommonTasks.ToList();
-        SetTasksLength(tasks, NormalPlayerTask.TaskLength.Short);
+        SetTasksLength(tasks, NormalPlayerTask.TaskLength.Common);
         return tasks;
     }
 
     private List<NormalPlayerTask> GetLongTasks()
     {
         var tasks = CurrentShipStatus.LongTasks.ToList();
-        SetTasksLength(tasks, NormalPlayerTask.TaskLength.Short);
+        SetTasksLength(tasks, NormalPlayerTask.TaskLength.Long);
         return tasks;
     }
 

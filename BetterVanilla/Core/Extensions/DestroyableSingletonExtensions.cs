@@ -20,11 +20,11 @@ public static class DestroyableSingletonExtensions
                 Object.Destroy(singleton.gameObject);
             }
         }
+
         public void BaseOnDestroy()
         {
             if (singleton.DontDestroy || DestroyableSingleton<T>._instance != singleton) return;
             DestroyableSingleton<T>._instance = null!;
         }
     }
-
 }
