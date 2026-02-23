@@ -51,6 +51,8 @@ public abstract class OptionBase : LocalizationBehaviourBase
     {
     }
 
+    public abstract void UpdateFromOption();
+
     protected virtual void SetActive(bool isActive) => gameObject.SetActive(isActive);
 
     protected void TriggerValueUpdated() => ValueUpdated?.Invoke();

@@ -19,7 +19,7 @@ public sealed class ToggleField : OptionBase
             if (value == field) return;
             BaseOption = field = value;
             if (field == null) return;
-            toggle.SetIsOnWithoutNotify(field.Value);
+            UpdateFromOption();
         }
     }
 
@@ -34,5 +34,11 @@ public sealed class ToggleField : OptionBase
         Option?.Value = value;
         ValueChanged?.Invoke(value);
         TriggerValueUpdated();
+    }
+
+    public override void UpdateFromOption()
+    {
+        if (Option == null) return;
+        toggle.SetIsOnWithoutNotify(Option.Value);
     }
 }

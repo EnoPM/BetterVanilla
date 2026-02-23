@@ -37,7 +37,7 @@ public sealed class ColorPicker : OptionBase
         {
             if (value == field) return;
             BaseOption = field = value;
-            SetColorWithoutNotify(value ?? Color.white);
+            UpdateFromOption();
         }
     }
 
@@ -216,5 +216,10 @@ public sealed class ColorPicker : OptionBase
         base.SetInteractable(isInteractable);
         hueBar.raycastTarget = isInteractable;
         svSquare.raycastTarget = isInteractable;
+    }
+
+    public override void UpdateFromOption()
+    {
+        SetColorWithoutNotify(Option?.Value ?? Color.white);
     }
 }

@@ -23,7 +23,7 @@ public sealed class NumberField : OptionBase
             if (value == field) return;
             BaseOption = field = value;
             if (field == null) return;
-            SetValueWithoutNotify(field.Value);
+            UpdateFromOption();
         }
     }
 
@@ -62,5 +62,11 @@ public sealed class NumberField : OptionBase
         SetValueWithoutNotify(value);
         ValueChanged?.Invoke(Option.Value);
         TriggerValueUpdated();
+    }
+
+    public override void UpdateFromOption()
+    {
+        if (Option == null) return;
+        SetValueWithoutNotify(Option.Value);
     }
 }

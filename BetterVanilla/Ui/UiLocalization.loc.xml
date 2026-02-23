@@ -91,4 +91,12 @@
         <En>Emergency Meetings</En>
         <Fr>Réunions d'urgence</Fr>
     </Key>
+    <Key x:Name="ImpostorsCategoryTitle">
+        <En>Impostors</En>
+        <Fr>Imposteurs</Fr>
+    </Key>
+    <Key x:Name="CrewmatesCategoryTitle">
+        <En>Crewmates</En>
+        <Fr>Coéquipiers</Fr>
+    </Key>
 </Localization>

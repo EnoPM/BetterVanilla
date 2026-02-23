@@ -11,14 +11,19 @@ public static class TabBaseExtensions
 {
     private static UiManager Manager => UiManager.Instance ?? throw new InvalidOperationException($"{nameof(UiManager)} is not initialized.");
     private static readonly Dictionary<Type, List<(TextMeshProUGUI Text, Func<string> TextGetter)>> AllCategoryTitles = [];
+    private static readonly Dictionary<Type, List<BetterVanilla.Options.Core.OptionBase>> OptionsCache = [];
+    private static readonly Dictionary<Type, List<OptionBase>> OptionBehavioursCache = [];
 
     extension(TabBase tab)
     {
+        
         public ColorPicker AddOption(ColorOption option)
         {
             var component = UnityEngine.Object.Instantiate(Manager.colorPickerPrefab, tab.container);
             component.Option = option;
 
+            tab.AllOptions.Add(option);
+            tab.AllOptionBehaviours.Add(component);
             return component;
         }
         
@@ -27,6 +32,8 @@ public static class TabBaseExtensions
             var component = UnityEngine.Object.Instantiate(Manager.numberFieldPrefab, tab.container);
             component.Option = option;
 
+            tab.AllOptions.Add(option);
+            tab.AllOptionBehaviours.Add(component);
             return component;
         }
 
@@ -35,6 +42,8 @@ public static class TabBaseExtensions
             var component = UnityEngine.Object.Instantiate(Manager.textFieldPrefab, tab.container);
             component.Option = option;
 
+            tab.AllOptions.Add(option);
+            tab.AllOptionBehaviours.Add(component);
             return component;
         }
 
@@ -43,6 +52,8 @@ public static class TabBaseExtensions
             var component = UnityEngine.Object.Instantiate(Manager.toggleFieldPrefab, tab.container);
             component.Option = option;
 
+            tab.AllOptions.Add(option);
+            tab.AllOptionBehaviours.Add(component);
             return component;
         }
 
@@ -51,6 +62,8 @@ public static class TabBaseExtensions
             var component = UnityEngine.Object.Instantiate(Manager.dropdownFieldPrefab, tab.container);
             component.Option = option;
 
+            tab.AllOptions.Add(option);
+            tab.AllOptionBehaviours.Add(component);
             return component;
         }
 
@@ -60,7 +73,7 @@ public static class TabBaseExtensions
             text.SetText(textGetter());
             
             tab.CategoryTitles.Add((text, textGetter));
-
+            
             return text;
         }
 
@@ -78,5 +91,31 @@ public static class TabBaseExtensions
         }
         
         public bool IsHeaderActive => tab.header != null && tab.header.gameObject.active && tab.header.title != null;
+        
+        public List<BetterVanilla.Options.Core.OptionBase> AllOptions
+        {
+            get
+            {
+                if (OptionsCache.TryGetValue(tab.GetType(), out var list))
+                {
+                    return list;
+                }
+
+                return OptionsCache[tab.GetType()] = [];
+            }
+        }
+        
+        public List<OptionBase> AllOptionBehaviours
+        {
+            get
+            {
+                if (OptionBehavioursCache.TryGetValue(tab.GetType(), out var list))
+                {
+                    return list;
+                }
+
+                return OptionBehavioursCache[tab.GetType()] = [];
+            }
+        }
     }
 }

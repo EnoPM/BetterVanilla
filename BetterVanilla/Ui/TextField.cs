@@ -18,7 +18,7 @@ public sealed class TextField : OptionBase
             if (value == field) return;
             BaseOption = field = value;
             if (field == null) return;
-            input.SetTextWithoutNotify(field.Value);
+            UpdateFromOption();
         }
     }
 
@@ -33,5 +33,11 @@ public sealed class TextField : OptionBase
         Option?.Value = value;
         ValueChanged?.Invoke(value);
         TriggerValueUpdated();
+    }
+
+    public override void UpdateFromOption()
+    {
+        if (Option == null) return;
+        input.SetTextWithoutNotify(Option.Value);
     }
 }

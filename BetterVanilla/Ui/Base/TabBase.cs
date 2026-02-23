@@ -15,4 +15,13 @@ public abstract class TabBase : LocalizationBehaviourBase
             text.SetText(textGetter());
         }
     }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        foreach (var optionBehaviour in this.AllOptionBehaviours)
+        {
+            optionBehaviour.UpdateFromOption();
+        }
+    }
 }

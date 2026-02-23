@@ -19,8 +19,7 @@ public sealed class DropdownField : OptionBase
             if (value == field) return;
             BaseOption = field = value;
             if (field == null) return;
-            RefreshOptions();
-            dropdown.SetValueWithoutNotify(field.SelectedIndex);
+            UpdateFromOption();
         }
     }
 
@@ -55,5 +54,12 @@ public sealed class DropdownField : OptionBase
     {
         base.SetupTranslation();
         RefreshOptions();
+    }
+
+    public override void UpdateFromOption()
+    {
+        if (Option == null) return;
+        RefreshOptions();
+        dropdown.SetValueWithoutNotify(Option.SelectedIndex);
     }
 }
